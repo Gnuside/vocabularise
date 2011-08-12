@@ -6,7 +6,7 @@ module VocabulariSe
 	class DirectoryCache
 		include Enumerable
 
-		def initialize directory
+		def initialize directory, timeout
 			@root = File.expand_path directory
 			if not File.exist? @root then
 				FileUtils.mkdir_p @root
@@ -19,11 +19,23 @@ module VocabulariSe
 			return (File.exist? path)
 		end
 
-		def []= key, value
+		# takes a HTTP::Message (response)
+		def []= key, resp
 			path = _key_to_path key
 			File.open path, "w" do |fh|
-				fh.puts value	
+				fh.puts resp.body.content
 			end
+		end
+
+		# return a HTTP::Message::Body
+		def [] key
+			path = _key_to_path key
+			value = nil
+			File.open path, "r" do |fh|
+				value = fh.gets
+			end
+			resp = HTTP::Message.new_response value
+			return resp
 		end
 
 		def each &blk
@@ -38,7 +50,7 @@ module VocabulariSe
 		private
 
 		def _key_to_path key
-			path =  File.join @root, Base64.encode64(key)
+			path =  (File.join @root, Base64.encode64(key)).strip
 			return path
 		end
 	end
