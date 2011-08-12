@@ -18,7 +18,7 @@ module VocabulariSe
 
 
 		def include? key
-			path = _key_to_path key
+			path = "%s.info" % (_key_to_path key)
 			if File.exist? path then
 				created_at = nil
 				File.open path, "r" do |fh|
@@ -33,22 +33,29 @@ module VocabulariSe
 
 		# takes a HTTP::Message (response)
 		def []= key, resp
-			path = _key_to_path key
+			#puts "resp.body class = %s" % resp.body.class
+			pp resp.body.inspect
+
+			path = "%s.info" % (_key_to_path key)
 			File.open path, "w" do |fh|
 				fh.puts Time.now.to_i
-				fh.puts resp.body.content
+			end
+
+			path = "%s.data" % (_key_to_path key)
+			File.open path, "w" do |fh|
+				fh.write Marshal.dump( resp )
 			end
 		end
 
 		# return a HTTP::Message::Body
 		def [] key
-			path = _key_to_path key
+			path = "%s.data" % (_key_to_path key)
 			value = nil
 			File.open path, "r" do |fh|
-				fh.gets #create_at
-				value = fh.gets.strip
+				value = Marshal.load fh.read
 			end 
-			resp = HTTP::Message.new_response value
+			resp = value
+			#HTTP::Message.new_response value
 			return resp
 		end
 
