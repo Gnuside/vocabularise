@@ -50,6 +50,20 @@
 	    ],
 	    "optional_params" : [ ],
 	    "expected_status" : [ 200 ]
+	},
+
+	"document_search" : {
+	    "path" : "/oapi/documents/search/:terms/",
+	    "method" : "GET",
+	    "required_params" : [
+		"consumer_key", 
+		"terms"
+	    ],
+	    "optional_params" : [ 
+		"page",
+		"items"
+	    ],
+	    "expected_status" : [ 200 ]
 	}
     },
     "name" : "Mendeley",
