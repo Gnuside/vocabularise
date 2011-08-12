@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export RUBYLIB=~/src/_Contrib/Ruby-Spore/lib
+export RUBYLIB=`pwd`/../Ruby-Spore/lib
 #bundle exec rackup config.ru -o 0.0.0.0 -p 9393
 ruby application.rb
 #bundle exec rackup config.ru -o 127.0.0.1 -p 9001
