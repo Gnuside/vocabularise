@@ -50,6 +50,7 @@ module VocabulariSe
 		# return a HTTP::Message::Body
 		def [] key
 			path = "%s.data" % (_key_to_path key)
+			puts "CACHE PATH = %s" % path
 			value = nil
 			File.open path, "r" do |fh|
 				value = Marshal.load fh.read
