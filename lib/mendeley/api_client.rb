@@ -1,6 +1,6 @@
 
 module Mendeley
-	class Client
+	class ApiClient
 
 		attr_reader :base_url
 
