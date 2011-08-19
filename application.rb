@@ -12,6 +12,7 @@ require 'json'
 require 'vocabulari-se/cache'
 require 'vocabulari-se/utils'
 require 'mendeley'
+require 'wikipedia'
 
 config = JSON.load File.open 'config.json'
 cache = VocabulariSe::DirectoryCache.new config["cache_dir"], (60 * 60 * 24)

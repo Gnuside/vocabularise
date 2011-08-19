@@ -2,6 +2,9 @@
 require 'set'
 require 'mendeley'
 
+require 'rubygems'
+require 'wikipedia'
+
 module VocabulariSe
 	class Utils
 
@@ -28,9 +31,11 @@ module VocabulariSe
 =end
 
 			when :wikipedia then
-				Wikipedia::Article.search_tagged client, intag do |article|
-					pp article
-				end
+				client = Wikipedia::Client.new
+				pp client
+				page = client.request_page intag
+				pp page
+				raise NotImplementedError
 
 			else # :fail :-(
 				raise RelatedTagsFailure
