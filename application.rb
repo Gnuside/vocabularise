@@ -27,13 +27,13 @@ documents = Set.new
 related_tags = VocabulariSe::Utils.related_tags config, intag
 related_tags.each do |reltag|
 	# sum of views for all documents
-	views = 0
+	views = 1
 	apparitions = 0
-	VocabulariSe::Utils.related_documents config, [intag, reltag] do |doc|
+	VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 		views += 1
 		apparitions += 1
 	end
-	slop = views / apparitions
+	slope =  apparitions / views
 	workspace[reltag] = {
 		:views => views,
 		:apparitions => apparitions,
@@ -42,8 +42,8 @@ related_tags.each do |reltag|
 end
 pp workspace
 
-# FIXME : sort workspace keys (tags) by slope
-result = workspace.sort{ |a,b| a[:slope] <=> b[:slope] }
+# sort workspace keys (tags) by slope
+result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }
 
 # FIXME : limit to 3 or 5 results only
 pp result
