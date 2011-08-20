@@ -34,15 +34,14 @@ module VocabulariSe
 				client = Wikipedia::Client.new
 				page_json = client.request_page intag
 				page = Wikipedia::Page.new page_json
-				pp page.links
-				raise NotImplementedError
+				tags = pp page.links
 
 			else # :fail :-(
 				raise RelatedTagsFailure
 
 			end
 
-			return tags
+			return tags.to_a
 		end 
 
 	end
