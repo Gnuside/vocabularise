@@ -18,19 +18,33 @@ require 'wikipedia'
 json = JSON.load File.open 'config.json'
 config = VocabulariSe::Config.new json
 
-#	r = mdl.stats_authors( :discipline => 5 )
-#	r = mdl.stats_papers( :discipline => 5 )
-#	r = mdl.stats_publications( :consumer_key => CONSUMER_KEY, :discipline => 5 )
-#	r = mdl.stats_tags( :consumer_key => CONSUMER_KEY, :discipline => 5 )
-#	r = mdl.document_search( :consumer_key => CONSUMER_KEY, :terms => "freedom" )
-#	r = mdl.documents_search( :terms => "freedom", :page => 1 )
+intag = STDIN.gets.strip
 
 
-tags = VocabulariSe::Utils.related_tags config, "freedom"
-pp tags
+# Association audacieuse
+workspace = {}
+documents = Set.new
+related_tags = VocabulariSe::Utils.related_tags config, intag
+related_tags.each do |reltag|
+	# sum of views for all documents
+	views = 0
+	apparitions = 0
+	VocabulariSe::Utils.related_documents config, [intag, reltag] do |doc|
+		views += 1
+		apparitions += 1
+	end
+	slop = views / apparitions
+	workspace[reltag] = {
+		:views => views,
+		:apparitions => apparitions,
+		:slope => slope
+	}
+end
+pp workspace
 
-#JSON.parse r.body.content
+# FIXME : sort workspace keys (tags) by slope
+result = workspace.sort{ |a,b| a[:slope] <=> b[:slope] }
 
-#r = mdl.stats_tags( :consumer_key => CONSUMER_KEY, :discipline => 5 )
-#pp r.body
+# FIXME : limit to 3 or 5 results only
+pp result
 
