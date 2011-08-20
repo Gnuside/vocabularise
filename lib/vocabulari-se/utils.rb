@@ -62,13 +62,13 @@ module VocabulariSe
 			when :mendeley then
 				# get tags from documents
 				
-				count = 0
+				hit_count = 0
 				# using the API
 				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
 					tags.merge( doc.tags config.mendeley_client )
 
-					count += 1
-					break if count > 10
+					hit_count += 1 unless doc.cached?
+					break if hit_count > 5
 				end
 
 				# using scrapping
@@ -85,7 +85,7 @@ module VocabulariSe
 
 			end
 
-			return tags.to_a
+			return (tags - [intag]).to_a
 		end 
 
 	end # class
