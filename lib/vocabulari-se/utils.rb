@@ -11,37 +11,42 @@ module VocabulariSe
 		class RelatedTagsFailure < ArgumentError ; end
 
 		# Return an array of related documents for given input tag
-		def self.related_documents config, intag, algo=:default
-			head = intag
-			tail = []
-
-			if intag.kind_of? Enumerable then
-				head = intag[0]
-				tail = intag[1..-1]
+		#
+		def self.related_documents config, intag, &blk
+			puts "VocabulariSe::Utils.related_documents config, %s" % intag
+			documents = Set.new
+			Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
+				if block_given? then
+					pp doc
+					yield doc 
+				end
+				documents.add doc
 			end
+			puts "finish"
+			return documents
+		end
+
+		def self.related_documents_multiple config, intag_arr, &blk
+			puts "VocabulariSe::Utils.related_documents_multiple config, [%s]" % intag_arr.join(', ')
+			head = intag_arr[0]
+			tail_arr = intag_arr[1..-1]
 
 			# for head
 			head_documents = Set.new
-			case algo
-			when :default then
-			when :mendeley then
-				# FIXME : what type for result ? (json, document object, document id, other?)
-				# FIXME are Mendeley::Document instances comparable ?
-				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
-					pp doc
-				end
-
-			when :wikipedia then
-			else # :fail :-(
-				raise RelatedDocumentFailure
-			end
+			tail_documents = Set.new
 
 			# for tail
-			unless tail.empty? then
-				tail_documents = self.related_documents tail, algo
-				head_documents.intersection tail_documents 
+			unless tail_arr.empty? then
+				tail_documents = self.related_documents_multiple config, tail_arr
+				#head_documents.intersection tail_documents 
 			end
-
+			self.related_documents config, head do |doc|
+				if not tail_documents.include? doc then
+					yield doc if block_given?
+					#pp doc
+					head_documents.add doc
+				end
+			end
 
 			return head_documents.to_a
 		end
