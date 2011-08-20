@@ -11,7 +11,7 @@ module VocabulariSe
 		class RelatedTagsFailure < ArgumentError ; end
 
 		# Return an array of related documents for given input tag
-		def self.related_documents intag, algo=:default
+		def self.related_documents config, intag, algo=:default
 			head = intag
 			tail = []
 
@@ -27,7 +27,7 @@ module VocabulariSe
 			when :mendeley then
 				# FIXME : what type for result ? (json, document object, document id, other?)
 				# FIXME are Mendeley::Document instances comparable ?
-				Mendeley::Document.search_tagged $client, intag do |doc|
+				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
 					pp doc
 				end
 
@@ -48,15 +48,15 @@ module VocabulariSe
 		
 
 		# Return an array of related tags for given input tag
-		def self.related_tags intag, algo=:default
+		def self.related_tags config, intag, algo=:default
 			tags = Set.new
 
 			case algo
 			when :default then
 				# try mendeley
-				tags.merge( related_tags intag, :mendeley ) if tags.empty? 
+				tags.merge( related_tags config, intag, :mendeley ) if tags.empty? 
 				# try wikipedia
-				tags.merge( related_tags intag, :wikipedia ) if tags.empty?
+				tags.merge( related_tags config, intag, :wikipedia ) if tags.empty?
 				# or fail
 				
 			when :mendeley then
@@ -64,9 +64,8 @@ module VocabulariSe
 				
 				count = 0
 				# using the API
-				Mendeley::Document.search_tagged $client, intag do |doc|
-					# FIXME: get infos on given document...
-					tags.merge( doc.tags $client )
+				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
+					tags.merge( doc.tags config.mendeley_client )
 
 					count += 1
 					break if count > 10
@@ -77,8 +76,7 @@ module VocabulariSe
 				#doc = Nokogiri::HTML(open('http://
 
 			when :wikipedia then
-				client = Wikipedia::Client.new
-				page_json = client.request_page intag
+				page_json = config.wikipedia_client.request_page intag
 				page = Wikipedia::Page.new page_json
 				tags = pp page.links
 

@@ -9,14 +9,14 @@ require 'rubygems'
 #require 'sinatra'
 require 'json'
 
+require 'vocabulari-se/config'
 require 'vocabulari-se/cache'
 require 'vocabulari-se/utils'
 require 'mendeley'
 require 'wikipedia'
 
-config = JSON.load File.open 'config.json'
-cache = VocabulariSe::DirectoryCache.new config["cache_dir"], (60 * 60 * 24)
-$client = Mendeley::Client.new( config["consumer_key"], cache )
+json = JSON.load File.open 'config.json'
+config = VocabulariSe::Config.new json
 
 #	r = mdl.stats_authors( :discipline => 5 )
 #	r = mdl.stats_papers( :discipline => 5 )
@@ -26,7 +26,7 @@ $client = Mendeley::Client.new( config["consumer_key"], cache )
 #	r = mdl.documents_search( :terms => "freedom", :page => 1 )
 
 
-tags = VocabulariSe::Utils.related_tags "freedom"
+tags = VocabulariSe::Utils.related_tags config, "freedom"
 pp tags
 
 #JSON.parse r.body.content
