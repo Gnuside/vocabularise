@@ -32,9 +32,9 @@ module VocabulariSe
 
 			when :wikipedia then
 				client = Wikipedia::Client.new
-				pp client
-				page = client.request_page intag
-				pp page
+				page_json = client.request_page intag
+				page = Wikipedia::Page.new page_json
+				pp page.links
 				raise NotImplementedError
 
 			else # :fail :-(
