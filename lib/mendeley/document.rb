@@ -11,7 +11,7 @@ module Mendeley
 		end
 
 		def hash
-			self.uuid
+			self.uuid.hash
 		end
 
 		# Instance
