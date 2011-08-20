@@ -34,7 +34,7 @@ module VocabulariSe
 		# takes a HTTP::Message (response)
 		def []= key, resp
 			#puts "resp.body class = %s" % resp.body.class
-			pp resp.body.inspect
+			#pp resp.body.inspect
 
 			path = "%s.info" % (_key_to_path key)
 			File.open path, "w" do |fh|
@@ -71,7 +71,13 @@ module VocabulariSe
 		private
 
 		def _key_to_path key
-			path =  (File.join @root, Base64.encode64(key)).strip
+			basename = Base64.encode64(key).strip
+			# safeurl encode
+			basename.gsub!("+","-")
+			basename.gsub!("/","_")
+
+			path = File.join @root, basename
+
 			return path
 		end
 	end
