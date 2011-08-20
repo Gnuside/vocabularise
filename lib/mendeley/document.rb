@@ -10,6 +10,10 @@ module Mendeley
 			@long_json = nil
 		end
 
+		def hash
+			self.uuid
+		end
+
 		# Instance
 		#
 		def == doc
@@ -28,6 +32,9 @@ module Mendeley
 			@short_json["uuid"]
 		end
 
+		def cached?
+			@short_json["x-cache-used"] || @long_json["x-cache-used"]
+		end
 
 		# tags
 		#
