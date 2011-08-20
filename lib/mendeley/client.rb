@@ -1,8 +1,9 @@
 
 module Mendeley
-	class ApiClient
+	class Client
 
-		attr_reader :base_url
+		attr_reader :base_api_url,
+			:base_site_url
 
 		STATS_AUTHORS_URL = "/oapi/stats/authors/"
 		STATS_PAPERS_URL = "/oapi/stats/papers/"
@@ -10,6 +11,7 @@ module Mendeley
 		STATS_TAGS_URL = "/oapi/stats/tags/:discipline/"
 
 		DOCUMENTS_SEARCH_URL = "/oapi/documents/search/:terms/"
+		DOCUMENTS_DETAILS_URL = "/oapi/documents/details/:id/"
 		DOCUMENTS_TAGGED_URL = "/oapi/documents/tagged/:tag/"
 
 		class RateLimitExceeded < RuntimeError ; end
@@ -18,7 +20,8 @@ module Mendeley
 		#
 		def initialize consumer_key, cache = {}
 			@consumer_key = consumer_key
-			@base_url =  "http://api.mendeley.com"
+			@base_api_url =  "http://api.mendeley.com"
+			@base_site_url =  "http://www.mendeley.com"
 			@cache = cache
 		end
 
@@ -59,6 +62,13 @@ module Mendeley
 			_get_url DOCUMENTS_SEARCH_URL, params
 		end
 
+		#
+		#
+		def documents_details params
+			#validator.required_params [:id]
+			#validator.optional_params [:type]
+			_get_url DOCUMENTS_DETAILS_URL, params
+		end
 
 		#
 		#
@@ -82,13 +92,14 @@ module Mendeley
 		#
 		def _get_url base, params
 			pp params
-			base_url = URI.parse( @base_url )
+			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
+			#pp url
 
 			if @cache.include? url then
 				resp = @cache[url]
 			else
-				resp = Net::HTTP.start(base_url.host, base_url.port) do |http|
+				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					puts "MAKING REQUEST calling %s" % url
 					resp = http.get(url,nil)
 
@@ -99,8 +110,8 @@ module Mendeley
 				end
 			end
 
-			pp resp.to_hash
-			pp resp.inspect
+			#pp resp.to_hash
+			#pp resp.inspect
 			return JSON.parse resp.body
 		end
 
@@ -109,13 +120,13 @@ module Mendeley
 		#
 		def _post_url base, params
 			pp params
-			base_url = URI.parse( @base_url )
+			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 
 			if @cache.include? url then
 				resp = @cache[url]
 			else
-				resp = Net::HTTP.start(base_url.host, base_url.port) do |http|
+				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					puts "MAKING REQUEST calling %s" % url
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
@@ -127,8 +138,8 @@ module Mendeley
 				end
 			end
 
-			pp resp.to_hash
-			pp resp.inspect
+			#pp resp.to_hash
+			#pp resp.inspect
 			return JSON.parse resp.body
 		end
 

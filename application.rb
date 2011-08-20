@@ -16,7 +16,7 @@ require 'wikipedia'
 
 config = JSON.load File.open 'config.json'
 cache = VocabulariSe::DirectoryCache.new config["cache_dir"], (60 * 60 * 24)
-client = Mendeley::ApiClient.new( config["consumer_key"], cache )
+$client = Mendeley::Client.new( config["consumer_key"], cache )
 
 #	r = mdl.stats_authors( :discipline => 5 )
 #	r = mdl.stats_papers( :discipline => 5 )

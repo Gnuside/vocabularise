@@ -5,21 +5,40 @@ module Mendeley
 		# Instance
 		#
 		def initialize json
-			@json = json
+			# FIXME detect what json it is
+			@short_json = json
+			@long_json = nil
+		end
+
+		# Instance
+		#
+		def == doc
+			return self.uuid == doc.uuid
 		end
 
 		# Instance
 		#
 		def title 
-			@json["title"]
+			@short_json["title"]
 		end
 
 		# Instance
 		#
 		def uuid
-			@json["uuid"]
+			@short_json["uuid"]
 		end
 
+
+		# tags
+		#
+		def tags client
+			self.details client if @long_json.nil?
+			@long_json["tags"].to_a
+		end
+
+		def details client
+			@long_json = client.documents_details( :id => self.uuid )
+		end
 
 		# Static
 		#
