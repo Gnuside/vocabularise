@@ -94,10 +94,12 @@ module Mendeley
 			pp params
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
+			cache_used = false
 			#pp url
 
 			if @cache.include? url then
 				resp = @cache[url]
+				cache_used = true
 			else
 				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					puts "MAKING REQUEST calling %s" % url
@@ -112,7 +114,9 @@ module Mendeley
 
 			#pp resp.to_hash
 			#pp resp.inspect
-			return JSON.parse resp.body
+			json = JSON.parse resp.body
+			json['x-cache-used'] = cache_used
+			return json
 		end
 
 
@@ -122,9 +126,11 @@ module Mendeley
 			pp params
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
+			cache_used = false
 
 			if @cache.include? url then
 				resp = @cache[url]
+				cache_used = true
 			else
 				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					puts "MAKING REQUEST calling %s" % url
@@ -140,7 +146,9 @@ module Mendeley
 
 			#pp resp.to_hash
 			#pp resp.inspect
-			return JSON.parse resp.body
+			json = JSON.parse resp.body
+			json['x-cache-used'] = cache_used
+			return json
 		end
 
 
