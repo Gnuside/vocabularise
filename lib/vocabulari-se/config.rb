@@ -1,3 +1,6 @@
+
+require 'vocabulari-se/wikipedia'
+
 module VocabulariSe
 	class Config
 
@@ -13,6 +16,7 @@ module VocabulariSe
 			@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
 			@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
 			@wikipedia_client = Wikipedia::Client.new
+			@wikipedia_client.extend(WikipediaCache)
 		end
 	end
 end

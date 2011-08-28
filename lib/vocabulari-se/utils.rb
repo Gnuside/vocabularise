@@ -10,24 +10,41 @@ module VocabulariSe
 
 		class RelatedTagsFailure < ArgumentError ; end
 
+		RELATED_TAGS_DEFAULT_HITLIMIT = 5
+		RELATED_DOCUMENTS_DEFAULT_HITLIMIT = 5
+
+		@@debug = true
+		@debug = true
+
+		#
 		# Return an array of related documents for given input tag
 		#
-		def self.related_documents config, intag, &blk
-			puts "VocabulariSe::Utils.related_documents config, %s" % intag
+		def self.related_documents config, intag, limit=RELATED_DOCUMENTS_DEFAULT_HITLIMIT, &blk
+			rdebug "VocabulariSe::Utils.related_documents config, %s" % intag
 			documents = Set.new
+			hit_count = 0
 			Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
+				raise RuntimeError, "nil document" if doc.nil?
+				raise RuntimeError, "nil document" if doc.kind_of? Array
 				if block_given? then
 					pp doc
 					yield doc 
 				end
 				documents.add doc
+
+				hit_count += 1 unless doc.cached?
+				rdebug "hit_count = %s" % hit_count
+				break if hit_count > limit
 			end
-			puts "finish"
 			return documents
 		end
 
-		def self.related_documents_multiple config, intag_arr, &blk
-			puts "VocabulariSe::Utils.related_documents_multiple config, [%s]" % intag_arr.join(', ')
+
+		#
+		#
+		#
+		def self.related_documents_multiple config, intag_arr, limit=RELATED_DOCUMENTS_DEFAULT_HITLIMIT, &blk
+			rdebug "config, [%s]" % intag_arr.join(', ')
 			head = intag_arr[0]
 			tail_arr = intag_arr[1..-1]
 
@@ -35,12 +52,17 @@ module VocabulariSe
 			head_documents = Set.new
 			tail_documents = Set.new
 
+			head_limit = limit.to_f / intag_arr.size.to_f
+			tail_limit = tail_arr.size.to_f * head_limit
+
+			# FIXME: hit count = #tags * #limit => that makes a lot
+			
 			# for tail
 			unless tail_arr.empty? then
-				tail_documents = self.related_documents_multiple config, tail_arr
+				tail_documents = self.related_documents_multiple config, tail_arr, tail_limit
 				#head_documents.intersection tail_documents 
 			end
-			self.related_documents config, head do |doc|
+			self.related_documents config, head, head_limit do |doc|
 				if not tail_documents.include? doc then
 					yield doc if block_given?
 					#pp doc
@@ -54,7 +76,7 @@ module VocabulariSe
 
 		# Return an hash of related tags with associated occurencies 
 		# for given input tag
-		def self.related_tags config, intag, algo=:default
+		def self.related_tags config, intag, algo=:default, limit=RELATED_TAGS_DEFAULT_HITLIMIT
 			# set count to zero
 			tags = Hash.new 0
 
@@ -96,7 +118,8 @@ module VocabulariSe
 					end
 
 					hit_count += 1 unless doc.cached?
-					break if hit_count > 5
+					rdebug "hit_count = %s" % hit_count
+					break if hit_count > limit
 				end
 
 				# using scrapping

@@ -1,4 +1,7 @@
 
+require 'rdebug/base'
+require 'mendeley/cache'
+
 module Mendeley
 	class Client
 
@@ -14,6 +17,8 @@ module Mendeley
 		DOCUMENTS_DETAILS_URL = "/oapi/documents/details/:id/"
 		DOCUMENTS_TAGGED_URL = "/oapi/documents/tagged/:tag/"
 
+		RATELIMIT_EXCEEDED_LIMIT = 5
+
 		class RateLimitExceeded < RuntimeError ; end
 
 		#
@@ -23,6 +28,7 @@ module Mendeley
 			@base_api_url =  "http://api.mendeley.com"
 			@base_site_url =  "http://www.mendeley.com"
 			@cache = cache
+			@debug = true
 		end
 
 
@@ -91,21 +97,23 @@ module Mendeley
 		#
 		#
 		def _get_url base, params
-			pp params
+			rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
 			#pp url
 
 			if @cache.include? url then
+				rdebug "CACHE REQUEST %s" % url
 				resp = @cache[url]
 				cache_used = true
 			else
 				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					puts "MAKING REQUEST calling %s" % url
+					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 
-					if resp["x-ratelimit-remaining"][0].to_i < 5 then
+					if (( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) or
+						( resp["error"] =~ /limit exceeded/ )) then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp
@@ -115,7 +123,7 @@ module Mendeley
 			#pp resp.to_hash
 			#pp resp.inspect
 			json = JSON.parse resp.body
-			json['x-cache-used'] = cache_used
+			json[JSON_CACHE_KEY] = cache_used
 			return json
 		end
 
@@ -123,21 +131,22 @@ module Mendeley
 		#
 		#
 		def _post_url base, params
-			pp params
+			rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
 
 			if @cache.include? url then
+				rdebug "CACHE REQUEST %s" % url
 				resp = @cache[url]
 				cache_used = true
 			else
 				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					puts "MAKING REQUEST calling %s" % url
+					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
 
-					if resp["x-ratelimit-remaining"][0].to_i < 1 then
+					if resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp
@@ -147,7 +156,7 @@ module Mendeley
 			#pp resp.to_hash
 			#pp resp.inspect
 			json = JSON.parse resp.body
-			json['x-cache-used'] = cache_used
+			json[JSON_CACHE_KEY] = cache_used
 			return json
 		end
 
@@ -160,6 +169,8 @@ module Mendeley
 			url = base.dup
 			url_has_params = false
 			l_params.each do |key,val|
+				# skip parameter called limit
+				next if key == :limit
 				if url =~ /:#{key.to_s}/ then
 					# match & replace
 					url = url.gsub(/:#{key.to_s}/,val.to_s)
