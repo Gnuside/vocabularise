@@ -18,6 +18,7 @@ require 'wikipedia'
 json = JSON.load File.open 'config.json'
 config = VocabulariSe::Config.new json
 
+print "Input tag ? "
 intag = STDIN.gets.strip
 
 
@@ -25,7 +26,10 @@ intag = STDIN.gets.strip
 workspace = {}
 documents = Set.new
 related_tags = VocabulariSe::Utils.related_tags config, intag
-related_tags.each do |reltag|
+p "Related tags:"
+pp related_tags
+exit 1
+related_tags.each do |reltag,reltag_count|
 	# sum of views for all documents
 	views = 1
 	apparitions = 0
