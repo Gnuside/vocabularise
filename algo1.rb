@@ -32,23 +32,23 @@ Indent.more
 workspace = {}
 documents = Set.new
 related_tags = VocabulariSe::Utils.related_tags config, intag
-related_tags.each do |reltag|
+related_tags.each do |reltag,reltag_count|
 	# sum of views for all documents
 	views = 1
-	apparitions = 0
+	apparitions = reltag_count
 
 	hit_count = 0
 	limit = 5
 	VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 		views += doc.readers(config.mendeley_client)
-		apparitions += 1
 
 		# limit to X real hits
 		hit_count += 1 unless doc.cached?
 		puts "Algo - hit_count = %s" % hit_count
 		break if hit_count > limit
 	end
-	slope =  apparitions.to_f / views.to_f
+	#slope =  apparitions.to_f / views.to_f
+	slope =  views.to_f / apparitions.to_f 
 	workspace[reltag] = {
 		:views => views,
 		:apparitions => apparitions,
