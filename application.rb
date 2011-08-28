@@ -18,6 +18,7 @@ require 'wikipedia'
 json = JSON.load File.open 'config.json'
 config = VocabulariSe::Config.new json
 
+print "tag ? "
 intag = STDIN.gets.strip
 
 
