@@ -52,16 +52,28 @@ module VocabulariSe
 		end
 		
 
-		# Return an array of related tags for given input tag
+		# Return an hash of related tags with associated occurencies 
+		# for given input tag
 		def self.related_tags config, intag, algo=:default
-			tags = Set.new
+			# set count to zero
+			tags = Hash.new 0
 
 			case algo
 			when :default then
 				# try mendeley
-				tags.merge( related_tags config, intag, :mendeley ) if tags.empty? 
+				if tags.empty? 
+					mendeley_related = related_tags config, intag, :mendeley
+					tags.merge!( mendeley_related ) do |key,oldval,newval|
+						oldval + newval
+					end
+				end
 				# try wikipedia
-				tags.merge( related_tags config, intag, :wikipedia ) if tags.empty?
+				if tags.empty? 
+					wikipedia_related = related_tags config, intag, :wikipedia
+					tags.merge!( wikipedia_related ) do |key,oldval,newval|
+						oldval + newval
+					end
+				end
 				# or fail
 				
 			when :mendeley then
@@ -70,7 +82,18 @@ module VocabulariSe
 				hit_count = 0
 				# using the API
 				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
-					tags.merge( doc.tags config.mendeley_client )
+					document_tags = doc.tags config.mendeley_client
+					p "Merge document tags"
+					pp tags
+					pp document_tags
+					document_tags.each do |tag|
+						words = tag.split(/\s+/)
+						if words.length > 2 then
+							words.each { |w| tags[w] += 1 }
+						else
+							tags[tag] += 1
+						end
+					end
 
 					hit_count += 1 unless doc.cached?
 					break if hit_count > 5
@@ -83,14 +106,16 @@ module VocabulariSe
 			when :wikipedia then
 				page_json = config.wikipedia_client.request_page intag
 				page = Wikipedia::Page.new page_json
-				tags = pp page.links
+				page.links.each { |tag| tags[tag] += 1 }
 
 			else # :fail :-(
 				raise RelatedTagsFailure
 
 			end
 
-			return (tags - [intag]).to_a
+			pp tags
+			tags.delete(intag)
+			return tags
 		end 
 
 	end # class
