@@ -14,6 +14,8 @@ module Mendeley
 		DOCUMENTS_DETAILS_URL = "/oapi/documents/details/:id/"
 		DOCUMENTS_TAGGED_URL = "/oapi/documents/tagged/:tag/"
 
+		RATELIMIT_EXCEEDED_LIMIT = 5
+
 		class RateLimitExceeded < RuntimeError ; end
 
 		#
@@ -105,7 +107,7 @@ module Mendeley
 					puts "MAKING REQUEST calling %s" % url
 					resp = http.get(url,nil)
 
-					if resp["x-ratelimit-remaining"][0].to_i < 5 then
+					if resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp
@@ -137,7 +139,7 @@ module Mendeley
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
 
-					if resp["x-ratelimit-remaining"][0].to_i < 1 then
+					if resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp
@@ -160,6 +162,8 @@ module Mendeley
 			url = base.dup
 			url_has_params = false
 			l_params.each do |key,val|
+				# skip parameter called limit
+				next if key == :limit
 				if url =~ /:#{key.to_s}/ then
 					# match & replace
 					url = url.gsub(/:#{key.to_s}/,val.to_s)
