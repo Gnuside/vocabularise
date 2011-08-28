@@ -15,6 +15,7 @@ module VocabulariSe
 			if not File.exist? @root then
 				FileUtils.mkdir_p @root
 			end
+			@debug = false
 		end
 
 
@@ -43,7 +44,7 @@ module VocabulariSe
 			end
 
 			path = "%s.data" % (_key_to_path key)
-			puts "CACHE = %s" % path
+			rdebug "CACHE = %s" % path
 			File.open path, "w" do |fh|
 				fh.write Marshal.dump( resp )
 			end
@@ -52,7 +53,7 @@ module VocabulariSe
 		# return a HTTP::Message::Body
 		def [] key
 			path = "%s.data" % (_key_to_path key)
-			puts "CACHE = %s" % path
+			rdebug "CACHE = %s" % path
 			value = nil
 			File.open path, "r" do |fh|
 				value = Marshal.load fh.read
