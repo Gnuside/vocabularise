@@ -45,7 +45,7 @@ module Mendeley
 			# replace with long json cache status if loaded
 			#puts "long_json cached = %s" % @long_json[JSON_CACHE_KEY] unless @long_json.nil?
 		   	cached = @long_json[JSON_CACHE_KEY] unless @long_json.nil?
-			rdebug "%s" % cached
+			rdebug "(%s) %s" % [self.uuid, cached]
 			return cached
 		end
 
