@@ -1,4 +1,5 @@
 
+require 'rdebug/base'
 require 'mendeley/cache'
 
 module Mendeley
@@ -27,6 +28,7 @@ module Mendeley
 			@base_api_url =  "http://api.mendeley.com"
 			@base_site_url =  "http://www.mendeley.com"
 			@cache = cache
+			@debug = true
 		end
 
 
@@ -95,18 +97,19 @@ module Mendeley
 		#
 		#
 		def _get_url base, params
-			pp params
+			rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
 			#pp url
 
 			if @cache.include? url then
+				rdebug "CACHE REQUEST %s" % url
 				resp = @cache[url]
 				cache_used = true
 			else
 				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					puts "MAKING REQUEST calling %s" % url
+					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 
 					if resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT then
@@ -127,17 +130,18 @@ module Mendeley
 		#
 		#
 		def _post_url base, params
-			pp params
+			rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
 
 			if @cache.include? url then
+				rdebug "CACHE REQUEST %s" % url
 				resp = @cache[url]
 				cache_used = true
 			else
 				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					puts "MAKING REQUEST calling %s" % url
+					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
 
