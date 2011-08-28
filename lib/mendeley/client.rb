@@ -97,7 +97,7 @@ module Mendeley
 		#
 		#
 		def _get_url base, params
-			rdebug params.inspect
+			#rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
@@ -131,7 +131,7 @@ module Mendeley
 		#
 		#
 		def _post_url base, params
-			rdebug params.inspect
+			#rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
