@@ -105,9 +105,9 @@ module VocabulariSe
 				# using the API
 				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
 					document_tags = doc.tags config.mendeley_client
-					p "Merge document tags"
-					pp tags
-					pp document_tags
+					rdebug "Merge document tags"
+					rdebug "common tags : %s" % tags.inspect
+					rdebug "   doc tags : %s" % document_tags.inspect
 					document_tags.each do |tag|
 						words = tag.split(/\s+/)
 						if words.length > 2 then
@@ -116,6 +116,7 @@ module VocabulariSe
 							tags[tag] += 1
 						end
 					end
+					rdebug "merged tags : %s" % tags.inspect
 
 					hit_count += 1 unless doc.cached?
 					rdebug "hit_count = %s" % hit_count
