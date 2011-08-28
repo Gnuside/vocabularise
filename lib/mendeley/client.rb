@@ -1,4 +1,6 @@
 
+require 'mendeley/cache'
+
 module Mendeley
 	class Client
 
@@ -117,7 +119,7 @@ module Mendeley
 			#pp resp.to_hash
 			#pp resp.inspect
 			json = JSON.parse resp.body
-			json['x-cache-used'] = cache_used
+			json[JSON_CACHE_KEY] = cache_used
 			return json
 		end
 
@@ -149,7 +151,7 @@ module Mendeley
 			#pp resp.to_hash
 			#pp resp.inspect
 			json = JSON.parse resp.body
-			json['x-cache-used'] = cache_used
+			json[JSON_CACHE_KEY] = cache_used
 			return json
 		end
 

@@ -1,4 +1,6 @@
 
+require 'mendeley/cache'
+
 module Mendeley
 	class Document
 
@@ -36,8 +38,10 @@ module Mendeley
 
 		def cached?
 			cached = true
-			cached &&= @short_json["x-cache-used"]
-		   	cached &&= @long_json["x-cache-used"] unless @long_json.nil?
+			puts "short_json cached = %s" % @short_json[JSON_CACHE_KEY]
+			cached &&= @short_json[JSON_CACHE_KEY]
+			puts "short_json cached = %s" % @long_json[JSON_CACHE_KEY] unless @long_json.nil?
+		   	cached &&= @long_json[JSON_CACHE_KEY] unless @long_json.nil?
 		end
 
 		# tags
@@ -65,6 +69,7 @@ module Mendeley
 				total_pages = resp["total_pages"]
 				if resp["documents"].nil? then pp resp end
 				resp["documents"].each do |resp_doc|
+					resp_doc[JSON_CACHE_KEY] = resp[JSON_CACHE_KEY]
 					doc = Document.new resp_doc
 					yield doc
 				end
