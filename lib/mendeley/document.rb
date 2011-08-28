@@ -2,6 +2,8 @@
 module Mendeley
 	class Document
 
+		DOCUMENTS_TAGGED_LIMIT = 5
+
 		# Instance
 		#
 		def initialize json
@@ -33,7 +35,9 @@ module Mendeley
 		end
 
 		def cached?
-			@short_json["x-cache-used"] || @long_json["x-cache-used"]
+			cached = true
+			cached &&= @short_json["x-cache-used"]
+		   	cached &&= @long_json["x-cache-used"] unless @long_json.nil?
 		end
 
 		# tags
@@ -53,7 +57,11 @@ module Mendeley
 			page = 0
 			total_pages = 0
 			while true do
-				resp = client.documents_tagged( :tag => tag, :page => page )
+				resp = client.documents_tagged({
+				   	:tag => tag, 
+					:page => page 
+			#		:limit => DOCUMENTS_TAGGED_LIMIT 
+				})
 				total_pages = resp["total_pages"]
 				if resp["documents"].nil? then pp resp end
 				resp["documents"].each do |resp_doc|
