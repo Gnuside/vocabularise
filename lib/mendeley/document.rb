@@ -1,4 +1,5 @@
 
+require 'common/indent'
 require 'mendeley/cache'
 
 module Mendeley
@@ -12,6 +13,7 @@ module Mendeley
 			# FIXME detect what json it is
 			@short_json = json
 			@long_json = nil
+			@debug = true
 		end
 
 		def hash
@@ -37,11 +39,14 @@ module Mendeley
 		end
 
 		def cached?
-			cached = true
-			puts "short_json cached = %s" % @short_json[JSON_CACHE_KEY]
-			cached &&= @short_json[JSON_CACHE_KEY]
-			puts "short_json cached = %s" % @long_json[JSON_CACHE_KEY] unless @long_json.nil?
-		   	cached &&= @long_json[JSON_CACHE_KEY] unless @long_json.nil?
+			#puts "short_json cached = %s" % @short_json[JSON_CACHE_KEY]
+			cached = @short_json[JSON_CACHE_KEY]
+
+			# replace with long json cache status if loaded
+			#puts "long_json cached = %s" % @long_json[JSON_CACHE_KEY] unless @long_json.nil?
+		   	cached = @long_json[JSON_CACHE_KEY] unless @long_json.nil?
+			rdebug "%s" % cached
+			return cached
 		end
 
 		# tags
@@ -53,6 +58,12 @@ module Mendeley
 
 		def details client
 			@long_json = client.documents_details( :id => self.uuid )
+		end
+
+		def readers client
+			self.details client if @long_json.nil?
+			#pp @long_json["stats"]
+			@long_json["stats"]["readers"].to_i
 		end
 
 		# Static
