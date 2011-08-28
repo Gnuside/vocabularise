@@ -61,6 +61,9 @@ module Mendeley
 			page = 0
 			total_pages = 0
 			while true do
+				# first json snippets count as a hit
+				# but all following count as cached
+				cached = false
 				resp = client.documents_tagged({
 				   	:tag => tag, 
 					:page => page 
@@ -69,9 +72,10 @@ module Mendeley
 				total_pages = resp["total_pages"]
 				if resp["documents"].nil? then pp resp end
 				resp["documents"].each do |resp_doc|
-					resp_doc[JSON_CACHE_KEY] = resp[JSON_CACHE_KEY]
+					resp_doc[JSON_CACHE_KEY] = cached
 					doc = Document.new resp_doc
 					yield doc
+					cached = true
 				end
 				page += 1
 				break if page >= total_pages
