@@ -5,5 +5,9 @@ module VocabulariSe
 	# wikipedia-client gem
 	#
 	module WikipediaCache
+
+		def cached?
+			return true
+		end
 	end
 end
