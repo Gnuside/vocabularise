@@ -10,23 +10,38 @@ module VocabulariSe
 
 		class RelatedTagsFailure < ArgumentError ; end
 
+		RELATED_TAGS_DEFAULT_HITLIMIT = 5
+		RELATED_DOCUMENTS_DEFAULT_HITLIMIT = 5
+
+		#
 		# Return an array of related documents for given input tag
 		#
-		def self.related_documents config, intag, &blk
+		def self.related_documents config, intag, limit=RELATED_DOCUMENTS_DEFAULT_HITLIMIT, &blk
 			puts "VocabulariSe::Utils.related_documents config, %s" % intag
 			documents = Set.new
+			hit_count = 0
 			Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
+				raise RuntimeError, "nil document" if doc.nil?
+				raise RuntimeError, "nil document" if doc.kind_of? Array
 				if block_given? then
 					pp doc
 					yield doc 
 				end
 				documents.add doc
+
+				hit_count += 1 unless doc.cached?
+				puts "hit_count = %s" % hit_count
+				break if hit_count > limit
 			end
 			puts "finish"
 			return documents
 		end
 
-		def self.related_documents_multiple config, intag_arr, &blk
+
+		#
+		#
+		#
+		def self.related_documents_multiple config, intag_arr, limit=RELATED_DOCUMENTS_DEFAULT_HITLIMIT, &blk
 			puts "VocabulariSe::Utils.related_documents_multiple config, [%s]" % intag_arr.join(', ')
 			head = intag_arr[0]
 			tail_arr = intag_arr[1..-1]
@@ -52,8 +67,10 @@ module VocabulariSe
 		end
 		
 
+		#
 		# Return an array of related tags for given input tag
-		def self.related_tags config, intag, algo=:default
+		#
+		def self.related_tags config, intag, algo=:default, limit=RELATED_TAGS_DEFAULT_HITLIMIT
 			tags = Set.new
 
 			case algo
@@ -73,7 +90,8 @@ module VocabulariSe
 					tags.merge( doc.tags config.mendeley_client )
 
 					hit_count += 1 unless doc.cached?
-					break if hit_count > 5
+					puts "hit_count = %s" % hit_count
+					break if hit_count > limit
 				end
 
 				# using scrapping
