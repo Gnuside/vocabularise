@@ -52,12 +52,17 @@ module VocabulariSe
 			head_documents = Set.new
 			tail_documents = Set.new
 
+			head_limit = limit.to_f / intag_arr.size.to_f
+			tail_limit = tail_arr.size.to_f * head_limit
+
+			# FIXME: hit count = #tags * #limit => that makes a lot
+			
 			# for tail
 			unless tail_arr.empty? then
-				tail_documents = self.related_documents_multiple config, tail_arr
+				tail_documents = self.related_documents_multiple config, tail_arr, tail_limit
 				#head_documents.intersection tail_documents 
 			end
-			self.related_documents config, head do |doc|
+			self.related_documents config, head, head_limit do |doc|
 				if not tail_documents.include? doc then
 					yield doc if block_given?
 					#pp doc

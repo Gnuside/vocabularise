@@ -112,7 +112,8 @@ module Mendeley
 					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 
-					if resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT then
+					if (( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) or
+						( resp["error"] =~ /limit exceeded/ )) then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp

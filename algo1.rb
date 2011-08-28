@@ -55,7 +55,9 @@ related_tags.each do |reltag|
 		:slope => slope
 	}
 end
-#pp workspace
+
+puts "AlgoI - all tags :"
+pp workspace.keys
 
 # sort workspace keys (tags) by slope
 result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }
