@@ -110,7 +110,7 @@ module VocabulariSe
 					rdebug "   doc tags : %s" % document_tags.inspect
 					document_tags.each do |tag|
 						words = tag.split(/\s+/)
-						if words.length > 2 then
+						if words.length > 1 then
 							words.each { |w| tags[w] += 1 }
 						else
 							tags[tag] += 1
@@ -121,6 +121,11 @@ module VocabulariSe
 					hit_count += 1 unless doc.cached?
 					rdebug "hit_count = %s" % hit_count
 					break if hit_count > limit
+				end
+
+				# remove tags with non alpha characters
+				tags.keys.each do |tag|
+					tags.delete(tag) if tag.strip =~ /:/ ;
 				end
 
 				# using scrapping
