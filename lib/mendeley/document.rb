@@ -60,11 +60,24 @@ module Mendeley
 			@long_json = client.documents_details( :id => self.uuid )
 		end
 
+
+		#
+		# return a list of hashes
+		# { "name" => ... ; "id" => ... ; "value" => ... }
+		#
+		def disciplines client
+			self.details client if @long_json.nil?
+			@long_json["stats"]["discipline"].to_a
+		end
+
 		def readers client
 			self.details client if @long_json.nil?
 			#pp @long_json["stats"]
 			@long_json["stats"]["readers"].to_i
 		end
+
+		# FIXME: remove hard limit
+		DOCUMENTS_TAGGED_PAGE_LIMIT = 10
 
 		# Static
 		#
@@ -81,7 +94,10 @@ module Mendeley
 			#		:limit => DOCUMENTS_TAGGED_LIMIT 
 				})
 				total_pages = resp["total_pages"]
-				if resp["documents"].nil? then pp resp end
+				if resp["documents"].nil? then
+				   	pp resp 
+					next
+				end
 				resp["documents"].each do |resp_doc|
 					resp_doc[JSON_CACHE_KEY] = cached
 					doc = Document.new resp_doc
@@ -90,6 +106,7 @@ module Mendeley
 				end
 				page += 1
 				break if page >= total_pages
+				break if page >= DOCUMENTS_TAGGED_PAGE_LIMIT
 			end
 		end
 	end
