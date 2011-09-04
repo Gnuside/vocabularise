@@ -18,6 +18,7 @@ module Mendeley
 		DOCUMENTS_TAGGED_URL = "/oapi/documents/tagged/:tag/"
 
 		RATELIMIT_EXCEEDED_LIMIT = 5
+		JSON_ERROR_KEY = "error"
 
 		class RateLimitExceeded < RuntimeError ; end
 
@@ -101,6 +102,7 @@ module Mendeley
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
+			resp = nil
 			#pp url
 
 			if @cache.include? url then
@@ -108,16 +110,13 @@ module Mendeley
 				resp = @cache[url]
 				cache_used = true
 			else
-				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
+				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 
 					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
 						raise RateLimitExceeded
-					elsif ( resp["error"] =~ /limit exceeded/ ) then
-						raise RateLimitExceeded
 					end
-					@cache[url] = resp
 				end
 			end
 
@@ -125,6 +124,12 @@ module Mendeley
 			#pp resp.inspect
 			json = JSON.parse resp.body
 			json[JSON_CACHE_KEY] = cache_used
+
+			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
+				raise RateLimitExceeded
+			end
+			@cache[url] = resp unless cache_used
+
 			rdebug "result = %s" % json.inspect
 			return json
 		end
@@ -137,23 +142,21 @@ module Mendeley
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
+			resp = nil
 
 			if @cache.include? url then
 				rdebug "CACHE REQUEST %s" % url
 				resp = @cache[url]
 				cache_used = true
 			else
-				resp = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
+				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
 
 					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
 						raise RateLimitExceeded
-					elsif ( resp["error"] =~ /limit exceeded/ ) then
-						raise RateLimitExceeded
 					end
-					@cache[url] = resp
 				end
 			end
 
@@ -161,6 +164,12 @@ module Mendeley
 			#pp resp.inspect
 			json = JSON.parse resp.body
 			json[JSON_CACHE_KEY] = cache_used
+
+			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
+				raise RateLimitExceeded
+			end
+			@cache[url] = resp unless cache_used
+
 			rdebug "result = %s" % json.inspect
 			return json
 		end
