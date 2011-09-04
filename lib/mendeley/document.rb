@@ -13,7 +13,7 @@ module Mendeley
 			# FIXME detect what json it is
 			@short_json = json
 			@long_json = nil
-			@debug = true
+			@debug = false
 		end
 
 		def hash
