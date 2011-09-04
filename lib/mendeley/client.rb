@@ -112,8 +112,9 @@ module Mendeley
 					rdebug "REAL  REQUEST %s" % url
 					resp = http.get(url,nil)
 
-					if (( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) or
-						( resp["error"] =~ /limit exceeded/ )) then
+					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
+						raise RateLimitExceeded
+					elsif ( resp["error"] =~ /limit exceeded/ ) then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp
@@ -124,6 +125,7 @@ module Mendeley
 			#pp resp.inspect
 			json = JSON.parse resp.body
 			json[JSON_CACHE_KEY] = cache_used
+			rdebug "result = %s" % json.inspect
 			return json
 		end
 
@@ -146,7 +148,9 @@ module Mendeley
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
 
-					if resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT then
+					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
+						raise RateLimitExceeded
+					elsif ( resp["error"] =~ /limit exceeded/ ) then
 						raise RateLimitExceeded
 					end
 					@cache[url] = resp
@@ -157,6 +161,7 @@ module Mendeley
 			#pp resp.inspect
 			json = JSON.parse resp.body
 			json[JSON_CACHE_KEY] = cache_used
+			rdebug "result = %s" % json.inspect
 			return json
 		end
 
