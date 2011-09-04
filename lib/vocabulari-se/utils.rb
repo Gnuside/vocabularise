@@ -13,8 +13,8 @@ module VocabulariSe
 		RELATED_TAGS_DEFAULT_HITLIMIT = 5
 		RELATED_DOCUMENTS_DEFAULT_HITLIMIT = 5
 
-		@@debug = true
-		@debug = true
+		@@debug = false
+		@debug = false
 
 		#
 		# Return an array of related documents for given input tag
@@ -142,8 +142,8 @@ module VocabulariSe
 
 			end
 
-			pp tags
 			tags.delete(intag)
+			rdebug "result tags = %s" % tags.inspect
 			return tags
 		end 
 
