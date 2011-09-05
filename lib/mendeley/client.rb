@@ -21,6 +21,7 @@ module Mendeley
 		JSON_ERROR_KEY = "error"
 
 		class RateLimitExceeded < RuntimeError ; end
+		class ServiceUnavailable < RuntimeError ; end
 
 		#
 		#
@@ -115,7 +116,7 @@ module Mendeley
 					resp = http.get(url,nil)
 
 					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
-						raise RateLimitExceeded,  resp.head.inspect
+						raise RateLimitExceeded, resp.header.inspect
 					end
 				end
 			end
@@ -126,7 +127,9 @@ module Mendeley
 			json[JSON_CACHE_KEY] = cache_used
 
 			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
-				raise RateLimitExceeded,  resp.head.inspect
+				raise RateLimitExceeded, resp.header.inspect
+			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
+				raise ServiceUnavailable, resp.header.inspect
 			end
 			@cache[url] = resp unless cache_used
 
@@ -155,7 +158,7 @@ module Mendeley
 					raise RateLimitExceeded
 
 					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
-						raise RateLimitExceeded, resp.head.inspect
+						raise RateLimitExceeded, resp.header.inspect
 					end
 				end
 			end
@@ -166,7 +169,9 @@ module Mendeley
 			json[JSON_CACHE_KEY] = cache_used
 
 			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
-				raise RateLimitExceeded, resp.head.inspect
+				raise RateLimitExceeded, resp.header.inspect
+			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
+				raise ServiceUnavailable, resp.header.inspect
 			end
 			@cache[url] = resp unless cache_used
 
