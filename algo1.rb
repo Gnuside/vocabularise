@@ -41,13 +41,13 @@ related_tags.each do |reltag,reltag_count|
 	apparitions = reltag_count
 
 	hit_count = 0
-	limit = 5
+	limit = 1
 	VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 		views += doc.readers(config.mendeley_client)
 
 		# limit to X real hits
 		hit_count += 1 unless doc.cached?
-		puts "Algo - hit_count = %s" % hit_count
+		puts "AlgoI - hit_count = %s" % hit_count
 		break if hit_count > limit
 	end
 	slope =  apparitions.to_f / views.to_f
@@ -65,5 +65,6 @@ pp workspace.keys
 result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }.reverse
 
 # FIXME : limit to 3 or 5 results only
+puts "AlgoI - result :"
 pp result[0..4]
 
