@@ -27,7 +27,7 @@ module VocabulariSe
 				raise RuntimeError, "nil document" if doc.nil?
 				raise RuntimeError, "nil document" if doc.kind_of? Array
 				if block_given? then
-					pp doc
+					pp doc if @debug or @@debug ;
 					yield doc 
 				end
 				documents.add doc
