@@ -30,7 +30,7 @@ module Mendeley
 			@base_api_url =  "http://api.mendeley.com"
 			@base_site_url =  "http://www.mendeley.com"
 			@cache = cache
-			@debug = true
+			@debug = false
 		end
 
 
