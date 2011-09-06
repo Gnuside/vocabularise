@@ -3,6 +3,8 @@ source "http://rubygems.org"
 
 gem 'wikipedia-client'
 
+gem 'json'
+
 #gem 'spore', :git => 'git://github.com/sukria/Ruby-Spore.git'
 #gem 'oauth2'
 #gem "sinatra-reloader"
