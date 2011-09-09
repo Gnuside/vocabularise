@@ -101,26 +101,30 @@ module VocabulariSe
 			when :mendeley then
 				# get tags from documents
 				
-				hit_count = 0
-				# using the API
-				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
-					document_tags = doc.tags config.mendeley_client
-					rdebug "Merge document tags"
-					rdebug "common tags : %s" % tags.inspect
-					rdebug "   doc tags : %s" % document_tags.inspect
-					document_tags.each do |tag|
-						words = tag.split(/\s+/)
-						if words.length > 1 then
-							words.each { |w| tags[w] += 1 }
-						else
-							tags[tag] += 1
+				begin
+					hit_count = 0
+					# using the API
+					Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
+						document_tags = doc.tags config.mendeley_client
+						rdebug "Merge document tags"
+						rdebug "common tags : %s" % tags.inspect
+						rdebug "   doc tags : %s" % document_tags.inspect
+						document_tags.each do |tag|
+							words = tag.split(/\s+/)
+							if words.length > 1 then
+								words.each { |w| tags[w] += 1 }
+							else
+								tags[tag] += 1
+							end
 						end
-					end
-					rdebug "merged tags : %s" % tags.inspect
+						rdebug "merged tags : %s" % tags.inspect
 
-					hit_count += 1 unless doc.cached?
-					rdebug "hit_count = %s" % hit_count
-					break if hit_count > limit
+						hit_count += 1 unless doc.cached?
+						rdebug "hit_count = %s" % hit_count
+						break if hit_count > limit
+					end
+				rescue Mendeley::Client::RateLimitExceeded => e
+					# try to resist ;-)
 				end
 
 				# remove tags with non alpha characters
