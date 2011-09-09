@@ -54,6 +54,7 @@ related_tags.each do |reltag,reltag_count|
 	discipline_ws = {}
 
 	# ws de disciplines
+	begin
 	VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 		# FIXME: lister les disciplines du document
 		# pour chaque discipline :
@@ -81,6 +82,9 @@ related_tags.each do |reltag,reltag_count|
 		hit_count += 1 #unless doc.cached?
 		puts "Algo - hit_count = %s" % hit_count
 		break if hit_count > limit
+	end
+	rescue Mendeley::Client::RateLimitExceeded => e
+		next
 	end
 
 	sorted_discipline_ws = discipline_ws.sort do |a,b|
