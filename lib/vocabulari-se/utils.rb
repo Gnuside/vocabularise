@@ -13,8 +13,8 @@ module VocabulariSe
 		RELATED_TAGS_DEFAULT_HITLIMIT = 5
 		RELATED_DOCUMENTS_DEFAULT_HITLIMIT = 5
 
-		@@debug = false
-		@debug = false
+		@@debug = true
+		@debug = true
 
 		#
 		# Return an array of related documents for given input tag
