@@ -23,7 +23,7 @@ require 'wikipedia'
 # limit the number of considered articles for computation
 ARTICLE_LIMIT = 3
 def tag_hotness config, tags_arr
-	search_expr = tags_arr.sort.join(' AND ')
+	search_expr = '"%s"' % tags_arr.sort.join('" AND "')
 	puts search_expr
 
 	resp_json =  config.wikipedia_client.search( search_expr )
