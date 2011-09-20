@@ -35,6 +35,8 @@ Indent.more
 workspace = {}
 documents = Set.new
 related_tags = VocabulariSe::Utils.related_tags config, intag
+
+puts "AlgoI - related tags :"
 related_tags.each do |reltag,reltag_count|
 	# sum of views for all documents
 	views = 1
@@ -58,7 +60,7 @@ related_tags.each do |reltag,reltag_count|
 	}
 end
 
-puts "AlgoI - all tags :"
+puts "AlgoI - workspace tags :"
 pp workspace.keys
 
 # sort workspace keys (tags) by increasing slope 
