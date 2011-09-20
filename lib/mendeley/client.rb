@@ -1,6 +1,7 @@
 
 require 'rdebug/base'
 require 'mendeley/cache'
+require 'cgi'
 
 module Mendeley
 	class Client
@@ -30,7 +31,7 @@ module Mendeley
 			@base_api_url =  "http://api.mendeley.com"
 			@base_site_url =  "http://www.mendeley.com"
 			@cache = cache
-			@debug = false
+			@debug = true
 		end
 
 
@@ -107,12 +108,12 @@ module Mendeley
 			#pp url
 
 			if @cache.include? url then
-				rdebug "CACHE REQUEST %s" % url
+				rdebug "CACHE REQUEST %s%s" % [ base_api_url, url ]
 				resp = @cache[url]
 				cache_used = true
 			else
 				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					rdebug "REAL  REQUEST %s" % url
+					rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
 					resp = http.get(url,nil)
 
 					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
@@ -148,12 +149,12 @@ module Mendeley
 			resp = nil
 
 			if @cache.include? url then
-				rdebug "CACHE REQUEST %s" % url
+				rdebug "CACHE REQUEST %s%s" % [ base_api_url, url ]
 				resp = @cache[url]
 				cache_used = true
 			else
 				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					rdebug "REAL  REQUEST %s" % url
+					rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
 					resp = http.get(url,nil)
 					raise RateLimitExceeded
 
@@ -192,14 +193,14 @@ module Mendeley
 				next if key == :limit
 				if url =~ /:#{key.to_s}/ then
 					# match & replace
-					url = url.gsub(/:#{key.to_s}/,val.to_s)
+					url = url.gsub(/:#{key.to_s}/,CGI::escape(val.to_s))
 				else
 					url += if url_has_params then "&"
 						   else
 							   url_has_params = true
 							   "?"
 						   end
-					url = url + key.to_s + "=" + val.to_s
+					url = url + key.to_s + "=" + CGI::escape(val.to_s)
 					# add in url
 				end
 			end
