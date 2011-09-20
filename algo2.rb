@@ -36,8 +36,13 @@ def tag_hotness config, tags_arr
 		puts "  - " + talk_title
 		#pp article_desc
 		page_json = config.wikipedia_client.request_page talk_title
-		page = Wikipedia::Page.new page_json
-		raw = page.content
+		begin
+			page = Wikipedia::Page.new page_json
+			raw = page.content
+		rescue Timeout::Error => e
+			puts "  WARNING: timeout error"
+			next
+		end
 		#puts raw
 		titles = (raw.split(/\n/) rescue []).select{ |line| line.strip =~ /^\s*==.*==\s*/ }
 		score += titles.size
