@@ -1,10 +1,12 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    json (1.5.3)
     wikipedia-client (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  json
   wikipedia-client
