@@ -9,7 +9,7 @@ module VocabulariSe
 
 		set :static, true                                                                                               
 		set :public, File.expand_path( File.dirname(__FILE__) + '/../../static' )                                          
-		set :views, File.expand_path( File.dirname(__FILE__) + '/../../views' )     
+		set :views, File.expand_path( File.dirname(__FILE__) + '/../../templates' )     
 
 		mime_type :ttf, "application/octet-stream"                                                                      
 		mime_type :eot, "application/octet-stream"                                                                      
