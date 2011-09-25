@@ -1,6 +1,20 @@
 
+
 module VocabulariSe
-	class API < Sinatra::Base
+
+	class Base < ::Sinatra::Base
+
+		enable :sessions                                                                                                
+		enable :run 
+
+		set :static, true                                                                                               
+		set :public, File.expand_path( File.dirname(__FILE__) + '/../../static' )                                          
+		set :views, File.expand_path( File.dirname(__FILE__) + '/../../views' )     
+
+		mime_type :ttf, "application/octet-stream"                                                                      
+		mime_type :eot, "application/octet-stream"                                                                      
+		mime_type :otf, "application/octet-stream"                                                                      
+		mime_type :woff, "application/octet-stream"   
 
 		# Index page
 		get "/" do
