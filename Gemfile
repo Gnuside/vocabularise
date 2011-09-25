@@ -2,16 +2,17 @@
 
 source "http://rubygems.org"
 # API access
-gem 'wikipedia-client'
+gem "wikipedia-client"
 
 # Config file
-gem 'json'
+gem "json"
 
 # Application + Web server
 gem "tilt", "= 1.3.2"
 gem "rack", "~> 1.3"
 gem "sinatra-reloader"
 gem "sinatra", :require => "sinatra/base"
+gem "haml"
 
 # Database
 gem "datamapper"
