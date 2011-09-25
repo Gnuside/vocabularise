@@ -25,8 +25,9 @@ module VocabulariSe
 
 
 		# Return the result page for given search expression
-		get "/search/:search" do
+		get "/search" do
 			# FIXME: use cache for search
+			@query = params[:query]
 			haml :page_search
 		end
 
