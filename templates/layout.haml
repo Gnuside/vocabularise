@@ -1,11 +1,17 @@
 %html
   %head
     %title= "vocabulari.se :: %s" % @title
+    %link{:rel => "stylesheet", :type => "text/css", :media => "print", :href=>"/css/blueprint/print.css" } 
+    %link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/screen.css" } 
+    /[if IE lt 8]
+      %link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/ie.css" } 
+    %link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/common.css" } 
     %body
-      %div.header
-        %h1
-          %a{:href=>"/"} vocabulari.se
-      %div.content
-        = yield
-      %div.footer
-        Copyright (c) DeuxiemeLabo & Gnuside
+      .container
+        #header.span-24.last
+          %h1
+            %a{:href=>"/"} vocabulari.se
+        #content.span-24.last
+          = yield
+        #footer.span-24.last
+          %p Copyright (c) DeuxiemeLabo & Gnuside
