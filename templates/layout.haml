@@ -1,0 +1,11 @@
+%html
+  %head
+    %title= "vocabulari.se :: %s" % @title
+    %body
+      %div.header
+        %h1
+          %a{:href=>"/"} vocabulari.se
+      %div.content
+        = yield
+      %div.footer
+        Copyright (c) DeuxiemeLabo & Gnuside
