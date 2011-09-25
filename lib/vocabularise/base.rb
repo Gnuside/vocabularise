@@ -7,6 +7,8 @@ module VocabulariSe
 		enable :sessions                                                                                                
 		enable :run 
 
+		set :haml, :format => :html5 # default Haml format is :xhtml
+
 		set :static, true                                                                                               
 		set :public, File.expand_path( File.dirname(__FILE__) + '/../../static' )                                          
 		set :views, File.expand_path( File.dirname(__FILE__) + '/../../templates' )     
