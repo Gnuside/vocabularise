@@ -1,7 +1,3 @@
-PATH
-  remote: vendor
-  specs:
-
 GEM
   remote: http://rubygems.org/
   specs:
