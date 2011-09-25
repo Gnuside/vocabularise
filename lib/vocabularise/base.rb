@@ -18,24 +18,26 @@ module VocabulariSe
 
 		# Index page
 		get "/" do
-			raise NotImplementedError
+			haml :page_index
 		end
 
 
 		# Return the result page for given search expression
 		get "/search/:search" do
 			# FIXME: use cache for search
-			raise NotImplementedError
+			haml :page_search
 		end
 
 
 		# Show request queue
 		get "/status/request_queue" do
+			haml :page_request_queue
 		end
 
 
 		# Show current cache
 		get "/status/cache" do 
+			haml :page_cache
 		end
 
 
