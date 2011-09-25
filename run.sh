@@ -1,8 +1,8 @@
 #!/bin/sh
 
 export RUBYLIB=`pwd`/../Ruby-Spore/lib:lib
-#bundle exec rackup config.ru -o 0.0.0.0 -p 9393
-ruby algo1.rb
+bundle exec rackup config.ru -o 0.0.0.0 -p 9393
+#ruby algo1.rb
 #ruby algo2.rb
 #ruby algo3.rb
 #bundle exec rackup config.ru -o 127.0.0.1 -p 9001
