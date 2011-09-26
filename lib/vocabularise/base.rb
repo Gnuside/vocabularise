@@ -25,12 +25,6 @@ module VocabulariSe
 		end
 
 		# Static page
-		get "/faq" do
-			@title = "F.A.Q"
-			haml :page_faq
-		end
-
-		# Static page
 		get "/news" do
 			@title = "News"
 			haml :page_news
