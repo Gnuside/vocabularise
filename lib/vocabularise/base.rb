@@ -18,8 +18,35 @@ module VocabulariSe
 		mime_type :otf, "application/octet-stream"                                                                      
 		mime_type :woff, "application/octet-stream"   
 
+		# Static page
+		get "/about" do
+			@title = "About"
+			haml :page_about
+		end
+
+		# Static page
+		get "/faq" do
+			@title = "F.A.Q"
+			haml :page_faq
+		end
+
+		# Static page
+		get "/news" do
+			@title = "News"
+			haml :page_news
+		end
+
+		# Static page
+		get "/contact" do
+			@title = "Contact"
+			haml :page_contact
+		end
+
+		#
+		#
 		# Index page
 		get "/" do
+			@title = "Index"
 			haml :page_index
 		end
 
@@ -30,7 +57,6 @@ module VocabulariSe
 			@query = params[:query]
 			haml :page_search
 		end
-
 
 		# Show request queue
 		get "/status/request_queue" do
