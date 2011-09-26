@@ -1,0 +1,14 @@
+
+#footer ul {
+    display: inline;
+    margin: 0px;
+    padding: 0px;
+}
+
+#footer ul li {
+    list-style: none;
+    text-transform: uppercase;
+    margin: 0px;
+    padding: 0px;
+}
+
