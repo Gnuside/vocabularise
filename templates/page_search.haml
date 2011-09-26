@@ -1,26 +1,59 @@
-= haml :widget_search
+#search_search.span-24.last
+  %strong vocabulari.se the word
+  = haml :widget_search
+
+#excepted_header.span-7
+  top-arrow
+
+#counterversial_header.span-10
+  top-arrow
+
+#clustering_header.span-7.last
+  top-arrow
 
 %hr
 
-#hot.span-7.colborder
-  %h2 Hot
-  %ul
+#excepted_content.span-7.colborder
+  %h2 
+    %a>< (un)
+    excepted
+
+  %ul.taglist
+    %li
+      %a a
+    %li
+      %a b
+    %li
+      %a c
+
+#counterversial_content.span-8.colborder
+  %h2 
+    %a>< (un)
+    counterversial
+
+  %ul.taglist
+    %li c
     %li a
     %li b
-    %li c
 
-#extra.span-8.colborder
-  %h2 Extradisciplinary
-  %ul
-    %li c
-    %li a
-    %li b
+#clustering_content.span-7.last
+  %h2 
+    %a>< (un)
+    clustering
 
-#what.span-7.last
-  %h2 Whatever
-  %ul
+  %ul.taglist
     %li a
     %li c
     %li b
 
 %hr
+
+#excepted_footer.span-7
+  bottom-arrow
+
+#counterversial_footer.span-10
+  bottom-arrow
+
+#clustering_footer.span-7.last
+  bottom-arrow
+

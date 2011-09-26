@@ -1,7 +1,8 @@
--# vim: set ts=2 sw=2 noet :
+-# vim: set ts=4 sw=4 noet :
 %html
 	%head
 		%title= "vocabulari.se :: %s" % @title
+		%link{:rel => "stylesheet", :type => "text/css", :href => 'http://fonts.googleapis.com/css?family=Droid+Sans+Mono' }
 		%link{:rel => "stylesheet", :type => "text/css", :media => "print", :href=>"/css/blueprint/print.css" } 
 		%link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/screen.css" } 
 		/[if IE lt 8]
@@ -10,17 +11,18 @@
 		%body
 			.container
 				#header.span-24.last
-					%h1
+					%h1.prepend-8.span-8.last
 						%a{:href=>"/"} vocabulari.se
 				#content.span-24.last
 					= yield
-				#footer.span-24.last
+				#footer.prepend-8.span-8.last
+					%hr
+					%hr
+					%hr
 					%ul
-						%li.span-6 
+						%li.span-3
 							%a{:href => '/about'} about
-						%li.span-6 
-							%a{:href => '/faq'} faq
-						%li.span-6 
+						%li.span-3
 							%a{:href => '/news'} news
-						%li.last 
+						%li.span-2.last 
 							%a{:href => '/contact'} contact

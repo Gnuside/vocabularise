@@ -1,32 +1,39 @@
-%p
-	What do you look for when you want to know more about a research topic? A definition!
-	%br/
-	Sure. But there is more to knowledge than definitions, especially when you dig into new, unsolidified or controversial research objects.
-	%br/
-	Objects matter, their relationships to other objects matter. The proofs of these relationships matter.
-	%br/
-	This is why vocabulari.se offers the exploration of a social network of research objects.
+-# vim: set ts=4 sw=4 noet :
+.span-12.prepend-6.last
+	%p.alt
+		What do you look for when you want to know more about a research topic? A definition!
+		%br/
+		Sure. But there is more to knowledge than definitions, especially when you dig into new, unsolidified or controversial research objects.
+		%br/
+		Objects matter, their relationships to other objects matter. The proofs of these relationships matter.
+		%br/
+		This is why vocabulari.se offers the exploration of a social network of research objects.
 
-%p 
-	Search the social network of 
-	= haml :widget_search
+	#search_index
+		%strong vocabulari.se the word 
+		= haml :widget_search, :layout => false
+		.example
+			(examples:&nbsp;
+			%a{ :href=>"/search?query=climate+change" }>< climate change
+			,
+			%a{ :href=>"/search?query=neutrino" } neutrino 
+			or any other one- or two-word expression)
 
-%h2 [One search tool, three types of social relationships]
+	%h2 [One search tool, three types of social relationships]
 
-%ul
-	%li unexpected relationships and popular publications that assert them.
-	%li (un)controversial relationships and hot Wikipedia entries that document them.
-	%li (dis)aggregating relationships and the scientific disciplines they bring together.
+	%ul.alt
+		%li unexpected relationships and popular publications that assert them.
+		%li (un)controversial relationships and hot Wikipedia entries that document them.
+		%li (dis)aggregating relationships and the scientific disciplines they bring together.
 
-%p
-	To shed new lights on your research topics,
-	%br/
-	To acknowledge the political relevance of your vocabulary,
-	%br/
-	To spice up your grant proposals and research papers:
-	%br/
-	%strong
-		%a
-			vocabulari.se
-		your research!
+	%p
+		To shed new lights on your research topics,
+		%br/
+		To acknowledge the political relevance of your vocabulary,
+		%br/
+		To spice up your grant proposals and research papers:
+		%br/
+		%strong
+			%a{ :href=>"/" } vocabulari.se 
+			your research!
 

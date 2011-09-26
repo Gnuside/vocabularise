@@ -1,4 +1,15 @@
 
+body {
+    font-family: 'Droid Sans Mono', sans-serif;
+    background: white;
+}
+
+#footer {
+    padding-top: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
 #footer ul {
     display: inline;
     margin: 0px;
@@ -11,4 +22,66 @@
     margin: 0px;
     padding: 0px;
 }
+
+#search_index {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#search_index.example {
+    font-size: 80%;
+}
+
+#search_search {
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+#searchwidget {
+    display: inline;
+}
+
+#searchwidget input[type="text"] {
+    border: none;
+    border-bottom: 1px dotted black;
+}
+
+#searchwidget input[type="submit"] {
+    color: #7f7f7f;
+    background: white;
+    border: 1px solid #7f7f7f;
+}
+
+.alt {
+    color: #7f7f7f;
+}
+
+#header,
+#footer,
+#excepted_header,
+#excepted_content,
+#excepted_footer,
+#counterversial_header,
+#counterversial_content,
+#counterversial_footer,
+#clustering_header,
+#clustering_content,
+#clustering_footer {
+    text-align: center;
+}
+
+#excepted_content h2 { color: #3ca52b; }
+#excepted_content h2 a { color: #7f7f7f; }
+#excepted_content h2.reverse { color: #7f7f7f; }
+#excepted_content h2.reverse a { color: #3ca52b; }
+
+#counterversial_content h2 { color: #e75018; }
+#counterversial_content h2 a { color: #7f7f7f; }
+#counterversial_content h2.reverse { color: #7f7f7f; }
+#counterversial_content h2.reverse a { color: #e75018; }
+
+#clustering_content h2 { color: #008bd0; }
+#clustering_content h2 a { color: #7f7f7f; }
+#clustering_content h2.reverse { color: #7f7f7f; }
+#clustering_content h2.reverse a { color: #008bd0; }
 
