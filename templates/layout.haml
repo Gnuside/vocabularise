@@ -1,17 +1,26 @@
+-# vim: set ts=2 sw=2 noet :
 %html
-  %head
-    %title= "vocabulari.se :: %s" % @title
-    %link{:rel => "stylesheet", :type => "text/css", :media => "print", :href=>"/css/blueprint/print.css" } 
-    %link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/screen.css" } 
-    /[if IE lt 8]
-      %link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/ie.css" } 
-    %link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/common.css" } 
-    %body
-      .container
-        #header.span-24.last
-          %h1
-            %a{:href=>"/"} vocabulari.se
-        #content.span-24.last
-          = yield
-        #footer.span-24.last
-          %p Copyright (c) DeuxiemeLabo & Gnuside
+	%head
+		%title= "vocabulari.se :: %s" % @title
+		%link{:rel => "stylesheet", :type => "text/css", :media => "print", :href=>"/css/blueprint/print.css" } 
+		%link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/screen.css" } 
+		/[if IE lt 8]
+			%link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/ie.css" } 
+		%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/common.css" } 
+		%body
+			.container
+				#header.span-24.last
+					%h1
+						%a{:href=>"/"} vocabulari.se
+				#content.span-24.last
+					= yield
+				#footer.span-24.last
+					%ul
+						%li.span-6 
+							%a{:href => '/about'} about
+						%li.span-6 
+							%a{:href => '/faq'} faq
+						%li.span-6 
+							%a{:href => '/news'} news
+						%li.last 
+							%a{:href => '/contact'} contact
