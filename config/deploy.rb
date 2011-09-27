@@ -1,4 +1,6 @@
 
+require "bundler/capistrano"
+
 set :application, "vocabularise"
 set :repository,  "git@devel.gnuside.com:vocabulari-se.git"
 set :branch, "master"
@@ -17,11 +19,15 @@ role :web, "market.gnuside.com"                          # Your HTTP server, Apa
 role :app, "market.gnuside.com"                          # This may be the same as your `Web` server
 role :db,  "market.gnuside.com", :primary => true # This is where Rails migrations will run
 
+# To disable asset timestamps updates (javascript, stylesheets, etc.)
+ set :normalize_asset_timestamps, false
+
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
 
 namespace :deploy do
 	task :start, :roles => [:web, :app] do
+		run "echo $PATH"
 		run "cd #{deploy_to}/current && nohup thin -C config/thin_production.yml -R config.ru start"
 	end
 
