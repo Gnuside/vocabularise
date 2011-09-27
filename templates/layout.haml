@@ -2,11 +2,18 @@
 %html
 	%head
 		%title= "vocabulari.se :: %s" % @title
+		-# google droid fonds
 		%link{:rel => "stylesheet", :type => "text/css", :href => 'http://fonts.googleapis.com/css?family=Droid+Sans+Mono' }
+		-# blueprint css
 		%link{:rel => "stylesheet", :type => "text/css", :media => "print", :href=>"/css/blueprint/print.css" } 
 		%link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/screen.css" } 
 		/[if IE lt 8]
 			%link{:rel => "stylesheet", :type => "text/css", :media => "screen, projection", :href=>"/css/blueprint/ie.css" } 
+		-# jquery related
+		%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/ui-lightness/jquery-ui-1.8.16.custom.css" } 
+		%script{ :type => "text/javascript", :src=>"/js/jquery-1.6.2.min.js" } 
+		%script{ :type => "text/javascript", :src=>"/js/jquery-ui-1.8.16.custom.min.js" } 
+		-# vocabularise content
 		%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/common.css" } 
 		%body
 			.container
