@@ -65,6 +65,8 @@ body {
     text-align: center;
 }
 
+h1 { margin-top: 0.5em; }
+
 .col_content.tag_excepted h2 { color: #3ca52b; }
 .col_content.tag_excepted h2 a { color: #7f7f7f; }
 .col_content.tag_excepted h2.reverse { color: #7f7f7f; }
@@ -80,10 +82,13 @@ body {
 .col_content.tag_clustering h2.reverse { color: #7f7f7f; }
 .col_content.tag_clustering h2.reverse a { color: #008bd0; }
 
-.col_content ul li {
+.col_content li {
     list-style: none;
     text-transform: capitalize;
 }
+
+.col_content li a { text-decoration: none; }
+.col_content li a:hover { text-decoration: underline; cursor: pointer; }
 
 #footer ul li {
     list-style: none;
