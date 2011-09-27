@@ -1,5 +1,7 @@
 {
   "cache_dir" : "cache",
   "consumer_key" : "****",
-  "consumer_secret" : "****"
+  "consumer_secret" : "****",
+  "db_adapter" : "sqlite3",
+  "db_database" : "vocabularise.sqlite3"
 }
