@@ -5,7 +5,6 @@ set :branch, "master"
 
 set :deploy_to, "/home/data/www/com.gnuside/client.deuxiemelabo"
 
-
 set :scm, :git
 set :scm_verbose, true
 
@@ -41,3 +40,4 @@ namespace :deploy do
 		deploy.start
 	end
 end
+
