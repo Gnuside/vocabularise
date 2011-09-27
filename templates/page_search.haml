@@ -1,59 +1,64 @@
+-# vim: set ts=4 sw=4 noet :
+- content_for :headers do
+	%script{ :type => "text/javascript", :src=>"/js/page_search.js" } 
+
 #search_search.span-24.last
-  %strong vocabulari.se the word
-  = haml :widget_search
+	%strong vocabulari.se the word
+	= haml :widget_search
+
 
 .col_header.tag_excepted.span-7
-  top-arrow
+	top-arrow
 
 .col_header.tag_counterversial.span-10
-  top-arrow
+	top-arrow
 
 .col_header.tag_clustering.span-7.last
-  top-arrow
+	top-arrow
 
 %hr
 
 .col_content.tag_excepted.span-7.colborder
-  %h2 
-    %a>< (un)
-    excepted
+	%h2 
+		%a>< (un)
+		excepted
 
-  %ul.taglist
-    %li
-      %a a
-    %li
-      %a b
-    %li
-      %a c
+	%ul.taglist
+		%li
+			%a a
+		%li
+			%a b
+		%li
+			%a c
 
 .col_content.tag_counterversial.span-8.colborder
-  %h2 
-    %a>< (un)
-    counterversial
+	%h2 
+		%a>< (un)
+		counterversial
 
-  %ul.taglist
-    %li c
-    %li a
-    %li b
+	%ul.taglist
+		%li c
+		%li a
+		%li b
 
 .col_content.tag_clustering.span-7.last
-  %h2 
-    %a>< (un)
-    clustering
+	%h2 
+		%a>< (un)
+	clustering
 
-  %ul.taglist
-    %li a
-    %li c
-    %li b
+	%ul.taglist
+		%li a
+		%li c
+		%li b
 
 %hr
 
 .col_footer.tag_excepted.span-7
-  bottom-arrow
+	bottom-arrow
 
 .col_footer.tag_counterversial.span-10
-  bottom-arrow
+	bottom-arrow
 
 .col_footer.tag_clustering.span-7.last
-  bottom-arrow
+	bottom-arrow
 

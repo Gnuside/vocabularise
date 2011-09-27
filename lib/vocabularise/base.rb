@@ -18,6 +18,8 @@ module VocabulariSe
 		mime_type :otf, "application/octet-stream"                                                                      
 		mime_type :woff, "application/octet-stream"   
 
+		helpers Sinatra::ContentFor
+
 		# Static page
 		get "/about" do
 			@title = "About"
