@@ -12,14 +12,14 @@ require 'rubygems'
 require 'json'
 
 require 'common/indent'
-require 'vocabulari-se/config'
-require 'vocabulari-se/cache'
-require 'vocabulari-se/utils'
+require 'vocabularise/config'
+require 'vocabularise/cache'
+require 'vocabularise/utils'
 
 require 'mendeley'
 require 'wikipedia'
 
-json = JSON.load File.open 'config.json'
+json = JSON.load File.open 'config/vocabularise.json'
 config = VocabulariSe::Config.new json
 
 puts "Algo III"
@@ -122,6 +122,7 @@ result = tag_ws.sort{ |a,b|
 }.reverse
 
 # FIXME : limit to 3 or 5 results only
-pp result[0..4].map{ |x| x[0] }
+#pp result[0..4].map{ |x| x[0] }
+pp JSON.generate(result[0..4])
 
-
+exit 0

@@ -8,20 +8,19 @@ $:.unshift 'lib'
 require 'pp'
 
 require 'rubygems'
-#require 'sinatra'
 require 'json'
 
 require 'common/indent'
-require 'vocabulari-se/config'
-require 'vocabulari-se/cache'
-require 'vocabulari-se/utils'
+require 'vocabularise/config'
+require 'vocabularise/cache'
+require 'vocabularise/utils'
 
 require 'mendeley'
 require 'wikipedia'
 
 
 
-json = JSON.load File.open 'config.json'
+json = JSON.load File.open 'config/vocabularise.json'
 config = VocabulariSe::Config.new json
 
 puts "Algo I"
@@ -69,4 +68,6 @@ result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }.reverse
 # FIXME : limit to 3 or 5 results only
 puts "AlgoI - result :"
 pp result[0..4]
+
+pp JSON.generate(result[0..4])
 

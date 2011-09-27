@@ -12,9 +12,9 @@ require 'rubygems'
 require 'json'
 
 require 'common/indent'
-require 'vocabulari-se/config'
-require 'vocabulari-se/cache'
-require 'vocabulari-se/utils'
+require 'vocabularise/config'
+require 'vocabularise/cache'
+require 'vocabularise/utils'
 
 require 'mendeley'
 require 'wikipedia'
@@ -55,7 +55,7 @@ def tag_hotness config, tags_arr
 	return score
 end
 
-json = JSON.load File.open 'config.json'
+json = JSON.load File.open 'config/vocabularise.json'
 config = VocabulariSe::Config.new json
 
 puts "Algo II"
@@ -84,6 +84,6 @@ result = workspace.sort{ |a,b| a[1][:hotness] <=> b[1][:hotness] }.reverse
 # FIXME : use archive pages if needed
 # FIXME : limit to 3 or 5 results only
 puts "AlgoII - result :"
-pp result[0..4]
+pp JSON.generate(result[0..4])
 
 exit 0
