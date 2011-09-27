@@ -9,7 +9,7 @@ gem "json"
 
 # Application + Web server
 gem "tilt", "= 1.3.2"
-gem "rack", "~> 1.3"
+gem "rack", "= 1.3.0"
 gem "sinatra-reloader"
 gem "sinatra-content-for"
 gem "sinatra", :require => "sinatra/base"
