@@ -8,6 +8,7 @@ require 'bundler/setup'
 
 # Web App server 
 require 'sinatra/base'
+require 'sinatra/content_for'
 
 # Database
 require 'dm-core'

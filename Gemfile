@@ -11,6 +11,7 @@ gem "json"
 gem "tilt", "= 1.3.2"
 gem "rack", "~> 1.3"
 gem "sinatra-reloader"
+gem "sinatra-content-for"
 gem "sinatra", :require => "sinatra/base"
 gem "haml"
 
