@@ -5,7 +5,6 @@ $VERBOSE= true
 
 $:.unshift 'lib'
 
-
 require 'pp'
 
 require 'rubygems'
@@ -20,13 +19,9 @@ require 'vocabularise/excepted_algorithm'
 require 'mendeley'
 require 'wikipedia'
 
-
-
-
 json = JSON.load File.open 'config/vocabularise.json'
 config = VocabulariSe::Config.new json
 
 algo = VocabulariSe::ExceptedAlgorithm.new config
 algo.exec "ionizing radiation"
-
 
