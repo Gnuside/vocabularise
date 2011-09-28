@@ -66,25 +66,23 @@ module VocabulariSe
 		end
 
 
-		# Return information about mendeley documents for tag tag :tag 
-		# restricted to search :search
-		get "/tag/:tag/mendeley_doc/:search" do
+		# Return results for expected algorithm
+		get "/search/expected" do
 			# FIXME: use cache for search/tag
+			@query = params[:query]
 			raise NotImplementedError
 		end
 
 
-		# Return information about mendeley disciplines for tag tag :tag 
-		# restructed to search :search
-		get "/tag/:tag/mendeley_disc/:search" do
+		# Return results for aggregating algorithm
+		get "/search/controversial" do
 			# FIXME: use cache for search/tag
 			raise NotImplementedError
 		end
 
 
 		# Return information about wikipedia pages for tag tag :tag 
-		# restricted to search :search
-		get "/tag/:tag/wikipedia_page/:search" do
+		get "/search/aggregating" do
 			# FIXME: use cache for search/tag
 			raise NotImplementedError
 		end
