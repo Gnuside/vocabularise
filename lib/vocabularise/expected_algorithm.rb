@@ -4,12 +4,7 @@ require 'lib/vocabularise/generic_algorithm'
 module VocabulariSe
 	class ExceptedAlgorithm < GenericAlgorithm
 
-		def exec tag
-			puts "Algo I"
-			print "tag ? "
-			intag = STDIN.gets.strip
-
-			Indent.more
+		def exec intag
 
 			# Association audacieuse
 			workspace = {}
@@ -48,9 +43,9 @@ module VocabulariSe
 
 			# FIXME : limit to 3 or 5 results only
 			puts "AlgoI - result :"
-			pp result[0..4]
 
-			pp JSON.generate(result[0..4])
+			return result
+
 		end
 
 	end

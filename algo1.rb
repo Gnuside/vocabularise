@@ -22,6 +22,13 @@ require 'wikipedia'
 json = JSON.load File.open 'config/vocabularise.json'
 config = VocabulariSe::Config.new json
 
+puts "Algo I"
+print "tag ? "
+intag = STDIN.gets.strip
+
 algo = VocabulariSe::ExceptedAlgorithm.new config
-algo.exec "ionizing radiation"
+result = algo.exec "ionizing radiation"
+
+pp result[0..4]
+pp JSON.generate(result[0..4])
 
