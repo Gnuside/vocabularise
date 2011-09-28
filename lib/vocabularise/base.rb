@@ -70,21 +70,38 @@ module VocabulariSe
 		get "/search/expected" do
 			# FIXME: use cache for search/tag
 			@query = params[:query]
-			raise NotImplementedError
+
+			# ask related tags in cache
+			# return a 503 (server not ready) error if missing
+			{ :algorithm => :expected,
+			  :result => [[:tag1,:tag1_blabla],
+				  [:tag2,:tag2_blabla]] }
 		end
 
 
 		# Return results for aggregating algorithm
 		get "/search/controversial" do
 			# FIXME: use cache for search/tag
-			raise NotImplementedError
+			@query = params[:query]
+			#
+			# ask related tags in cache
+			# return a 503 (server not ready) error if missing
+			{ :algorithm => :controversial,
+			  :result => [[:tag1,:tag1_blabla],
+				  [:tag2,:tag2_blabla]] }
 		end
 
 
 		# Return information about wikipedia pages for tag tag :tag 
 		get "/search/aggregating" do
 			# FIXME: use cache for search/tag
-			raise NotImplementedError
+			@query = params[:query]
+			#
+			# ask related tags in cache
+			# return a 503 (server not ready) error if missing
+			{ :algorithm => :aggregating,
+			  :result => [[:tag1,:tag1_blabla],
+				  [:tag2,:tag2_blabla]] }
 		end
 
 
