@@ -14,7 +14,7 @@ require 'common/indent'
 require 'vocabularise/config'
 require 'vocabularise/cache'
 require 'vocabularise/utils'
-require 'vocabularise/excepted_algorithm'
+require 'vocabularise/expected_algorithm'
 
 require 'mendeley'
 require 'wikipedia'
@@ -26,9 +26,10 @@ puts "Algo I"
 print "tag ? "
 intag = STDIN.gets.strip
 
-algo = VocabulariSe::ExceptedAlgorithm.new config
-result = algo.exec "ionizing radiation"
+algo = VocabulariSe::ExpectedAlgorithm.new config
+result = algo.exec intag
 
-pp result[0..4]
-pp JSON.generate(result[0..4])
+puts "AlgoI - result :"
+pp result
+pp JSON.generate(result)
 

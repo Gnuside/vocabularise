@@ -2,7 +2,7 @@
 require 'lib/vocabularise/generic_algorithm'
 
 module VocabulariSe
-	class ExceptedAlgorithm < GenericAlgorithm
+	class ExpectedAlgorithm < GenericAlgorithm
 
 		def exec intag
 
@@ -11,7 +11,7 @@ module VocabulariSe
 			documents = Set.new
 			related_tags = VocabulariSe::Utils.related_tags config, intag
 
-			puts "AlgoI - related tags :"
+			#puts "AlgoI - related tags :"
 			related_tags.each do |reltag,reltag_count|
 				# sum of views for all documents
 				views = 1
@@ -24,7 +24,7 @@ module VocabulariSe
 
 					# limit to X real hits
 					hit_count += 1 unless doc.cached?
-					puts "AlgoI - hit_count = %s" % hit_count
+					#puts "AlgoI - hit_count = %s" % hit_count
 					break if hit_count > limit
 				end
 				slope =  apparitions.to_f / views.to_f
@@ -35,17 +35,13 @@ module VocabulariSe
 				}
 			end
 
-			puts "AlgoI - workspace tags :"
-			pp workspace.keys
+			#puts "AlgoI - workspace tags :"
+			#pp workspace.keys
 
 			# sort workspace keys (tags) by increasing slope 
 			result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }.reverse
 
-			# FIXME : limit to 3 or 5 results only
-			puts "AlgoI - result :"
-
 			return result
-
 		end
 
 	end
