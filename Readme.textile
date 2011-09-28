@@ -13,7 +13,7 @@ Then, install  headers packages required to build some gems
 Also install mandatory gem packages on your system
 
     sudo gem install bundle 
-    sudo gem install capistrano
+    sudo gem install capistrano capistrano-ext
     sudo gem install thin
 
 And make sure that /var/lib/gems/1.8/bin is in your path. Update your ~.profile 
