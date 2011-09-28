@@ -28,11 +28,11 @@ role :db,  "market.gnuside.com", :primary => true # This is where Rails migratio
 namespace :deploy do
 	task :start, :roles => [:web, :app] do
 		run "echo $PATH"
-		run "cd #{deploy_to}/current && nohup thin -C config/thin_production.yml -R config.ru start"
+		run "cd #{deploy_to}/current && nohup bundle exec thin -C config/thin_production.yml -R config.ru start"
 	end
 
 	task :stop, :roles => [:web, :app] do
-		run "cd #{deploy_to}/current && nohup thin -C config/thin_production.yml -R config.ru stop"
+		run "cd #{deploy_to}/current && nohup bundle exec thin -C config/thin_production.yml -R config.ru stop"
 	end
 
 	task :restart, :roles => [:web, :app] do
