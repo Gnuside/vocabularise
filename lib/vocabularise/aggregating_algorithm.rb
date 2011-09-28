@@ -2,7 +2,7 @@
 module VocabulariSe
 	class AggregatingAlgorithm < GenericAlgorithm
 
-		def exec intag
+		def exec intag, related_tags
 			Indent.more
 
 			# Association audacieuse

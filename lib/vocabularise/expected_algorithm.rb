@@ -4,12 +4,11 @@ require 'lib/vocabularise/generic_algorithm'
 module VocabulariSe
 	class ExpectedAlgorithm < GenericAlgorithm
 
-		def exec intag
+		def exec intag, related_tags
 
 			# Association audacieuse
 			workspace = {}
 			documents = Set.new
-			related_tags = VocabulariSe::Utils.related_tags config, intag
 
 			#puts "AlgoI - related tags :"
 			related_tags.each do |reltag,reltag_count|

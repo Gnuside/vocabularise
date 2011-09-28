@@ -39,7 +39,7 @@ module VocabulariSe
 			return score
 		end
 
-		def exec intag
+		def exec intag, related_tags
 			# Association audacieuse
 			workspace = {}
 			documents = Set.new

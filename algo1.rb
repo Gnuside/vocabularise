@@ -26,8 +26,9 @@ puts "Algo I"
 print "tag ? "
 intag = STDIN.gets.strip
 
+related_tags = VocabulariSe::Utils.related_tags config, intag
 algo = VocabulariSe::ExpectedAlgorithm.new config
-result = algo.exec intag
+result = algo.exec intag, related_tags
 
 puts "AlgoI - result :"
 pp result

@@ -29,7 +29,8 @@ print "tag ? "
 intag = STDIN.gets.strip
 
 algo = VocabulariSe::AggregatingAlgorithm.new config
-result = algo.exec intag
+related_tags = VocabulariSe::Utils.related_tags config, intag
+result = algo.exec intag, related_tags
 
 # FIXME : limit to 3 or 5 results only
 #pp result[0..4].map{ |x| x[0] }

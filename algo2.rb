@@ -30,7 +30,8 @@ puts "Algo II"
 print "tag ? "
 intag = STDIN.gets.strip
 
-result = algo.exec intag
+related_tags = VocabulariSe::Utils.related_tags config, intag
+result = algo.exec intag, related_tags
 
 puts "AlgoII - result :"
 pp JSON.generate(result[0..4])
