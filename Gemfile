@@ -8,6 +8,7 @@ gem "wikipedia-client"
 gem "json"
 
 # Application + Web server
+gem "thin"
 gem "tilt", "= 1.3.2"
 gem "rack", "= 1.3.0"
 gem "sinatra-reloader"
