@@ -2,14 +2,32 @@ h1. Vocabulari.se
 
 h2. Requirements
 
-First, make sure your system uses a proper version of rubygems 
-(>= 1.7.x)
+First, make install ruby and a proper version of rubygems (>=1.7) on your system
+
+    sudo apt-get install rubygems1.8
 
 Then, install  headers packages required to build some gems
 
- sudo apt-get install libmysqlclient-dev \
- libsqlite3-dev
+    sudo apt-get install libmysqlclient-dev libsqlite3-dev
 
-Install required gems into ''vendor/'' directory
+Also install mandatory gem packages on your system
 
- bundle install --path vendor
+    sudo gem install bundle 
+    sudo gem install capistrano
+    sudo gem install thin
+
+And make sure that /var/lib/gems/1.8/bin is in your path. Update your ~.profile 
+or ~/.bashrc or simply run
+
+    export PATH=$PATH:/var/lib/gems/1.8/bin/
+
+Finally, from the project directory, run the following command to install
+locally into the "vendor/" directory the gems required by this project and all
+their dependencies :
+
+    bundle install --path vendor
+
+
+h2. Configuration
+
+
