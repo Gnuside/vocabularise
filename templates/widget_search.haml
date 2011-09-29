@@ -1,5 +1,5 @@
 -# vim: set ts=4 sw=4 noet :
 %form#searchwidget{:method=>"get", :action=>"/search?"}
 	%input{:type=>"text", :id=>"searchwidget_query", :name=>"query", :value => @query }
-	%input{:type=>"hidden", :id=>"searchwidget_oldquery", :name=>"oldquery", :value => @query }
 	%input.tag_counterversial{:type=>"submit", :value=>"Search" }
+%input{:type=>"hidden", :id=>"searchwidget_oldquery", :name=>"oldquery", :value => @query }
