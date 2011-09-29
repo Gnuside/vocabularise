@@ -23,10 +23,12 @@ function show_resultlist( elem, resp, color ) {
 				Math.floor(color[1] - ( factor * (color[1] - COLOR_BLACK[1]) )),
 				Math.floor(color[2] - ( factor * (color[2] - COLOR_BLACK[2]) ))
 			];
-			elem.append('<li style="'+
+			elem.append('<li>'+
+				'<a href="#" style="'+
 				'font-size: '+res_size+'em; '+
 				'color: rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');'+ 
-				'">' + tag + '</li>');
+				'">' + tag + '</a>' + 
+				'</li>');
 		}
 		// make change happen
 		elem.fadeIn();

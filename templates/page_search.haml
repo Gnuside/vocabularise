@@ -7,52 +7,53 @@
 	= haml :widget_search
 
 
-.col_header.tag_expected.span-7
-	top-arrow
-
-.col_header.tag_controversial.span-10
-	top-arrow
-
-.col_header.tag_aggregating.span-7.last
-	top-arrow
-
-%hr
-
-.col_content.tag_expected.span-7.colborder
-	%h2
-		%a>< (un)
-		expected
-
-	%ul#list_expected.taglist
-		%li<
-			%img(src="/images/ajax-loader-bar.gif")
-
-.col_content.tag_controversial.span-8.colborder
-	%h2
-		%a>< (un)
-		controversial
-
-	%ul#list_controversial.taglist
-		%li<
-			%img(src="/images/ajax-loader-bar.gif")
-
-.col_content.tag_aggregating.span-7.last
-	%h2
-		%a>< (dis)
-		aggregating
-
-	%ul#list_aggregating.taglist
-		%li<
-			%img(src="/images/ajax-loader-bar.gif")
+.col_header.span-24.last
+	.tag_expected.span-7
+		%img{ :src => "/images/top-arrow-green.png" }
+	.tag_controversial.span-10
+		%img{ :src => "/images/top-arrow-orange.png" }
+	.tag_aggregating.span-7.last
+		%img{ :src => "/images/top-arrow-blue.png" }
 
 %hr
 
-.col_footer.tag_expected.span-7
-	bottom-arrow
+.col_content.span-24.last
+	.tag_expected.span-7.colborder
+		%h2
+			%a>< (un)
+			expected
 
-.col_footer.tag_controversial.span-10
-	bottom-arrow
+		%ul#list_expected.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif")
 
-.col_footer.tag_aggregating.span-7.last
-	bottom-arrow
+	.tag_controversial.span-8.colborder
+		%h2
+			%a>< (un)
+			controversial
+
+		%ul#list_controversial.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif")
+
+	.tag_aggregating.span-7.last
+		%h2
+			%a>< (dis)
+			aggregating
+
+		%ul#list_aggregating.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif")
+
+%hr
+
+.col_footer
+	.tag_expected.span-7
+		%img{ :src => "/images/bottom-arrow-green.png" }
+
+	.tag_controversial.span-10
+		%img{ :src => "/images/bottom-arrow-orange.png" }
+
+	.tag_aggregating.span-7.last
+		%img{ :src => "/images/bottom-arrow-blue.png" }
 
