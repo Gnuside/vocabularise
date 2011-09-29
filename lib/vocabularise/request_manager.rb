@@ -1,4 +1,5 @@
 
+require 'pp'
 require 'monitor'
 
 require 'vocabularise/utils'
@@ -86,7 +87,10 @@ module VocabulariSe
 			result = nil
 			case action
 			when REQUEST_RELATED then
-				result = VocabulariSe::Utils.related_tags @config, intag                   
+				result = VocabulariSe::Utils.related_tags @config, intag
+				#puts "handler - related tags for %s" % key
+				#pp result
+
 			when REQUEST_EXPECTED then
 				related_tags = request REQUEST_RELATED, intag
 				return if related_tags.nil?
