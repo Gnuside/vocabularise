@@ -59,7 +59,6 @@ module VocabulariSe
 			result = workspace.sort{ |a,b| a[1][:hotness] <=> b[1][:hotness] }.reverse
 
 			# FIXME : use archive pages if needed
-			# FIXME : limit to 3 or 5 results only
 			return result
 		end
 	end
