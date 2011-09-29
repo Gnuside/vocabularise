@@ -15,6 +15,10 @@ set :branch, "master"
 set :scm, :git
 set :scm_verbose, true
 
+# limit number of releases on server
+set :keep_releases, 5
+
+
 # To disable asset timestamps updates (javascript, stylesheets, etc.)
 set :normalize_asset_timestamps, false
 
@@ -42,5 +46,13 @@ namespace :deploy do
 		deploy.update
 		deploy.start
 	end
+
+	task :finalize_update, :roles => [:wep, :app] do
+		unless File.exist? "#{shared_path}/config/vocabularise.json"
+			run "cp #{current_release}/config/vocabularise.json.example #{shared_path}/config/vocabularise.json "
+		end
+		run "ln -s #{shared_path}/config/vocabularise.json #{current_release}/config/vocabularise.json"
+	end
+
 end
 
