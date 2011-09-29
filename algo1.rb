@@ -8,6 +8,8 @@ $:.unshift 'lib'
 require 'pp'
 
 require 'rubygems'
+require 'bundler/setup'
+
 require 'json'
 
 require 'common/indent'

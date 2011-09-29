@@ -8,9 +8,8 @@ $:.unshift 'lib'
 require 'pp'
 
 require 'rubygems'
-# use bundler
 require 'bundler/setup'
-#require 'sinatra'
+
 require 'json'
 
 require 'common/indent'
