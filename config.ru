@@ -17,6 +17,7 @@ require 'dm-sqlite-adapter'
 
 # Rendering
 require 'haml'
+require 'json'
 
 # Vocabularise specific
 require "vocabularise/base"
