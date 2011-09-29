@@ -73,9 +73,12 @@ module VocabulariSe
 
 			# ask related tags in cache
 			# return a 503 (server not ready) error if missing
-			{ :algorithm => :expected,
-			  :result => [[:tag1,:tag1_blabla],
-				  [:tag2,:tag2_blabla]] }
+			JSON.generate( {
+				:algorithm => "expected",
+				:result => [
+					[:tag1,:tag1_blabla],
+					[:tag2,:tag2_blabla]] 
+			} )
 		end
 
 
@@ -86,9 +89,13 @@ module VocabulariSe
 			#
 			# ask related tags in cache
 			# return a 503 (server not ready) error if missing
-			{ :algorithm => :controversial,
-			  :result => [[:tag1,:tag1_blabla],
-				  [:tag2,:tag2_blabla]] }
+			sleep 2
+			JSON.generate( { 
+				:algorithm => "controversial",
+				:result => [
+					[:tag1,:tag1_blabla],
+					[:tag2,:tag2_blabla]] 
+			} )
 		end
 
 
@@ -99,9 +106,13 @@ module VocabulariSe
 			#
 			# ask related tags in cache
 			# return a 503 (server not ready) error if missing
-			{ :algorithm => :aggregating,
-			  :result => [[:tag1,:tag1_blabla],
-				  [:tag2,:tag2_blabla]] }
+			sleep 5
+			JSON.generate( { 
+				:algorithm => "aggregating",
+				:result => [
+					[:tag1,:tag1_blabla],
+					[:tag2,:tag2_blabla]] 
+			} )
 		end
 
 
