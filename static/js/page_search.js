@@ -7,6 +7,8 @@ var COLOR_BLACK = [0,0,0];
 var TEXTSIZE_MIN = 0.6;
 var TEXTSIZE_MAX = 2;
 
+var AJAX_TIMEOUT = 8000;
+
 function show_resultlist( elem, resp, color ) {
 	//alert("got "+result);
 
@@ -36,9 +38,10 @@ function load_expected( query ) {
 		url: "/search/expected?query=" + query,
 		context: $('#list_expected'),
 		dataType: 'json',
+		timeout: AJAX_TIMEOUT,
 		success: function( resp ){ show_resultlist( $(this), resp, COLOR_EXPECTED ); },
 		error: function( req, error ) {
-			// setTimeout(2000, load_expected(query));
+			setTimeout(function(){ load_expected(query); },2000);
 		}
 	});
 }
@@ -48,9 +51,10 @@ function load_controversial( query ) {
 		url: "/search/controversial?query=" + query,
 		context: $('#list_controversial'),
 		dataType: 'json',
+		timeout: AJAX_TIMEOUT,
 		success: function( resp ){ show_resultlist( $(this), resp, COLOR_CONTROVERSIAL ); },
 		error: function( req, error ) {
-			// setTimeout(2000, load_expected(query));
+			setTimeout(function(){ load_controversial(query); }, 2000);
 		}
 	});
 }
@@ -60,9 +64,10 @@ function load_aggregating( query ) {
 		url: "/search/aggregating?query=" + query,
 		context: $('#list_aggregating'),
 		dataType: 'json',
+		timeout: AJAX_TIMEOUT,
 		success: function( resp ){ show_resultlist( $(this), resp, COLOR_AGGREGATING ); },
 		error: function( req, error ) {
-			// setTimeout(2000, load_expected(query));
+			setTimeout(function(){ load_aggregating(query); }, 2000);
 		}
 	});
 }
