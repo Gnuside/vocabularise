@@ -1,5 +1,8 @@
 
+require 'vocabularise/cache'
 require 'vocabularise/wikipedia'
+require 'mendeley'
+require 'wikipedia'
 
 module VocabulariSe
 	class Config
