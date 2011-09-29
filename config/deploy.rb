@@ -18,8 +18,6 @@ set :scm_verbose, true
 # To disable asset timestamps updates (javascript, stylesheets, etc.)
 set :normalize_asset_timestamps, false
 
-set :user, "www-data"
-set :use_sudo, false
 
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
