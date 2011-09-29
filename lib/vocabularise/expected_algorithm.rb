@@ -34,9 +34,6 @@ module VocabulariSe
 				}
 			end
 
-			#puts "AlgoI - workspace tags :"
-			#pp workspace.keys
-
 			# sort workspace keys (tags) by increasing slope 
 			result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }.reverse
 
