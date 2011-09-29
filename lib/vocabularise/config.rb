@@ -35,7 +35,10 @@ module VocabulariSe
 
 		def load_json json
 			raise ConfigurationError, "no cache_dir specified" unless json.include? "cache_dir"
-			@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
+			# 2 min
+			@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 2)
+			# 1 day
+			#@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
 
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
 			@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
