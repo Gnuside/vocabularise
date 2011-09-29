@@ -18,6 +18,9 @@
 		%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/common.css" }
 		= yield_content :headers
 
+		-# less important things
+		%script{ :type => "text/javascript", :src=>"/js/uservoice.js" }
+
 		%body
 			.container
 				#header.prepend-6.span-12.last
