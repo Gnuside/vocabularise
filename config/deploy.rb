@@ -48,10 +48,8 @@ namespace :deploy do
 	end
 
 	task :finalize_update, :roles => [:wep, :app] do
-		unless File.exist? "#{shared_path}/config/vocabularise.json"
-			run "mkdir -p #{shared_path}/config"
-			run "cp #{current_release}/config/vocabularise.json.example #{shared_path}/config/vocabularise.json "
-		end
+		run "mkdir -p #{shared_path}/config"
+		run "test -e #{shared_path}/config/vocabularise.json || cp #{current_release}/config/vocabularise.json.example #{shared_path}/config/vocabularise.json"
 		run "ln -s #{shared_path}/config/vocabularise.json #{current_release}/config/vocabularise.json"
 	end
 
