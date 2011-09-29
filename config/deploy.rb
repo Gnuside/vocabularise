@@ -17,7 +17,7 @@ set :scm_verbose, true
 
 # limit number of releases on server
 set :keep_releases, 5
-
+after "deploy:update", "deploy:cleanup" 
 
 # To disable asset timestamps updates (javascript, stylesheets, etc.)
 set :normalize_asset_timestamps, false
