@@ -15,9 +15,6 @@ module VocabulariSe
 			})
 
 			documents = Set.new
-			related_tags = VocabulariSe::Utils.related_tags config, intag
-			puts "Algo III - related tags"
-			pp related_tags
 
 			related_tags.each do |reltag,reltag_count|
 				# sum of views for all documents
