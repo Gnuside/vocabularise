@@ -46,7 +46,7 @@ module VocabulariSe
 					# we add request to the queue
 					self.queue action, intag
 					# FIXME: run thread to make request & unqueue
-					Thread.abort_on_exception = true
+					#Thread.abort_on_exception = true
 					Thread.new do
 						# do nothing
 						self.handle action, intag
@@ -82,6 +82,8 @@ module VocabulariSe
 
 		# stop (return) if not computable (missing prerequisites, etc)
 		def handle action, intag
+			#begin
+			
 			STDERR.puts "request begin-run %s, %s" % [action, intag]
 			key = _key(action, intag)
 			result = nil
@@ -111,6 +113,11 @@ module VocabulariSe
 			end
 			@config.cache[key] = result
 			STDERR.puts "request end-run %s, %s" % [action, intag]
+
+			#rescue Exception => e
+			#	STDERR.puts e.message
+			#	STDERR.puts e.backtrace
+			#end
 		end
 
 		private
