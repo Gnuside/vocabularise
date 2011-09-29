@@ -20,12 +20,15 @@
 
 		%body
 			.container
-				#header.span-24.last
-					%h1.prepend-8.span-8.last
+				#header.prepend-6.span-12.last
+					%h1
 						%a{:href=>"/"} vocabulari.se
+					%hr.tag.tag_excepted
+					%hr.tag.tag_counterversial
+					%hr.tag.tag_clustering
 				#content.span-24.last
 					= yield
-				#footer.prepend-8.span-8.last
+				#footer.prepend-6.span-12.last
 					%hr.tag.tag_excepted
 					%hr.tag.tag_counterversial
 					%hr.tag.tag_clustering
