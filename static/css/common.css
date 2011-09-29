@@ -78,7 +78,7 @@ h1 a { color: #000000; text-decoration:none; text-transform: capitalize; }
 h2 { font-size: 130%; text-align: center; }
 
 .tag_expected { color: #3ca52b; border-color: #3ca52b; }
-.tag_counterversial { color: #e75018; border-color: #e75018; }
+.tag_controversial { color: #e75018; border-color: #e75018; }
 .tag_aggregating { color: #008bd0; border-color: #008bd0; }
 
 .col_content.tag_expected h2 { color: #3ca52b; }
@@ -86,10 +86,10 @@ h2 { font-size: 130%; text-align: center; }
 .col_content.tag_expected h2.reverse { color: #7f7f7f; }
 .col_content.tag_expected h2.reverse a { color: #3ca52b; }
 
-.col_content.tag_counterversial h2 { color: #e75018; }
-.col_content.tag_counterversial h2 a { color: #7f7f7f; }
-.col_content.tag_counterversial h2.reverse { color: #7f7f7f; }
-.col_content.tag_counterversial h2.reverse a { color: #e75018; }
+.col_content.tag_controversial h2 { color: #e75018; }
+.col_content.tag_controversial h2 a { color: #7f7f7f; }
+.col_content.tag_controversial h2.reverse { color: #7f7f7f; }
+.col_content.tag_controversial h2.reverse a { color: #e75018; }
 
 .col_content.tag_aggregating h2 { color: #008bd0; }
 .col_content.tag_aggregating h2 a { color: #7f7f7f; }
@@ -106,7 +106,7 @@ h2 { font-size: 130%; text-align: center; }
 
 hr.tag { border: 0; display: block; height: 1px; margin: 0 0 5px 0; }
 hr.tag_expected { background-color: #3ca52b; color: #3ca52b; }
-hr.tag_counterversial { background-color: #e75018; color: #e75018; }
+hr.tag_controversial { background-color: #e75018; color: #e75018; }
 hr.tag_aggregating { background-color: #008bd0; color: #008bd0; }
 
 #footer ul li {
