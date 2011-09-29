@@ -1,4 +1,6 @@
 
+require 'vocabularise/config'
+require 'vocabularise/request_manager'
 
 module VocabulariSe
 
@@ -20,11 +22,23 @@ module VocabulariSe
 
 		helpers Sinatra::ContentFor
 
+
+		# Common configuration
+		configure do
+			json = JSON.load File.open 'config/vocabularise.json'
+			config = VocabulariSe::Config.new json
+			manager = VocabulariSe::RequestManager.new config
+			set :config, config
+			set :manager, manager
+		end
+
+
 		# Static page
 		get "/about" do
 			@title = "About"
 			haml :page_about
 		end
+
 
 		# Static page
 		get "/news" do
@@ -32,13 +46,13 @@ module VocabulariSe
 			haml :page_news
 		end
 
+
 		# Static page
 		get "/contact" do
 			@title = "Contact"
 			haml :page_contact
 		end
 
-		#
 		#
 		# Index page
 		get "/" do
@@ -51,6 +65,9 @@ module VocabulariSe
 		get "/search" do
 			# FIXME: use cache for search
 			@query = params[:query]
+
+			settings.manager.request :related, @query
+
 			haml :page_search
 		end
 
@@ -68,51 +85,50 @@ module VocabulariSe
 
 		# Return results for expected algorithm
 		get "/search/expected" do
-			# FIXME: use cache for search/tag
 			@query = params[:query]
 
-			# ask related tags in cache
-			# return a 503 (server not ready) error if missing
-			JSON.generate( {
-				:algorithm => "expected",
-				:result => [
-					[:tag1,:tag1_blabla],
-					[:tag2,:tag2_blabla]] 
-			} )
+			result = settings.manager.request :expected, @query
+			if result.nil? then
+				status(503)
+			else
+				JSON.generate( { 
+					:algorithm => "expected",
+					:result => result
+				} )
+			end
 		end
 
 
 		# Return results for aggregating algorithm
 		get "/search/controversial" do
-			# FIXME: use cache for search/tag
 			@query = params[:query]
-			#
-			# ask related tags in cache
-			# return a 503 (server not ready) error if missing
-			sleep 2
-			JSON.generate( { 
-				:algorithm => "controversial",
-				:result => [
-					[:tag1,:tag1_blabla],
-					[:tag2,:tag2_blabla]] 
-			} )
+			
+			result = settings.manager.request :controversial, @query
+			if result.nil? then
+				status(503)
+			else
+				JSON.generate( { 
+					:algorithm => "controversial",
+					:result => result
+				} )
+			end
+
 		end
 
 
 		# Return information about wikipedia pages for tag tag :tag 
 		get "/search/aggregating" do
-			# FIXME: use cache for search/tag
 			@query = params[:query]
-			#
-			# ask related tags in cache
-			# return a 503 (server not ready) error if missing
-			sleep 5
-			JSON.generate( { 
-				:algorithm => "aggregating",
-				:result => [
-					[:tag1,:tag1_blabla],
-					[:tag2,:tag2_blabla]] 
-			} )
+
+			result = settings.manager.request :aggregating, @query
+			if result.nil? then
+				status(503)
+			else
+				JSON.generate( { 
+					:algorithm => "aggregating",
+					:result => result
+				} )
+			end
 		end
 
 
