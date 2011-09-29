@@ -3,15 +3,26 @@ module VocabulariSe
 
 	class RequestManager
 
+		def new config
+		end
 
-	def step
+		def in_queue? action, intag
+		end
 
-		# FIXME: get next request 
-		# - sorted by priority 
-		# - sorted by creation time
-		# make the request
-		#
+		def in_cache? action, intag
+		end
+
+		def queue action, intag
+		end
+
+		def cache action, intag, result
+		end
+
+		def unqueue action, intag
+		end
+
+		def uncache action, intag
+		end
+
 	end
-
 end
-
