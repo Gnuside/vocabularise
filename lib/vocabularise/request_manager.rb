@@ -1,6 +1,7 @@
 
 require 'monitor'
 
+require 'vocabularise/utils'
 require 'vocabularise/expected_algorithm'
 require 'vocabularise/controversial_algorithm'
 require 'vocabularise/aggregating_algorithm'
@@ -27,16 +28,13 @@ module VocabulariSe
 
 		# try to answer to API needs
 		def request action, intag
+			key = _key(action, intag)
 			result = nil
 			@monitor.synchronize do 
-				if self.in_cache? action, intag then
+				if @config.cache.include? key then
 					STDERR.puts "request in cache %s, %s" % [action, intag]
-					# FIXME: send result from cache
-					result = [
-					   [ :tag1, "toto" ],
-					   [ :tag2, "toto" ],
-					   [ :tag3, "toto" ]
-					]
+					# send result from cache
+					result = @config.cache[key]
 				elsif self.in_queue? action, intag then
 					STDERR.puts "request in queue %s, %s" % [action, intag]
 					# you'll have to wait
@@ -66,21 +64,9 @@ module VocabulariSe
 			end
 		end
 
-		def in_cache? action, intag
-			@monitor.synchronize do 
-
-			end
-		end
-
 		def queue action, intag
 			@monitor.synchronize do 
 				@queue << _key(action, intag)
-			end
-		end
-
-		def cache action, intag, result
-			@monitor.synchronize do 
-			# FIXME : store the result in cache
 			end
 		end
 
@@ -96,10 +82,11 @@ module VocabulariSe
 		# stop (return) if not computable (missing prerequisites, etc)
 		def handle action, intag
 			STDERR.puts "request begin-run %s, %s" % [action, intag]
+			key = _key(action, intag)
 			result = nil
 			case action
 			when REQUEST_RELATED then
-				result = VocabulariSe::Utils.related_tags config, intag                   
+				result = VocabulariSe::Utils.related_tags @config, intag                   
 			when REQUEST_EXPECTED then
 				related_tags = request REQUEST_RELATED, intag
 				return if related_tags.nil?
@@ -118,8 +105,8 @@ module VocabulariSe
 			else
 				raise RuntimeError, "unknown action"
 			end
+			@config.cache[key] = result
 			STDERR.puts "request end-run %s, %s" % [action, intag]
-			cache action, intag, result
 		end
 
 		private
