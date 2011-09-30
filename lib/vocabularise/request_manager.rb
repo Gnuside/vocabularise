@@ -20,7 +20,6 @@ module VocabulariSe
 		def initialize config
 			@config = config
 			@monitor = Monitor.new
-			@queue = []
 
 			@algo_expected = VocabulariSe::ExpectedAlgorithm.new config
 			@algo_controversial = VocabulariSe::ControversialAlgorithm.new config
