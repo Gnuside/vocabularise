@@ -44,7 +44,7 @@ module VocabulariSe
 			#@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
 			
 			# simple queue model
-			@queue = VocabulariSe::MemoryQueue.new config
+			@queue = VocabulariSe::MemoryQueue.new
 
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
 			@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
