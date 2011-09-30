@@ -1,14 +1,6 @@
 
 module VocabulariSe
-	class MemoryQueue
-		def enqueue key, value
-		end
-
-		def dequeue key
-		end
-
-		def include? key
-		end
+	class MemoryQueue < Array
 
 		# FIXME: do something for priority
 	end
