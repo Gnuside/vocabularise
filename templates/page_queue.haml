@@ -1,0 +1,10 @@
+-# vim: set ts=4 sw=4 noet :
+
+.span-12.prepend-6.last
+	%h2 Request queue
+
+	%ul
+		- settings.manager.queue.each do |elem|
+			%li= elem
+
+
