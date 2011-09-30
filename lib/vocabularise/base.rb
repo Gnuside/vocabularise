@@ -72,8 +72,8 @@ module VocabulariSe
 		end
 
 		# Show request queue
-		get "/status/request_queue" do
-			haml :page_request_queue
+		get "/status/queue" do
+			haml :page_queue
 		end
 
 
