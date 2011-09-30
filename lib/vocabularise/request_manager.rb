@@ -35,7 +35,7 @@ module VocabulariSe
 					STDERR.puts "request in cache %s, %s" % [action, intag]
 					# send result from cache
 					result = @config.cache[key]
-				elsif self.in_queue? action, intag then
+				elsif @config.queue.include? key then
 					STDERR.puts "request in queue %s, %s" % [action, intag]
 					# you'll have to wait
 					result = nil
@@ -43,13 +43,13 @@ module VocabulariSe
 					STDERR.puts "request nowhere %s, %s" % [action, intag]
 					# neither in cache nor in queue
 					# we add request to the queue
-					self.queue action, intag
+					@config.queue << key
 					# FIXME: run thread to make request & unqueue
 					#Thread.abort_on_exception = true
 					Thread.new do
 						# do nothing
 						self.handle action, intag
-						self.unqueue action, intag
+						@config.queue.delete key
 					end
 					result = nil
 				end
@@ -57,27 +57,6 @@ module VocabulariSe
 			return result
 		end
 
-
-		def in_queue? action, intag
-			@monitor.synchronize do 
-				@queue.include? _key(action, intag)
-			end
-		end
-
-		def queue action, intag
-			@monitor.synchronize do 
-				@queue << _key(action, intag)
-			end
-		end
-
-		def unqueue action, intag
-			key = _key(action, intag)
-			@monitor.synchronize do 
-				@queue = @queue.select do |x|
-					x != key
-				end
-			end
-		end
 
 		# stop (return) if not computable (missing prerequisites, etc)
 		def handle action, intag
