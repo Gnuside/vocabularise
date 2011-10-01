@@ -85,6 +85,8 @@ h2 { font-size: 130%; text-align: center; }
 .tag_controversial { color: #e75018; border-color: #e75018; }
 .tag_aggregating { color: #008bd0; border-color: #008bd0; }
 
+.col_content h2 { font-weight: bold; }
+
 .col_content .tag_expected h2 { color: #3ca52b; }
 .col_content .tag_expected h2 a { color: #7f7f7f; }
 .col_content .tag_expected h2.reverse { color: #7f7f7f; }
