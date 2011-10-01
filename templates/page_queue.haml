@@ -3,8 +3,6 @@
 .span-12.prepend-6.last
 	%h2 Request queue
 
-	%ul
-		- settings.manager.queue.each do |elem|
-			%li= elem
-
+	- settings.config.queue.each do |elem|
+		%p= elem.inspect
 

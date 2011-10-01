@@ -1,0 +1,8 @@
+-# vim: set ts=4 sw=4 noet :
+
+.span-12.prepend-6.last
+	%h2 Request cache
+
+	- settings.config.cache.each do |elem|
+		%p= elem.inspect
+
