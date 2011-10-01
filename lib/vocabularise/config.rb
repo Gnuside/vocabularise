@@ -1,6 +1,6 @@
 
 require 'vocabularise/database_cache'
-require 'vocabularise/queue'
+require 'vocabularise/memory_queue'
 require 'vocabularise/wikipedia'
 require 'mendeley'
 require 'wikipedia'
