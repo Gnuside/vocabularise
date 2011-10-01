@@ -1,5 +1,5 @@
 
-require 'vocabularise/cache'
+require 'vocabularise/database_cache'
 require 'vocabularise/queue'
 require 'vocabularise/wikipedia'
 require 'mendeley'
@@ -39,7 +39,7 @@ module VocabulariSe
 		def load_json json
 			raise ConfigurationError, "no cache_dir specified" unless json.include? "cache_dir"
 			# 2 hours
-			@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 2)
+			@cache = VocabulariSe::DatabaseCache.new json["cache_dir"], (60 * 60 * 2)
 			# 1 day
 			#@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
 			
