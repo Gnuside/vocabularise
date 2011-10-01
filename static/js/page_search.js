@@ -9,6 +9,8 @@ var TEXTSIZE_MAX = 2;
 
 var AJAX_TIMEOUT = 8000;
 
+// FIXME: maintain state of reversed/notreverse
+
 function show_resultlist( elem, resp, color ) {
 	//alert("got "+result);
 
@@ -75,10 +77,19 @@ function load_aggregating( query ) {
 }
 
 $(document).ready(function() {
+	/* run queries */
+
+	/* make buttons clickable */
+	/*$('.col_content h2').click(function() {
+		$(this).toggleClass('reverse');
+	});
+	$('.tag_expected h2').click(function(){
+		load_expected( query );
+	}); */
+
 	/* set focus */
 	$('#searchwidget_query').focus();
 
-	/* run queries */
 	query = $('#searchwidget_oldquery').val();
 
 	load_expected( query );
