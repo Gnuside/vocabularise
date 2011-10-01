@@ -10,7 +10,6 @@ module VocabulariSe
 			workspace = {}
 			documents = Set.new
 
-			#puts "AlgoI - related tags :"
 			related_tags.each do |reltag,reltag_count|
 				# sum of views for all documents
 				views = 1
@@ -18,6 +17,7 @@ module VocabulariSe
 
 				hit_count = 0
 				limit = 1
+				begin
 				VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 					views += doc.readers(config.mendeley_client)
 
@@ -25,6 +25,10 @@ module VocabulariSe
 					hit_count += 1 unless doc.cached?
 					#puts "AlgoI - hit_count = %s" % hit_count
 					break if hit_count > limit
+				end
+				rescue Mendeley::Client::RateLimitExceeded => e
+					# FIXME: do something when limit is exceeded
+					# FIXME: design a Vocabularise::HitLimitExceeded exception
 				end
 				slope =  apparitions.to_f / views.to_f
 				workspace[reltag] = {
