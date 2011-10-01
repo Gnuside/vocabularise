@@ -14,7 +14,6 @@ require 'json'
 
 require 'common/indent'
 require 'vocabularise/config'
-require 'vocabularise/cache'
 require 'vocabularise/utils'
 require 'vocabularise/expected_algorithm'
 
