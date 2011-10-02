@@ -13,7 +13,7 @@ require 'common/indent'
 require 'vocabularise/config'
 require 'vocabularise/utils'
 require 'vocabularise/expected_algorithm'
-require 'vocabularise/queue_manager'
+require 'vocabularise/crawler'
 require 'vocabularise/request_manager'
 
 require 'mendeley'
@@ -27,8 +27,8 @@ module VocabulariSe
 	json = JSON.load File.open 'config/vocabularise.json'
 	config = VocabulariSe::Config.new json
 
-	qman = QueueManager.new config
-	qman.run
+	crawler = Crawler.new config
+	crawler.run
 
 	rman = RequestManager.new config
 
@@ -38,9 +38,11 @@ module VocabulariSe
 	intag = STDIN.gets.strip
 
 	#related_tags = VocabulariSe::Utils.related_tags config, intag
-	related_tags = rman.request RequestManager::REQUEST_RELATED, intag
-
-	sleep 10
+	related_tags = nil
+	while related_tags.nil? do
+		related_tags = crawler.request Crawler::REQUEST_RELATED, intag, Crawler::MODE_INTERACTIVE
+		sleep 1
+	end
 
 	algo = ExpectedAlgorithm.new config
 	result = algo.exec intag, related_tags
