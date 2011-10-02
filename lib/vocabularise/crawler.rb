@@ -1,11 +1,11 @@
 
 require 'thread'
 
-require 'vocabularise/request_counter'
+require 'vocabularise/hit_counter'
 
 module VocabulariSe
 
-	class RequestQueue
+	class Crawler
 
 		MODE_INTERACTIVE = :interactive
 		MODE_PASSIVE = :passive
@@ -18,28 +18,25 @@ module VocabulariSe
 
 		def initialize config
 			@config = config
-
-
-			# prepare everything
-			@counter = {
-				COUNTER_MENDELEY_RATE => (60 * 60) / 500,
-				COUNTER_MENDELEY_CURRENT => 0,
-				:wikipedia_rate => (60 * 60) / 500,
-				:wikipedia => 0
-			}
-
-			counter[:wikipedia] = 0
-			speed = (60 * 60) / 500
 		end
 
-		# make a request
-		def request something, mode
 
+		# request a request
+		def request something, mode
+			priority = case mode 
+					   when MODE_INTERACTIVE then 5
+					   when MODE_PASSIVE then 1
+					   else 1
+					   end
+			@config.queue something, {:priority => priority}
 		end
 
 		# 
 		def handle req
 			case req.handler
+			when "FIXME"
+				# 
+			end
 		end
 
 		def run
