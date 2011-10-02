@@ -26,26 +26,29 @@ module VocabulariSe
 		def include? key
 			now = Time.now
 			req = { :id => key,
-		   			:expires_at.lt => now.to_i}
+		   			:expires_at.gt => now.to_i}
 			resp = DatabaseCacheEntry.first req
 			return (not resp.nil?)
 		end
 
 		def []= key, data
-			DatabaseCacheEntry.transaction do
+			#DatabaseCacheEntry.transaction do
 				now = Time.now
 
 				resp = DatabaseCacheEntry.get key
 				resp.destroy if resp
 
-				create = { 
+				req_create = { 
 					:id => key,
-					:data => data,
+					:data => Marshal.dump( data ),
 					:created_at => now.to_i,
 					:expires_at => now.to_i + @timeout,
 				}
-				resp = DatabaseCacheEntry.create create
-			end
+				resp = DatabaseCacheEntry.create req_create
+				resp.save
+
+				self.include? key
+			#end
 		rescue DataMapper::SaveFailureError => e
 			STDERR.puts e.message
 			raise RuntimeError, "unable to set data"
@@ -55,10 +58,12 @@ module VocabulariSe
 			now = Time.now
 			req = { 
 				:id => key,
-				:expires_at.lt => now.to_i
+				:expires_at.gt => now.to_i
 			}
 			resp = DatabaseCacheEntry.first req
-			return resp
+			if resp then return Marshal.load( resp.data )
+			else return nil
+			end
 		end
 
 		def each &blk
