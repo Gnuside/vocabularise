@@ -1,6 +1,6 @@
 
 require 'vocabularise/database_cache'
-require 'vocabularise/memory_queue'
+require 'vocabularise/database_queue'
 require 'vocabularise/wikipedia'
 require 'mendeley'
 require 'wikipedia'
@@ -95,6 +95,7 @@ module VocabulariSe
 			@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
 			@wikipedia_client = Wikipedia::Client.new
 			@wikipedia_client.extend(WikipediaFix)
+			@wikipedia_client.cache = cache
 		end
 	end
 end
