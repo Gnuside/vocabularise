@@ -1,6 +1,7 @@
 
 require 'vocabularise/config'
 require 'vocabularise/request_manager'
+require 'vocabularise/crawler'
 
 module VocabulariSe
 
@@ -28,8 +29,14 @@ module VocabulariSe
 			json = JSON.load File.open 'config/vocabularise.json'
 			config = VocabulariSe::Config.new json
 			manager = VocabulariSe::RequestManager.new config
+			crawler = VocabulariSe::Crawler.new config
+
+			set :crawler, crawler
 			set :config, config
 			set :manager, manager
+
+			# run crawler thread ;-)
+			crawler.run
 		end
 
 
