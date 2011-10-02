@@ -47,8 +47,6 @@ module VocabulariSe
 					# neither in cache nor in queue
 					# we add request to the queue
 					@config.queue << key
-					# FIXME: run thread to make request & unqueue
-					#Thread.abort_on_exception = true
 					result = nil
 				end
 			end
