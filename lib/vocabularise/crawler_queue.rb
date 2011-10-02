@@ -8,11 +8,11 @@ module VocabulariSe
 	class CrawlerQueueEntry
 		include DataMapper::Resource
 
-		property :id,   String, :key => true
-		property :handler, String, :key => true
-		property :data, String, :required => true 
-		property :priority, Integer, :required => true                        
-
+		property :id, Serial
+		property :cquery,   String, :unique => true
+		property :handler, String, :unique => true
+		property :priority, Integer, :default => 0
+		property :created_at, Integer, :required => true                        
 	end
 
 	class CrawlerQueue
@@ -65,6 +65,40 @@ module VocabulariSe
 			end
 		end
 =end
+
+		def push handler, query, priority
+			CrawlerQueueEntry.transaction do
+				now = Time.now
+				req_find = {
+					:handler => handler,
+					:cquery => query
+				}
+				req_create = {
+					:handler => handler,
+					:cquery => query,
+					:priority => priority,
+					:created_at => now.to_i
+				}
+				resp = CrawlerQueueEntry.first_or_create req_find, req_create
+				resp.save!
+			end
+		end
+
+		def first
+			req = { 
+				:order => [:priority, :created_at]
+			}
+			resp = CrawlerQueueEntry.first req
+			return resp
+		end
+
+		def shift
+			req = { 
+				:order => [:priority, :created_at]
+			}
+			resp = CrawlerQueueEntry.first req
+			resp.destroy if resp
+		end
 
 		def each &blk
 			now = Time.now
