@@ -1,7 +1,5 @@
 #!/usr/bin/ruby
 
-$DEBUG = true
-$VERBOSE= true
 
 $:.unshift 'lib'
 
@@ -19,6 +17,9 @@ require 'vocabularise/expected_algorithm'
 
 require 'mendeley'
 require 'wikipedia'
+
+#$DEBUG = true
+#$VERBOSE= true
 
 json = JSON.load File.open 'config/vocabularise.json'
 config = VocabulariSe::Config.new json
