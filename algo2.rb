@@ -26,6 +26,7 @@ algo = VocabulariSe::ControversialAlgorithm.new config
 
 puts "Algo II"
 print "tag ? "
+STDOUT.flush
 intag = STDIN.gets.strip
 
 related_tags = VocabulariSe::Utils.related_tags config, intag

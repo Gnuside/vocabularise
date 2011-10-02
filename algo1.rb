@@ -26,6 +26,7 @@ config = VocabulariSe::Config.new json
 
 puts "Algo I"
 print "tag ? "
+STDOUT.flush
 intag = STDIN.gets.strip
 
 related_tags = VocabulariSe::Utils.related_tags config, intag

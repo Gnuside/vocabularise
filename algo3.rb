@@ -26,6 +26,7 @@ config = VocabulariSe::Config.new json
 
 puts "Algo III"
 print "tag ? "
+STDOUT.flush
 intag = STDIN.gets.strip
 
 algo = VocabulariSe::AggregatingAlgorithm.new config
