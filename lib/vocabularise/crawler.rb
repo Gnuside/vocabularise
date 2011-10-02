@@ -1,6 +1,7 @@
 
 require 'thread'
 
+require 'vocabularise/crawler_queue'
 require 'vocabularise/hit_counter'
 
 module VocabulariSe
@@ -18,6 +19,10 @@ module VocabulariSe
 
 		def initialize config
 			@config = config
+			@queue = CrawlerQueue.new
+
+			# FIXME: add multiple crawling threads for more efficiency
+			# or to prevent blocked requests
 		end
 
 
@@ -41,6 +46,7 @@ module VocabulariSe
 
 		def run
 			Thread.new do
+				STDERR.puts "crawler up and running!"
 				while true
 					# get first in queue, by priority
 					next_req = @config.queue.first
