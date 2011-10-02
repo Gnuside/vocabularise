@@ -22,12 +22,10 @@ module VocabulariSe
 
 		# cache store
 		attr_reader :cache
-		attr_reader :queue
 
 		def initialize json
 			# default values
 			@cache = nil
-			@queue = nil
 			@mendeley_client = nil
 			@wikipedia_client = nil
 			@counter = nil
