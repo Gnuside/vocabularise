@@ -3,6 +3,7 @@ require 'dm-core'
 require 'vocabularise/generic_cache'
 
 require 'monitor'
+require 'rdebug/base'
 
 module VocabulariSe
 
@@ -13,7 +14,6 @@ module VocabulariSe
 		property :data, String, :required => true 
 		property :created_at, Integer, :required => true                        
 		property :expires_at, Integer, :required => true                        
-
 	end
 
 	class DatabaseCache < GenericCache
@@ -21,18 +21,23 @@ module VocabulariSe
 		def initialize timeout
 			@timeout = timeout
 			@monitor = Monitor.new
+			@debug = true
 		end
 
 		def include? key
+			rdebug "key = %s" % key
 			now = Time.now
-			req = { :id => key,
-		   			:expires_at.gt => now.to_i}
+			req = { 
+				:id => key,
+				:expires_at.gt => now.to_i
+			}
 			resp = DatabaseCacheEntry.first req
+			rdebug "return : %s" % (not resp.nil?)
 			return (not resp.nil?)
 		end
 
 		def []= key, data
-			#DatabaseCacheEntry.transaction do
+			DatabaseCacheEntry.transaction do
 				now = Time.now
 
 				resp = DatabaseCacheEntry.get key
@@ -45,13 +50,15 @@ module VocabulariSe
 					:expires_at => now.to_i + @timeout,
 				}
 				resp = DatabaseCacheEntry.create req_create
-				resp.save
+				unless resp.save then
+					raise RuntimeError, "unable to save"
+				end
 
-				self.include? key
-			#end
-		rescue DataMapper::SaveFailureError => e
-			STDERR.puts e.message
-			raise RuntimeError, "unable to set data"
+				return self.include? key
+			end
+		#rescue DataMapper::SaveFailureError => e
+		#	STDERR.puts e.message
+		#	raise RuntimeError, "unable to set data"
 		end
 
 		def [] key
@@ -69,7 +76,7 @@ module VocabulariSe
 		def each &blk
 			now = Time.now
 			req = { 
-				:expires_at.lt => now.to_i
+				:expires_at.gt => now.to_i,
 			}
 			resp = DatabaseCacheEntry.all req
 			resp.each do |x| yield x ; end
