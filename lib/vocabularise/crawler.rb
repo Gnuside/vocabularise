@@ -17,6 +17,12 @@ module VocabulariSe
 		COUNTER_MENDELEY_RATE = :mendeley_rate
 		COUNTER_MENDELEY_CURRENT = :mendeley_current
 
+
+		REQUEST_RELATED = 'related'
+		REQUEST_EXPECTED = 'expected'
+		REQUEST_CONTROVERSIAL = 'controversial'
+		REQUEST_AGGREGATING = 'aggregating'
+
 		def initialize config
 			@config = config
 			@queue = CrawlerQueue.new
@@ -27,33 +33,40 @@ module VocabulariSe
 
 
 		# request a request
-		def request something, mode
+		def request handler, query, mode
 			priority = case mode 
 					   when MODE_INTERACTIVE then 5
 					   when MODE_PASSIVE then 1
 					   else 1
 					   end
-			@config.queue something, {:priority => priority}
+			@queue.push handler, query, priority
 		end
 
 		# 
 		def handle req
 			case req.handler
-			when "FIXME"
-				# 
+			when REQUEST_EXPECTED then 
+				# do something
+			else
+				STDOUT.puts "unknown handler for %s" % req.inspect
 			end
 		end
 
 		def run
+			Thread.abort_on_exception = true
 			Thread.new do
 				STDERR.puts "crawler up and running!"
 				while true
+					sleep 1
 					# get first in queue, by priority
-					next_req = @config.queue.first
-					# call proper handler for request
-					handle next_req
+					req = @queue.first
+					next if req.nil?
 
-					@config.queue.shift
+					pp req
+					# call proper handler for request
+					#handle next_req
+
+					@queue.shift
 				end
 			end
 		end
