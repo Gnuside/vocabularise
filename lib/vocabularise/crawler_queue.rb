@@ -5,7 +5,7 @@ require 'vocabularise/generic_queue'
 
 module VocabulariSe
 
-	class DatabaseQueueEntry
+	class CrawlerQueueEntry
 		include DataMapper::Resource
 
 		property :id,   String, :key => true
@@ -15,7 +15,7 @@ module VocabulariSe
 
 	end
 
-	class DatabaseQueue < GenericQueue
+	class CrawlerQueue < GenericQueue
 		#
 		# FIXME: do something for priority
 
@@ -25,16 +25,16 @@ module VocabulariSe
 		def include? key, handler
 			now = Time.now
 			req = { :id => key }
-			resp = DatabaseQueueEntry.first req
+			resp = CrawlerQueueEntry.first req
 			return (not resp.nil?)
 		end
 
 =begin
 		def []= key, resp
-			DatabaseQueueEntry.transaction do
+			CrawlerQueueEntry.transaction do
 				now = Time.now
 
-				resp = DatabaseQueueEntry.get key
+				resp = CrawlerQueueEntry.get key
 				resp.destroy if resp
 
 				req_create = { 
@@ -43,7 +43,7 @@ module VocabulariSe
 					:created_at => now.to_i,
 					:expires_at => now.to_i + @timeout,
 				}
-				resp = DatabaseQueueEntry.create req_create
+				resp = CrawlerQueueEntry.create req_create
 				resp.save
 
 				self.include? key
@@ -59,7 +59,7 @@ module VocabulariSe
 				:id => key,
 				:expires_at.gt => now.to_i
 			}
-			resp = DatabaseQueueEntry.first req
+			resp = CrawlerQueueEntry.first req
 			if resp then return Marshal.load( resp.data )
 			else return nil
 			end
@@ -68,7 +68,7 @@ module VocabulariSe
 
 		def each &blk
 			now = Time.now
-			resp = DatabaseQueueEntry.all
+			resp = CrawlerQueueEntry.all
 			resp.each do |x| 
 				yield x 
 			end
