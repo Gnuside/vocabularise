@@ -1,6 +1,5 @@
 
 require 'vocabularise/database_cache'
-require 'vocabularise/database_queue'
 require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia'
 require 'mendeley'
@@ -89,9 +88,6 @@ module VocabulariSe
 			# 1 day
 			#@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
 			
-			# simple queue model
-			#@queue = VocabulariSe::MemoryQueue.new
-			@queue = VocabulariSe::DatabaseQueue.new
 
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
 			@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
