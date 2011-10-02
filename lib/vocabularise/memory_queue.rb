@@ -1,36 +1,33 @@
 
 require 'vocabularise/generic_queue'
+require 'thread'
 
 module VocabulariSe
 	class MemoryQueue < GenericQueue
 
 		def initialize
-			@queue = []
-			@content = {}
-		end
-
-		def include? key
-			@queue.include? key
-		end
-
-		def []= key, data
-			@queue << key
-			@content[key] = data
-		end
-
-		def [] key
-			@content[key]	
-		end
-
-		def each &blk
-			@queue.each do |x|
-				yield x
-			end
+			@queue = Queue.new
 		end
 
 		def << key
 			@queue << key
-			@content[key] = nil
+		end
+
+		def include? key
+			fake = @queue.clone
+			while not fake.empty? do
+				if fake.pop == key then
+					return true
+				end
+			end
+			return false
+		end
+
+		def each &blk
+			fake = @queue.clone
+			while not fake.empty? do
+				yield fake.pop
+			end
 		end
 	end
 end
