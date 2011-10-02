@@ -18,14 +18,14 @@ module VocabulariSe
 				hit_count = 0
 				limit = 1
 				begin
-				VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
-					views += doc.readers(config.mendeley_client)
+					VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
+						views += doc.readers(config.mendeley_client)
 
-					# limit to X real hits
-					hit_count += 1 unless doc.cached?
-					#puts "AlgoI - hit_count = %s" % hit_count
-					break if hit_count > limit
-				end
+						# limit to X real hits
+						hit_count += 1 unless doc.cached?
+						#puts "AlgoI - hit_count = %s" % hit_count
+						break if hit_count > limit
+					end
 				rescue Mendeley::Client::RateLimitExceeded => e
 					# FIXME: do something when limit is exceeded
 					# FIXME: design a Vocabularise::HitLimitExceeded exception
