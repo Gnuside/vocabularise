@@ -1,6 +1,7 @@
 
 require 'vocabularise/database_cache'
 require 'vocabularise/database_queue'
+require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia'
 require 'mendeley'
 require 'wikipedia'
@@ -30,6 +31,7 @@ module VocabulariSe
 			@queue = nil
 			@mendeley_client = nil
 			@wikipedia_client = nil
+			@counter = nil
 			@database = nil
 
 			load_json json
@@ -96,6 +98,10 @@ module VocabulariSe
 			@wikipedia_client = Wikipedia::Client.new
 			@wikipedia_client.extend(WikipediaFix)
 			@wikipedia_client.cache = cache
+
+			@counter = HitCounter.new
+			@counter.limit :wikipedia, 500
+			@counter.limit :mendeley, 500
 		end
 	end
 end
