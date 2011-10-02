@@ -1,10 +1,10 @@
 
 
 require 'dm-core'
-require 'vocabularise/generic_queue'
 
 module VocabulariSe
 
+	# a queue entry
 	class CrawlerQueueEntry
 		include DataMapper::Resource
 
@@ -15,7 +15,7 @@ module VocabulariSe
 
 	end
 
-	class CrawlerQueue < GenericQueue
+	class CrawlerQueue
 		#
 		# FIXME: do something for priority
 
