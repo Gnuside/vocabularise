@@ -12,6 +12,8 @@ module VocabulariSe
 
 	class RequestManager
 
+		class RequestIncomplete < RuntimeError ; end
+
 		REQUEST_RELATED = :related
 		REQUEST_EXPECTED = :expected
 		REQUEST_CONTROVERSIAL = :controversial
@@ -26,6 +28,7 @@ module VocabulariSe
 			@algo_aggregating = VocabulariSe::AggregatingAlgorithm.new config
 		end
 
+
 		# try to answer to API needs
 		def request action, intag
 			key = _key(action, intag)
@@ -35,7 +38,7 @@ module VocabulariSe
 					STDERR.puts "request in cache %s, %s" % [action, intag]
 					# send result from cache
 					result = @config.cache[key]
-				elsif @config.queue.include? key then
+				elsif @config.queue.include? key  then
 					STDERR.puts "request in queue %s, %s" % [action, intag]
 					# you'll have to wait
 					result = nil
@@ -46,11 +49,6 @@ module VocabulariSe
 					@config.queue << key
 					# FIXME: run thread to make request & unqueue
 					#Thread.abort_on_exception = true
-					Thread.new do
-						# do nothing
-						self.handle action, intag
-						@config.queue.delete key
-					end
 					result = nil
 				end
 			end
@@ -58,7 +56,7 @@ module VocabulariSe
 		end
 
 
-		# stop (return) if not computable (missing prerequisites, etc)
+		# stop (raise something) if not computable (missing prerequisites, etc)
 		def handle action, intag
 			#begin
 			
@@ -68,8 +66,6 @@ module VocabulariSe
 			case action
 			when REQUEST_RELATED then
 				result = VocabulariSe::Utils.related_tags @config, intag
-				#puts "handler - related tags for %s" % key
-				#pp result
 
 			when REQUEST_EXPECTED then
 				related_tags = request REQUEST_RELATED, intag
