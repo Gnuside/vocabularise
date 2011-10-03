@@ -8,7 +8,12 @@ require 'bundler/setup'
 require 'rspec'
 require 'json'
 
+require 'datamapper'
+require 'dm-core'
+require 'dm-sqlite-adapter'                                                     
+
 require 'vocabularise/config'
+
 
 describe 'DatabaseCache' do
 	CACHE_TIMEOUT = 5
