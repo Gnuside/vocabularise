@@ -32,3 +32,4 @@ gem "dm-aggregates"
 # Strange dependencies
 gem "extlib"
 gem "rdebug"
+gem "rspec"
