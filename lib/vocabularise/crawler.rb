@@ -80,6 +80,7 @@ module VocabulariSe
 			case req.handler
 			when REQUEST_RELATED then
 				result = VocabulariSe::Utils.related_tags @config, req.cquery
+				rdebug "related tags = %s" % result.inspect
 
 			when REQUEST_EXPECTED then 
 				# do something
