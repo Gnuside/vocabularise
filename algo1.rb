@@ -46,6 +46,8 @@ module VocabulariSe
 
 	algo = ExpectedAlgorithm.new config
 	result = algo.exec intag, related_tags
+	pp result
+	exit 1
 
 	puts "AlgoI - result :"
 	pp result
