@@ -11,7 +11,7 @@ module VocabulariSe
 		include DataMapper::Resource
 
 		property :id,   String, :key => true
-		property :data, String, :required => true 
+		property :data, Binary, :required => true 
 		property :created_at, Integer, :required => true                        
 		property :expires_at, Integer, :required => true                        
 	end
@@ -68,8 +68,13 @@ module VocabulariSe
 				:expires_at.gt => now.to_i
 			}
 			resp = DatabaseCacheEntry.first req
+			begin
 			if resp then return Marshal.load( resp.data )
 			else return nil
+			end
+			rescue ArgumentError
+				pp resp
+				raise RuntimeError, "wtf? in data?"
 			end
 		end
 
