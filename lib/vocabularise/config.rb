@@ -87,8 +87,9 @@ module VocabulariSe
 			@cache = VocabulariSe::DatabaseCache.new(60 * 60 * 2)
 			
 			#@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
-			@wikipedia_client = Wikipedia::Client.new
-			@wikipedia_client.extend(WikipediaFix)
+			@wikipedia_client = ::Wikipedia::Client.new
+			@wikipedia_client.extend(::VocabulariSe::Wikipedia::Search)
+			@wikipedia_client.extend(::VocabulariSe::Wikipedia::Cache)
 			@wikipedia_client.cache = cache
 
 			@counter = HitCounter.new
