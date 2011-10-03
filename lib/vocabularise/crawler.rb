@@ -52,6 +52,7 @@ module VocabulariSe
 
 				elsif @queue.include? handler, query then
 					rdebug "request in queue %s, %s" % [handler, query]
+					#@queue.push handler, query, priority
 					# you'll have to wait
 					result = nil
 				else
@@ -71,12 +72,19 @@ module VocabulariSe
 		end
 
 
+
 		# no need to be synchronized
 		def handle req
 			rdebug "begin-run %s, %s" % [req.handler, req.cquery]
 
 			result = nil
 			cache_key = _cache_key(req.handler, req.cquery)
+
+			find_handlers( req.handler ) do |handler|
+				handler.process req
+			end
+
+=begin
 			case req.handler
 			when REQUEST_RELATED then
 				result = VocabulariSe::Utils.related_tags @config, req.cquery
@@ -87,6 +95,7 @@ module VocabulariSe
 			else
 				rdebug "unknown handler for %s" % req.inspect
 			end
+=end
 
 			@config.cache[cache_key] = result if result
 			STDERR.puts "request end-run %s, %s" % [req.handler, req.cquery]
@@ -121,6 +130,20 @@ module VocabulariSe
 		# no need to be synchronized
 		def _cache_key action, intag
 			key = "%s:%s" % [action,intag]	
+		end
+
+		def find_handlers handle
+			CrawlerHandler::Base.subclasses.find_all do |handler|
+				handler.handles? handle
+			end
+		end
+
+		def process handle, query, mode
+			find_handlers( statement ).each do |handler|
+				begin
+					handler.new(self,statement).process
+				end
+			end
 		end
 	end
 
