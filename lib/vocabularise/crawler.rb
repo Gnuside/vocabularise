@@ -73,12 +73,22 @@ module VocabulariSe
 
 		# no need to be synchronized
 		def handle req
+			rdebug "begin-run %s, %s" % [req.handler, req.cquery]
+
+			result = nil
+			cache_key = _cache_key(req.handler, req.cquery)
 			case req.handler
+			when REQUEST_RELATED then
+				result = VocabulariSe::Utils.related_tags @config, req.cquery
+
 			when REQUEST_EXPECTED then 
 				# do something
 			else
-				STDOUT.puts "unknown handler for %s" % req.inspect
+				rdebug "unknown handler for %s" % req.inspect
 			end
+
+			@config.cache[cache_key] = result if result
+			STDERR.puts "request end-run %s, %s" % [req.handler, req.cquery]
 		end
 
 
@@ -97,7 +107,7 @@ module VocabulariSe
 
 					rdebug 'handling %s' % req.inspect
 					# call proper handler for request
-					#handle next_req
+					handle req
 
 					rdebug 'shifting queue'
 					@queue.shift
