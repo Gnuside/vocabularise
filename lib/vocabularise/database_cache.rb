@@ -1,7 +1,6 @@
 
 require 'dm-core'
 #require 'dm-types/support/dirty_minder'
-require 'vocabularise/generic_cache'
 
 require 'monitor'
 require 'base64'
@@ -48,12 +47,12 @@ module VocabulariSe
 		property :expires_at, Integer, :required => true                        
 	end
 
-	class DatabaseCache < GenericCache
+	class DatabaseCache
 
 		def initialize timeout
 			@timeout = timeout
 			@monitor = Monitor.new
-			@debug = true
+			@debug = false
 		end
 
 		def include? key
