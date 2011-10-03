@@ -22,9 +22,12 @@ module VocabulariSe
 		def initialize
 		end
 
-		def include? key, handler
+		def include? handler, query
 			now = Time.now
-			req = { :id => key }
+			req = {
+				:handler => handler,
+			   	:cquery => query
+			}
 			resp = CrawlerQueueEntry.first req
 			return (not resp.nil?)
 		end
