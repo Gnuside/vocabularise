@@ -15,15 +15,15 @@ module DataMapper
 			#load_as ::Object
 
 			def load(value64)
-				@debug = true
-				rdebug "loading value = %s" % value64.inspect
+				#@debug = true
+				#rdebug "loading value = %s" % value64.inspect
 				value = Base64.decode64(value64) if value64
 				::Marshal.load(value) if value
 			end
 
 			def dump(value)
-				@debug = true
-				rdebug "dumping value = %s" % value.inspect
+				#@debug = true
+				#rdebug "dumping value = %s" % value.inspect
 				value64 = ::Marshal.dump(value) if value
 				Base64.encode64(value64) if value64
 			end
