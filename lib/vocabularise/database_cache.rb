@@ -1,21 +1,38 @@
 
 require 'dm-core'
+#require 'dm-types/support/dirty_minder'
 require 'vocabularise/generic_cache'
 
 require 'monitor'
+require 'base64'
 require 'rdebug/base'
 
 module DataMapper
 	class Property
 		class Marshal < Text
+
 			primitive ::Object
+			#load_as ::Object
+
 			def load(value)
-				::Marshal.load(value) if value
+				@debug = true
+				rdebug "loading value = %s" % value.inspect
+				mvalue = Base64.decode64(value) if value
+				::Marshal.load(mvalue) if mvalue
 			end
 
 			def dump(value)
-				::Marshal.dump(value) if value
+				@debug = true
+				rdebug "dumping value = %s" % value.inspect
+				mvalue = ::Marshal.dump(value) if value
+				Base64.encode64(mvalue) if mvalue
 			end
+
+			def typecast(value)
+				value
+			end
+
+		#	include ::DataMapper::Property::DirtyMinder
 		end
 	end
 end
@@ -60,7 +77,6 @@ module VocabulariSe
 
 				req_create = { 
 					:id => key,
-					#:data => Marshal.dump( data ),
 					:data => data,
 					:created_at => now.to_i,
 					:expires_at => now.to_i + @timeout,
@@ -84,14 +100,8 @@ module VocabulariSe
 				:expires_at.gt => now.to_i
 			}
 			resp = DatabaseCacheEntry.first req
-			begin
-			#if resp then return Marshal.load( resp.data )
 			if resp then return resp.data
 			else return nil
-			end
-			rescue ArgumentError
-				pp resp
-				raise RuntimeError, "wtf? in data?"
 			end
 		end
 
