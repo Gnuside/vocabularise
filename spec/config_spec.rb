@@ -12,7 +12,7 @@ require 'vocabularise/config'
 
 #$:.unshift '../lib'
 
-describe Config, '#new' do
+describe 'Config' do
 	DB_PATH = "tmp/test/vocabularise.sqlite3"
 
 	before(:all) do
