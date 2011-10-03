@@ -23,7 +23,6 @@ module VocabulariSe
 		end
 
 		def include? handler, query
-			now = Time.now
 			req = {
 				:handler => handler,
 			   	:cquery => query
