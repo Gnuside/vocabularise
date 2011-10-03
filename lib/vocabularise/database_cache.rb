@@ -5,13 +5,28 @@ require 'vocabularise/generic_cache'
 require 'monitor'
 require 'rdebug/base'
 
+module DataMapper
+	class Property
+		class Marshal < Text
+			primitive ::Object
+			def load(value)
+				::Marshal.load(value) if value
+			end
+
+			def dump(value)
+				::Marshal.dump(value) if value
+			end
+		end
+	end
+end
+
 module VocabulariSe
 
 	class DatabaseCacheEntry
 		include DataMapper::Resource
 
 		property :id,   String, :key => true
-		property :data, Binary, :required => true 
+		property :data, Marshal, :required => true 
 		property :created_at, Integer, :required => true                        
 		property :expires_at, Integer, :required => true                        
 	end
@@ -45,7 +60,8 @@ module VocabulariSe
 
 				req_create = { 
 					:id => key,
-					:data => Marshal.dump( data ),
+					#:data => Marshal.dump( data ),
+					:data => data,
 					:created_at => now.to_i,
 					:expires_at => now.to_i + @timeout,
 				}
@@ -69,7 +85,8 @@ module VocabulariSe
 			}
 			resp = DatabaseCacheEntry.first req
 			begin
-			if resp then return Marshal.load( resp.data )
+			#if resp then return Marshal.load( resp.data )
+			if resp then return resp.data
 			else return nil
 			end
 			rescue ArgumentError
