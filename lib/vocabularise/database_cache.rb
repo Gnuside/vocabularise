@@ -14,18 +14,18 @@ module DataMapper
 			primitive ::Object
 			#load_as ::Object
 
-			def load(value)
+			def load(value64)
 				@debug = true
-				rdebug "loading value = %s" % value.inspect
-				mvalue = Base64.decode64(value) if value
-				::Marshal.load(mvalue) if mvalue
+				rdebug "loading value = %s" % value64.inspect
+				value = Base64.decode64(value64) if value64
+				::Marshal.load(value) if value
 			end
 
 			def dump(value)
 				@debug = true
 				rdebug "dumping value = %s" % value.inspect
-				mvalue = ::Marshal.dump(value) if value
-				Base64.encode64(mvalue) if mvalue
+				value64 = ::Marshal.dump(value) if value
+				Base64.encode64(value64) if value64
 			end
 
 			def typecast(value)
