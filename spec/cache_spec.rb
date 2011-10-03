@@ -10,7 +10,7 @@ require 'json'
 
 require 'vocabularise/config'
 
-describe 'Cache' do
+describe 'DatabaseCache' do
 	CACHE_TIMEOUT = 5
 	DB_PATH = "tmp/test/vocabularise.sqlite3"
 
@@ -69,6 +69,19 @@ describe 'Cache' do
 
 	it 'should create a database file' do
 		File.exist?(DB_PATH).should == true
+	end
+
+	it 'should list all entries' do
+		inside = [ 'A', 'B', 'C' ]
+		outside = ['D']
+
+		@cache['A'] = '1'
+		@cache['B'] = '2'
+		@cache['C'] = '3'
+		@cache.each do |entry|
+			inside.include?(entry.id).should == true
+			outside.include?(entry.id).should == false
+		end
 	end
 end
 
