@@ -1,64 +1,59 @@
 -# vim: set ts=4 sw=4 noet :
 - content_for :headers do
-	%script{ :type => "text/javascript", :src=>"/js/page_search.js" } 
+	%script{ :type => "text/javascript", :src=>"/js/page_search.js" }
 
 #search_search.span-24.last
 	%strong vocabulari.se the word
 	= haml :widget_search
 
 
-.col_header.tag_excepted.span-7
-	top-arrow
-
-.col_header.tag_counterversial.span-10
-	top-arrow
-
-.col_header.tag_clustering.span-7.last
-	top-arrow
-
-%hr
-
-.col_content.tag_excepted.span-7.colborder
-	%h2 
-		%a>< (un)
-		excepted
-
-	%ul.taglist
-		%li
-			%a a
-		%li
-			%a b
-		%li
-			%a c
-
-.col_content.tag_counterversial.span-8.colborder
-	%h2 
-		%a>< (un)
-		counterversial
-
-	%ul.taglist
-		%li c
-		%li a
-		%li b
-
-.col_content.tag_clustering.span-7.last
-	%h2 
-		%a>< (un)
-	clustering
-
-	%ul.taglist
-		%li a
-		%li c
-		%li b
+.col_header.span-24.last
+	.tag_expected.span-7
+		%img{ :src => "/images/top-arrow-green.png" }
+	.tag_controversial.span-10
+		%img{ :src => "/images/top-arrow-orange.png" }
+	.tag_aggregating.span-7.last
+		%img{ :src => "/images/top-arrow-blue.png" }
 
 %hr
 
-.col_footer.tag_excepted.span-7
-	bottom-arrow
+.col_content.span-24.last
+	.tag_expected.span-7.colborder
+		%h2
+			%a>< (un)
+			expected
 
-.col_footer.tag_counterversial.span-10
-	bottom-arrow
+		%ul#list_expected.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif")
 
-.col_footer.tag_clustering.span-7.last
-	bottom-arrow
+	.tag_controversial.span-8.colborder
+		%h2
+			%a>< (un)
+			controversial
+
+		%ul#list_controversial.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif")
+
+	.tag_aggregating.span-7.last
+		%h2
+			%a>< (dis)
+			aggregating
+
+		%ul#list_aggregating.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif")
+
+%hr
+
+.col_footer
+	.tag_expected.span-7
+		%img{ :src => "/images/bottom-arrow-green.png" }
+
+	.tag_controversial.span-10
+		%img{ :src => "/images/bottom-arrow-orange.png" }
+
+	.tag_aggregating.span-7.last
+		%img{ :src => "/images/bottom-arrow-blue.png" }
 

@@ -7,7 +7,7 @@ module VocabulariSe
 			@config = config
 		end
 
-		def exec tag
+		def exec tag, related_tags
 			raise NotImplementedError
 		end
 	end

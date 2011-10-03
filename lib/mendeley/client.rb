@@ -104,12 +104,13 @@ module Mendeley
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
+			cache_key = "mendeley:%s" % url
 			resp = nil
 			#pp url
 
 			if @cache.include? url then
 				rdebug "CACHE REQUEST %s%s" % [ base_api_url, url ]
-				resp = @cache[url]
+				resp = @cache[cache_key]
 				cache_used = true
 			else
 				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
@@ -132,7 +133,7 @@ module Mendeley
 			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
 				raise ServiceUnavailable, resp.header.inspect
 			end
-			@cache[url] = resp unless cache_used
+			@cache[cache_key] = resp unless cache_used
 
 			rdebug "result = %s" % json.inspect
 			return json
@@ -146,11 +147,12 @@ module Mendeley
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
+			cache_key = "mendeley:%s" % url
 			resp = nil
 
-			if @cache.include? url then
+			if @cache.include? cache_key then
 				rdebug "CACHE REQUEST %s%s" % [ base_api_url, url ]
-				resp = @cache[url]
+				resp = @cache[cache_key]
 				cache_used = true
 			else
 				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
@@ -174,7 +176,7 @@ module Mendeley
 			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
 				raise ServiceUnavailable, resp.header.inspect
 			end
-			@cache[url] = resp unless cache_used
+			@cache[cache_key] = resp unless cache_used
 
 			rdebug "result = %s" % json.inspect
 			return json
@@ -206,8 +208,6 @@ module Mendeley
 			end
 			return url
 		end
-
-
 
 	end
 end

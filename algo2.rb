@@ -8,14 +8,12 @@ $:.unshift 'lib'
 require 'pp'
 
 require 'rubygems'
-# use bundler
 require 'bundler/setup'
-#require 'sinatra'
+
 require 'json'
 
 require 'common/indent'
 require 'vocabularise/config'
-require 'vocabularise/cache'
 require 'vocabularise/utils'
 require 'vocabularise/controversial_algorithm'
 
@@ -28,9 +26,11 @@ algo = VocabulariSe::ControversialAlgorithm.new config
 
 puts "Algo II"
 print "tag ? "
+STDOUT.flush
 intag = STDIN.gets.strip
 
-result = algo.exec intag
+related_tags = VocabulariSe::Utils.related_tags config, intag
+result = algo.exec intag, related_tags
 
 puts "AlgoII - result :"
 pp JSON.generate(result[0..4])

@@ -1,4 +1,7 @@
 
+require 'vocabularise/config'
+require 'vocabularise/request_manager'
+require 'vocabularise/crawler'
 
 module VocabulariSe
 
@@ -20,11 +23,29 @@ module VocabulariSe
 
 		helpers Sinatra::ContentFor
 
+
+		# Common configuration
+		configure do
+			json = JSON.load File.open 'config/vocabularise.json'
+			config = VocabulariSe::Config.new json
+			manager = VocabulariSe::RequestManager.new config
+			crawler = VocabulariSe::Crawler.new config
+
+			set :crawler, crawler
+			set :config, config
+			set :manager, manager
+
+			# run crawler thread ;-)
+			crawler.run
+		end
+
+
 		# Static page
 		get "/about" do
 			@title = "About"
 			haml :page_about
 		end
+
 
 		# Static page
 		get "/news" do
@@ -32,13 +53,13 @@ module VocabulariSe
 			haml :page_news
 		end
 
+
 		# Static page
 		get "/contact" do
 			@title = "Contact"
 			haml :page_contact
 		end
 
-		#
 		#
 		# Index page
 		get "/" do
@@ -51,12 +72,15 @@ module VocabulariSe
 		get "/search" do
 			# FIXME: use cache for search
 			@query = params[:query]
+
+			settings.manager.request :related, @query
+
 			haml :page_search
 		end
 
 		# Show request queue
-		get "/status/request_queue" do
-			haml :page_request_queue
+		get "/status/queue" do
+			haml :page_queue
 		end
 
 
@@ -66,27 +90,52 @@ module VocabulariSe
 		end
 
 
-		# Return information about mendeley documents for tag tag :tag 
-		# restricted to search :search
-		get "/tag/:tag/mendeley_doc/:search" do
-			# FIXME: use cache for search/tag
-			raise NotImplementedError
+		# Return results for expected algorithm
+		get "/search/expected" do
+			@query = params[:query]
+
+			result = settings.manager.request :expected, @query
+			if result.nil? then
+				status(503)
+			else
+				JSON.generate( { 
+					:algorithm => "expected",
+					:result => result
+				} )
+			end
 		end
 
 
-		# Return information about mendeley disciplines for tag tag :tag 
-		# restructed to search :search
-		get "/tag/:tag/mendeley_disc/:search" do
-			# FIXME: use cache for search/tag
-			raise NotImplementedError
+		# Return results for aggregating algorithm
+		get "/search/controversial" do
+			@query = params[:query]
+			
+			result = settings.manager.request :controversial, @query
+			if result.nil? then
+				status(503)
+			else
+				JSON.generate( { 
+					:algorithm => "controversial",
+					:result => result
+				} )
+			end
+
 		end
 
 
 		# Return information about wikipedia pages for tag tag :tag 
-		# restricted to search :search
-		get "/tag/:tag/wikipedia_page/:search" do
-			# FIXME: use cache for search/tag
-			raise NotImplementedError
+		get "/search/aggregating" do
+			@query = params[:query]
+
+			result = settings.manager.request :aggregating, @query
+			if result.nil? then
+				status(503)
+			else
+				JSON.generate( { 
+					:algorithm => "aggregating",
+					:result => result
+				} )
+			end
 		end
 
 

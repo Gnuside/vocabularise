@@ -18,21 +18,35 @@
 		%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/common.css" }
 		= yield_content :headers
 
+		-# less important things
+		%script{ :type => "text/javascript", :src=>"/js/uservoice.js" }
+
 		%body
 			.container
-				#header.span-24.last
-					%h1.prepend-8.span-8.last
+				#header.prepend-6.span-12.last
+					%h1
 						%a{:href=>"/"} vocabulari.se
+					%hr.tag.tag_expected
+					%hr.tag.tag_controversial
+					%hr.tag.tag_aggregating
 				#content.span-24.last
 					= yield
-				#footer.prepend-8.span-8.last
-					%hr
-					%hr
-					%hr
+				#footer.prepend-6.span-12.last
+					%hr.tag.tag_expected
+					%hr.tag.tag_controversial
+					%hr.tag.tag_aggregating
 					%ul
-						%li.span-3
+						%li.span-4
 							%a{:href => '/about'} about
-						%li.span-3
-							%a{:href => '/news'} news
-						%li.span-2.last
+						%li.span-4
+							%a{:href => 'http://vocabularise.blogspot.com/', :target => '_blank' } news
+						%li.span-4.last
 							%a{:href => '/contact'} contact
+
+						%li.span-6
+							%small
+								%a{:href => '/status/cache'} cache status
+							
+						%li.span-6
+							%small
+								%a{:href => '/status/queue'} queue status
