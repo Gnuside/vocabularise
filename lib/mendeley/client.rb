@@ -1,9 +1,22 @@
 
+require 'vocabularise/config'
 require 'rdebug/base'
 require 'mendeley/cache'
 require 'cgi'
 
+require 'vocabularise/crawler_handler'
+
 module Mendeley
+
+	REQUEST_STATS_AUTHORS = :request_stats_authors
+
+	class RequestStatsAuthorsHandler < ::VocabulariSe::CrawlerHandler::Base
+		handles REQUEST_STATS_AUTHORS
+		#process do |crawler|
+		#	crawler
+		#end
+	end
+
 	class Client
 
 		attr_reader :base_api_url,
@@ -26,7 +39,7 @@ module Mendeley
 
 		#
 		#
-		def initialize consumer_key, cache = {}
+		def initialize consumer_key, cache, crawler
 			@consumer_key = consumer_key
 			@base_api_url =  "http://api.mendeley.com"
 			@base_site_url =  "http://www.mendeley.com"
@@ -38,28 +51,32 @@ module Mendeley
 		#
 		#
 		def stats_authors params
-			_get_url STATS_AUTHORS_URL, params
+			crawler.request REQUEST_STATS_AUTHORS, params
+			#_get_url STATS_AUTHORS_URL, params
 		end
 
 
 		#
 		#
 		def stats_papers params
-			_get_url STATS_PAPERS_URL, params
+			crawler.request REQUEST_STATS_PAPERS, params
+			#_get_url STATS_PAPERS_URL, params
 		end
 
 
 		#
 		#
 		def stats_publications params
-			_get_url STATS_PUBLICATIONS_URL, params
+			crawler.request REQUEST_STATS_PUBLICATIONS, params
+			#_get_url STATS_PUBLICATIONS_URL, params
 		end
 
 
 		#
 		#
 		def stats_tags params
-			_get_url STATS_TAGS_URL, params
+			crawler.request REQUEST_STATS_TAGS, params
+			#_get_url STATS_TAGS_URL, params
 		end
 
 
@@ -68,7 +85,8 @@ module Mendeley
 		def documents_search params
 			#validator.required_params [:items, :page]
 			#validator.optional_params [:items, :page]
-			_get_url DOCUMENTS_SEARCH_URL, params
+			crawler.request REQUEST_DOCUMENT_SEARCH, params
+			#_get_url DOCUMENTS_SEARCH_URL, params
 		end
 
 		#
@@ -76,7 +94,8 @@ module Mendeley
 		def documents_details params
 			#validator.required_params [:id]
 			#validator.optional_params [:type]
-			_get_url DOCUMENTS_DETAILS_URL, params
+			crawler.request REQUEST_DOCUMENTS_DETAILS, params
+			#_get_url DOCUMENTS_DETAILS_URL, params
 		end
 
 		#
@@ -84,7 +103,8 @@ module Mendeley
 		def documents_tagged params
 			#validator.required_params [:tag]
 			#validator.optional_params [:items, :page]
-			_get_url DOCUMENTS_TAGGED_URL, params
+			crawler.request REQUEST_DOCUMENTS_TAGGED, params
+			#_get_url DOCUMENTS_TAGGED_URL, params
 		end
 
 
