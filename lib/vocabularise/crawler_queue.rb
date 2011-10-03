@@ -100,6 +100,7 @@ module VocabulariSe
 			}
 			resp = CrawlerQueueEntry.first req
 			resp.destroy if resp
+			return self
 		end
 
 		def each &blk
@@ -109,6 +110,14 @@ module VocabulariSe
 				yield x 
 			end
 			raise RuntimeError
+		end
+
+		def empty?
+			return (size == 0)
+		end
+
+		def size
+			return CrawlerQueueEntry.count
 		end
 	end
 end
