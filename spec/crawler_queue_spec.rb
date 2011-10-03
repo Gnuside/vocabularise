@@ -15,28 +15,11 @@ require 'dm-sqlite-adapter'
 require 'wikipedia'
 require 'vocabularise/crawler_queue'
 
+require 'spec/spec_helper'
+
 describe 'CrawlerQueue' do
 
-	DB_PATH = "tmp/test/vocabularise.sqlite3"
-
 	before :all do
-		FileUtils.rm_f DB_PATH
-		hash = {                                                   
-			"adapter"   => 'sqlite3',                                   
-			"database"  => DB_PATH,
-			"username"  => "",                                          
-			"password"  => "",                                          
-			"host"      => "",                                          
-			"timeout"   => 15000                                        
-		} 
-		FileUtils.mkdir_p File.dirname DB_PATH
-
-		DataMapper::Logger.new(STDERR, :info)                               
-		DataMapper.finalize                                                 
-		DataMapper.setup(:default, hash)                               
-		DataMapper::Model.raise_on_save_failure = true                                  
-		DataMapper.auto_upgrade!
-
 		@queue = ::VocabulariSe::CrawlerQueue.new
 	end
 
