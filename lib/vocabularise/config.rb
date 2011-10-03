@@ -2,7 +2,7 @@
 require 'vocabularise/database_cache'
 require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia'
-require 'mendeley'
+#require 'mendeley'
 require 'wikipedia'
 
 require 'datamapper'
@@ -37,7 +37,7 @@ module VocabulariSe
 
 		def validate
 			raise ConfigurationError, "Cache not defined" if @cache.nil?
-			raise ConfigurationError, "No consumer key defined" if @mendeley_client.nil?
+			#raise ConfigurationError, "No mendeley client" if @mendeley_client.nil?
 		end
 
 		def load_json json
@@ -73,7 +73,6 @@ module VocabulariSe
 			end
 
 			DataMapper::Logger.new(STDERR, :info)
-			pp @database
 			DataMapper.finalize
 			DataMapper.setup(:default, @database)
 			DataMapper::Model.raise_on_save_failure = true                      
@@ -82,13 +81,12 @@ module VocabulariSe
 
 			# setup cache & queue
 			# 2 hours
-			@cache = VocabulariSe::DatabaseCache.new(60 * 60 * 2)
-			# 1 day
-			#@cache = VocabulariSe::DirectoryCache.new json["cache_dir"], (60 * 60 * 24)
-			
-
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
-			@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
+			raise ConfigurationError, "no cache duration specified" unless json.include? "cache_duration"
+
+			@cache = VocabulariSe::DatabaseCache.new(60 * 60 * 2)
+			
+			#@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
 			@wikipedia_client = Wikipedia::Client.new
 			@wikipedia_client.extend(WikipediaFix)
 			@wikipedia_client.cache = cache
