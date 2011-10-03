@@ -1,5 +1,6 @@
 {
   "cache_dir" : "cache",
+  "cache_duration" : 7200,
   "consumer_key" : "****",
   "consumer_secret" : "****",
   "db_adapter" : "sqlite3",
