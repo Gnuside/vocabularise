@@ -8,15 +8,6 @@ require 'vocabularise/crawler_handler'
 
 module Mendeley
 
-	REQUEST_STATS_AUTHORS = :request_stats_authors
-
-	class RequestStatsAuthorsHandler < ::VocabulariSe::CrawlerHandler::Base
-		handles REQUEST_STATS_AUTHORS
-		#process do |crawler|
-		#	crawler
-		#end
-	end
-
 	class Client
 
 		attr_reader :base_api_url,
@@ -51,32 +42,28 @@ module Mendeley
 		#
 		#
 		def stats_authors params
-			crawler.request REQUEST_STATS_AUTHORS, params
-			#_get_url STATS_AUTHORS_URL, params
+			request_get STATS_AUTHORS_URL, params
 		end
 
 
 		#
 		#
 		def stats_papers params
-			crawler.request REQUEST_STATS_PAPERS, params
-			#_get_url STATS_PAPERS_URL, params
+			request_get STATS_PAPERS_URL, params
 		end
 
 
 		#
 		#
 		def stats_publications params
-			crawler.request REQUEST_STATS_PUBLICATIONS, params
-			#_get_url STATS_PUBLICATIONS_URL, params
+			request_get STATS_PUBLICATIONS_URL, params
 		end
 
 
 		#
 		#
 		def stats_tags params
-			crawler.request REQUEST_STATS_TAGS, params
-			#_get_url STATS_TAGS_URL, params
+			request_get STATS_TAGS_URL, params
 		end
 
 
@@ -85,8 +72,7 @@ module Mendeley
 		def documents_search params
 			#validator.required_params [:items, :page]
 			#validator.optional_params [:items, :page]
-			crawler.request REQUEST_DOCUMENT_SEARCH, params
-			#_get_url DOCUMENTS_SEARCH_URL, params
+			request_get DOCUMENTS_SEARCH_URL, params
 		end
 
 		#
@@ -94,8 +80,7 @@ module Mendeley
 		def documents_details params
 			#validator.required_params [:id]
 			#validator.optional_params [:type]
-			crawler.request REQUEST_DOCUMENTS_DETAILS, params
-			#_get_url DOCUMENTS_DETAILS_URL, params
+			request_get DOCUMENTS_DETAILS_URL, params
 		end
 
 		#
@@ -103,8 +88,7 @@ module Mendeley
 		def documents_tagged params
 			#validator.required_params [:tag]
 			#validator.optional_params [:items, :page]
-			crawler.request REQUEST_DOCUMENTS_TAGGED, params
-			#_get_url DOCUMENTS_TAGGED_URL, params
+			request_get DOCUMENTS_TAGGED_URL, params
 		end
 
 
@@ -114,12 +98,9 @@ module Mendeley
 			# tag 
 		end
 
-		private
-
-
 		#
 		#
-		def _get_url base, params
+		def request_get base, params
 			#rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
@@ -162,7 +143,7 @@ module Mendeley
 
 		#
 		#
-		def _post_url base, params
+		def request_post base, params
 			#rdebug params.inspect
 			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
