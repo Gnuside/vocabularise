@@ -14,29 +14,12 @@ require 'dm-sqlite-adapter'
 
 require 'vocabularise/config'
 
+require 'spec/spec_helper'
 
 describe 'DatabaseCache' do
 	CACHE_TIMEOUT = 5
-	DB_PATH = "tmp/test/vocabularise.sqlite3"
 
-	before :all do
-		FileUtils.rm_f DB_PATH
-		hash = {                                                   
-			"adapter"   => 'sqlite3',                                   
-			"database"  => DB_PATH,
-			"username"  => "",                                          
-			"password"  => "",                                          
-			"host"      => "",                                          
-			"timeout"   => 15000                                        
-		} 
-		FileUtils.mkdir_p File.dirname DB_PATH
-
-		DataMapper::Logger.new(STDERR, :info)                               
-		DataMapper.finalize                                                 
-		DataMapper.setup(:default, hash)                               
-		DataMapper::Model.raise_on_save_failure = true                                  
-		DataMapper.auto_upgrade!
-
+	before :each do
 		@cache = VocabulariSe::DatabaseCache.new( CACHE_TIMEOUT )               
 	end
 	
@@ -70,10 +53,6 @@ describe 'DatabaseCache' do
 		@cache['A'] = '1'
 		sleep CACHE_TIMEOUT * 1.1
 		@cache['A'].should == nil
-	end
-
-	it 'should create a database file' do
-		File.exist?(DB_PATH).should == true
 	end
 
 	it 'should list all entries' do
