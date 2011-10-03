@@ -11,15 +11,15 @@ require 'json'
 require 'wikipedia'
 require 'vocabularise/wikipedia'
 
-describe 'WikipediaFix' do
+describe 'Wikipedia' do
 
 	before :all do
 		@wikipedia_client = Wikipedia::Client.new                           
-		@wikipedia_client.extend(VocabulariSe::WikipediaFix)                              
-		@wikipedia_client.cache = {}
 	end
 	
 	it 'should search' do
+		@wikipedia_client.extend(::VocabulariSe::Wikipedia::Search)                              
+
 		@wikipedia_client.should respond_to(:search)
 		result = @wikipedia_client.search "Love"
 		result.kind_of?(String).should == true
@@ -35,6 +35,14 @@ describe 'WikipediaFix' do
 
 		json = JSON.parse result
 		json.include?("query").should == true
+	end
+
+	it 'should use the cache' do
+		cache = {}
+		@wikipedia_client.extend(::VocabulariSe::Wikipedia::Cache)                              
+		@wikipedia_client.cache = cache
+		result = @wikipedia_client.request_page "Love"
+		cache.empty?.should == false
 	end
 end
 
