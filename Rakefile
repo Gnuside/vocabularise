@@ -21,6 +21,7 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 	t.pattern = FileList['spec/**/*_spec.rb']
 	t.verbose = true
 	t.ruby_opts = "-Ilib"
+	t.rspec_opts = "--format documentation"
 end
 
 
