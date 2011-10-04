@@ -15,8 +15,6 @@ set :branch, "master"
 set :scm, :git
 set :scm_verbose, true
 
-# limit number of releases on server
-set :keep_releases, 5
 after "deploy:update", "deploy:cleanup" 
 
 # To disable asset timestamps updates (javascript, stylesheets, etc.)

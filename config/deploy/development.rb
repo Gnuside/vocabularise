@@ -9,3 +9,5 @@ set :use_sudo, false
 set :deploy_to, "/home/data/www/com.gnuside/client.deuxiemelabo"
 set :deploy_env, 'development'
 
+# limit number of releases on server
+set :keep_releases, 2

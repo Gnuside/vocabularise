@@ -9,3 +9,5 @@ set :use_sudo, false
 set :deploy_to, "/home/vocabularise"
 set :deploy_env, 'production'
 
+# limit number of releases on server
+set :keep_releases, 5
