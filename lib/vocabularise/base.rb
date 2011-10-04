@@ -1,6 +1,5 @@
 
 require 'vocabularise/config'
-require 'vocabularise/request_manager'
 require 'vocabularise/crawler'
 
 module VocabulariSe
@@ -28,12 +27,12 @@ module VocabulariSe
 		configure do
 			json = JSON.load File.open 'config/vocabularise.json'
 			config = VocabulariSe::Config.new json
-			manager = VocabulariSe::RequestManager.new config
 			crawler = VocabulariSe::Crawler.new config
+			#OBSOLETE:crawler = VocabulariSe::RequestManager.new config, crawler.queue
 
 			set :crawler, crawler
 			set :config, config
-			set :manager, manager
+			#OBSOLETE:set :crawler, manager
 
 			# run crawler thread ;-)
 			crawler.run
@@ -73,7 +72,9 @@ module VocabulariSe
 			# FIXME: use cache for search
 			@query = params[:query]
 
-			settings.manager.request :related, @query
+			settings.crawler.request( Crawler::REQUEST_RELATED, 
+									 @query,
+									 Crawler::MODE_INTERACTIVE )
 
 			haml :page_search
 		end
@@ -94,7 +95,9 @@ module VocabulariSe
 		get "/search/expected" do
 			@query = params[:query]
 
-			result = settings.manager.request :expected, @query
+			result = settings.crawler.request( Crawler::REQUEST_EXPECTED, 
+											  @query, 
+											  Crawler::MODE_INTERACTIVE )
 			if result.nil? then
 				status(503)
 			else
@@ -110,7 +113,9 @@ module VocabulariSe
 		get "/search/controversial" do
 			@query = params[:query]
 			
-			result = settings.manager.request :controversial, @query
+			result = settings.crawler.request( Crawler::REQUEST_CONTROVERSIAL, 
+											  @query,
+											  Crawler::MODE_INTERACTIVE )
 			if result.nil? then
 				status(503)
 			else
@@ -127,7 +132,9 @@ module VocabulariSe
 		get "/search/aggregating" do
 			@query = params[:query]
 
-			result = settings.manager.request :aggregating, @query
+			result = settings.crawler.request( Crawler::REQUEST_AGGREGATING, 
+											  @query,
+											  Crawler::MODE_INTERACTIVE )
 			if result.nil? then
 				status(503)
 			else
