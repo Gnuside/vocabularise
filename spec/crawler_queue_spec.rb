@@ -121,7 +121,14 @@ describe 'CrawlerQueue' do
 
 
 	#
-	it 'should not shift empty queue' do
+	it 'should not first an empty queue' do
+		@queue.empty!
+
+		lambda{ @queue.first }.should raise_error VocabulariSe::CrawlerQueue::EmptyQueueError
+	end
+
+	#
+	it 'should not shift an empty queue' do
 		@queue.empty!
 
 		lambda{ @queue.shift }.should raise_error VocabulariSe::CrawlerQueue::EmptyQueueError
