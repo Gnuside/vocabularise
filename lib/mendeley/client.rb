@@ -97,15 +97,16 @@ module Mendeley
 			# tag 
 		end
 
+
 		#
 		#
-		def request_get base, params
+		def request_url base, params, &blk
 			base_api_url = URI.parse( @base_api_url )
 			url = create_url base, params
+			rdebug "REQUEST %s%s" % [ base_api_url, url ]
 			resp = nil
 
 			http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-				rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
 				resp = http.get(url,nil)
 
 				if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
@@ -124,33 +125,17 @@ module Mendeley
 			return json
 		end
 
+		
+		#
+		#
+		def request_get base, params
+			request_url(base, params){ |http| http.get(url,nil) }
+		end
 
 		#
 		#
 		def request_post base, params
-			base_api_url = URI.parse( @base_api_url )
-			url = create_url base, params
-			resp = nil
-
-				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
-					resp = http.get(url,nil)
-					raise RateLimitExceeded
-
-					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
-						raise RateLimitExceeded, resp.header.inspect
-					end
-				end
-
-			json = JSON.parse resp.body
-
-			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
-				raise RateLimitExceeded, resp.header.inspect
-			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
-				raise ServiceUnavailable, resp.header.inspect
-			end
-
-			return json
+			request_url(base, params){ |http| http.post(url,nil) }
 		end
 
 
