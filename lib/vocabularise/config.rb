@@ -1,12 +1,14 @@
 
-require 'vocabularise/database_cache'
-require 'vocabularise/hit_counter'
-require 'vocabularise/wikipedia'
-#require 'mendeley'
+require 'mendeley'
 require 'wikipedia'
 
 require 'datamapper'
 require 'dm-core'                                                               
+
+require 'vocabularise/database_cache'
+require 'vocabularise/hit_counter'
+require 'vocabularise/wikipedia'
+require 'vocabularise/mendeley'
 
 
 module VocabulariSe
@@ -86,7 +88,10 @@ module VocabulariSe
 
 			@cache = VocabulariSe::DatabaseCache.new(60 * 60 * 2)
 			
-			#@mendeley_client = Mendeley::Client.new( json["consumer_key"], cache )
+			@mendeley_client = ::Mendeley::Client.new( json["consumer_key"] )
+			@mendeley_client.extend(::VocabulariSe::Mendeley::Cache)
+			@mendeley_client.cache = cache
+
 			@wikipedia_client = ::Wikipedia::Client.new
 			@wikipedia_client.extend(::VocabulariSe::Wikipedia::Search)
 			@wikipedia_client.extend(::VocabulariSe::Wikipedia::Cache)
