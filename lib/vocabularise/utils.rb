@@ -4,6 +4,7 @@ require 'mendeley'
 
 require 'rubygems'
 require 'wikipedia'
+require 'mendeley/client'
 
 module VocabulariSe
 	class Utils
