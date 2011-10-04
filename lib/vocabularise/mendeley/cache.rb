@@ -18,17 +18,17 @@ module VocabulariSe ; module Mendeley
 			super
 
 			@cache = {}
+			@debug = true
 		end
 
 		#
 		#
-		def request_get base, params
-			#rdebug params.inspect
-			url = _make_url base, params
+		def old_request_url base, params, &blk
+			
+			url = create_url base, params
 			cache_used = false
 			cache_key = "mendeley:%s" % url
 			resp = nil
-			#pp url
 
 			if @cache.include? url then
 				rdebug "CACHE REQUEST %s%s" % [ base_api_url, url ]
@@ -37,7 +37,7 @@ module VocabulariSe ; module Mendeley
 			else
 				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
-					resp = http.get(url,nil)
+					resp = yield http
 
 					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
 						raise RateLimitExceeded, resp.header.inspect
@@ -45,63 +45,42 @@ module VocabulariSe ; module Mendeley
 				end
 			end
 
-			#pp resp.to_hash
-			#pp resp.inspect
 			json = JSON.parse resp.body
 			json[JSON_CACHE_KEY] = cache_used
 
-			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
+			case json[JSON_ERROR_KEY]
+			when /limit\s*exceeded/ then
 				raise RateLimitExceeded, resp.header.inspect
-			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
+			when /temporarily\s*unavailable/ then
 				raise ServiceUnavailable, resp.header.inspect
 			end
 			@cache[cache_key] = resp unless cache_used
 
 			rdebug "result = %s" % json.inspect
+			exit 1 #FIXME: debug
 			return json
 		end
 
 
 		#
 		#
-		def request_post base, params
-			#rdebug params.inspect
-			base_api_url = URI.parse( @base_api_url )
-			url = _make_url base, params
-			cache_used = false
+		def request_url base, params, &blk
+			
+			url = create_url base, params
 			cache_key = "mendeley:%s" % url
 			resp = nil
 
+			pp @cache
 			if @cache.include? cache_key then
 				rdebug "CACHE REQUEST %s%s" % [ base_api_url, url ]
 				resp = @cache[cache_key]
-				cache_used = true
 			else
-				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
-					rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
-					resp = http.get(url,nil)
-					raise RateLimitExceeded
-
-					if ( resp["x-ratelimit-remaining"][0].to_i < RATELIMIT_EXCEEDED_LIMIT ) then
-						raise RateLimitExceeded, resp.header.inspect
-					end
-				end
+				rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
+				resp = super base, params, &blk
+				@cache[cache_key] = resp
 			end
 
-			#pp resp.to_hash
-			#pp resp.inspect
-			json = JSON.parse resp.body
-			json[JSON_CACHE_KEY] = cache_used
-
-			if ( json[JSON_ERROR_KEY] =~ /limit\s*exceeded/ ) then
-				raise RateLimitExceeded, resp.header.inspect
-			elsif ( json[JSON_ERROR_KEY] =~ /temporarily\s*unavailable/ ) then
-				raise ServiceUnavailable, resp.header.inspect
-			end
-			@cache[cache_key] = resp unless cache_used
-
-			rdebug "result = %s" % json.inspect
-			return json
+			return resp
 		end
 
 	end
