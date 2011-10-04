@@ -29,6 +29,11 @@ describe 'DatabaseCache' do
 		@cache['C'] = '3'
 	end
 
+	it 'should be able to store twice' do
+		@cache['A'] = '1'
+		@cache['A'] = '1'
+	end
+
 	it 'should answer to include correctly' do
 		@cache.include?('A').should == true
 		@cache.include?('B').should == true
