@@ -6,7 +6,7 @@ require 'cgi'
 
 require 'vocabularise/crawler_handler'
 
-module Vocabularise ; module Mendeley 
+module VocabulariSe ; module Mendeley 
 
 	module Cache
 
