@@ -29,6 +29,8 @@ module VocabulariSe
 		def initialize config
 			@config = config
 			@queue = CrawlerQueue.new
+			@queue.empty!
+
 			@debug = true
 			@monitor = Monitor.new
 
@@ -40,23 +42,26 @@ module VocabulariSe
 		# request a request
 		#
 		# if request is in cache then send a result
-		def request handler, query, mode
+		def request handler, query, mode=MODE_PASSIVE
+			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query, mode ]
 
 			result = nil
 			@monitor.synchronize do 
 				cache_key = _cache_key(handler, query)
 				if @config.cache.include? cache_key then
-					rdebug "request in cache %s, %s" % [handler, query]
+					rdebug "request in cache (%s, %s)" % [handler, query]
 					# send result from cache
 					result = @config.cache[cache_key]
 
 				elsif @queue.include? handler, query then
-					rdebug "request in queue %s, %s" % [handler, query]
-					#@queue.push handler, query, priority
+					rdebug "request in queue (%s, %s)" % [handler, query]
+
+					# FIXME: increase queue priority
 					# you'll have to wait
+					
 					result = nil
 				else
-					rdebug "request nowhere %s, %s" % [handler, query]
+					rdebug "request nowhere (%s, %s)" % [handler, query]
 					# neither in cache nor in queue
 					# we add request to the queue
 					priority = case mode 
@@ -73,6 +78,7 @@ module VocabulariSe
 
 
 
+=begin
 		# no need to be synchronized
 		def handle req
 			rdebug "begin-run %s, %s" % [req.handler, req.cquery]
@@ -84,7 +90,6 @@ module VocabulariSe
 				handler.process req
 			end
 
-=begin
 			case req.handler
 			when REQUEST_RELATED then
 				result = VocabulariSe::Utils.related_tags @config, req.cquery
@@ -95,11 +100,11 @@ module VocabulariSe
 			else
 				rdebug "unknown handler for %s" % req.inspect
 			end
-=end
 
 			@config.cache[cache_key] = result if result
 			STDERR.puts "request end-run %s, %s" % [req.handler, req.cquery]
 		end
+=end
 
 
 		# no need to be synchronized
@@ -113,11 +118,12 @@ module VocabulariSe
 					# get first in queue, by priority
 					next if @queue.empty?
 					rdebug 'queue first'
-					req = @queue.first
 
-					rdebug 'handling %s' % req.inspect
+					e_handler, e_query, e_priority = @queue.first
+
+					rdebug 'handling %s, %s, %s' % [ e_handler, e_query, e_priority ]
 					# call proper handler for request
-					handle req
+					process e_handler, e_query, e_priority
 
 					rdebug 'shifting queue'
 					@queue.shift
@@ -139,9 +145,9 @@ module VocabulariSe
 		end
 
 		def process handle, query, mode
-			find_handlers( statement ).each do |handler|
+			find_handlers( handle ).each do |handler|
 				begin
-					handler.new(self,statement).process
+					handler.new(self,query,mode).process
 				end
 			end
 		end
