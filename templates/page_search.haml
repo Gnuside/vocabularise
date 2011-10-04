@@ -8,52 +8,51 @@
 
 
 .col_header.span-24.last
-	.tag_expected.span-7
-		%img{ :src => "/images/top-arrow-green.png" }
-	.tag_controversial.span-10
-		%img{ :src => "/images/top-arrow-orange.png" }
-	.tag_aggregating.span-7.last
-		%img{ :src => "/images/top-arrow-blue.png" }
-
-%hr
-
-.col_content.span-24.last
-	.tag_expected.span-7.colborder
+	.tag.tag_expected.span-8
 		%h2
 			%a>< (un)
 			expected
+		%p<
+			(related scientific articles)
+		%img{ :src => "/images/top-arrow-green.png" }
+	.tag.tag_controversial.span-8
+		%h2
+			%a>< (un)
+			controversial
+		%p<
+			(related Wikipedia entries)
+		%img{ :src => "/images/top-arrow-orange.png" }
+	.tag.tag_aggregating.span-8.last
+		%h2
+			%a>< (dis)
+			aggregating
+		%p<
+			(related Mendeley disciplines)
+		%img{ :src => "/images/top-arrow-blue.png" }
 
+.col_content.span-24.last
+	.tag_expected.span-8
 		%ul#list_expected.taglist
 			%li<
 				%img(src="/images/ajax-loader-bar.gif")
 
-	.tag_controversial.span-8.colborder
-		%h2
-			%a>< (un)
-			controversial
-
+	.tag_controversial.span-8
 		%ul#list_controversial.taglist
 			%li<
 				%img(src="/images/ajax-loader-bar.gif")
 
-	.tag_aggregating.span-7.last
-		%h2
-			%a>< (dis)
-			aggregating
-
+	.tag_aggregating.span-8.last
 		%ul#list_aggregating.taglist
 			%li<
 				%img(src="/images/ajax-loader-bar.gif")
 
-%hr
-
 .col_footer
-	.tag_expected.span-7
+	.tag.tag_expected.span-8
 		%img{ :src => "/images/bottom-arrow-green.png" }
 
-	.tag_controversial.span-10
+	.tag.tag_controversial.span-8
 		%img{ :src => "/images/bottom-arrow-orange.png" }
 
-	.tag_aggregating.span-7.last
+	.tag.tag_aggregating.span-8.last
 		%img{ :src => "/images/bottom-arrow-blue.png" }
 
