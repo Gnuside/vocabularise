@@ -16,7 +16,7 @@ require 'vocabularise/config'
 
 require 'spec/spec_helper'
 
-describe 'Vocabularise::Mendeley::Cache' do
+describe 'Vocabularise::MendeleyExt::Cache' do
 
 	CONSUMER_KEY = "d0d46ad71eb6691a44fb608424ad71c704e160d23"
 
@@ -24,7 +24,7 @@ describe 'Vocabularise::Mendeley::Cache' do
 		@cache = {}
 
 		@mendeley_client = ::Mendeley::Client.new( CONSUMER_KEY )
-		@mendeley_client.extend(::VocabulariSe::Mendeley::Cache)
+		@mendeley_client.extend(::VocabulariSe::MendeleyExt::Cache)
 		@mendeley_client.cache = @cache
 	end
 	
