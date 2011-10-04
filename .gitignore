@@ -3,3 +3,4 @@ vendor/*
 .bundle
 config/vocabularise.json*
 !config/vocabularise.json.example
+*.sqlite3
