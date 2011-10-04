@@ -6,7 +6,7 @@ require 'cgi'
 
 require 'vocabularise/crawler_handler'
 
-module Vocabularise ; module Mendeley 
+module VocabulariSe ; module Mendeley 
 
 	module Cache
 
@@ -20,12 +20,10 @@ module Vocabularise ; module Mendeley
 			@cache = {}
 		end
 
-
 		#
 		#
 		def request_get base, params
 			#rdebug params.inspect
-			base_api_url = URI.parse( @base_api_url )
 			url = _make_url base, params
 			cache_used = false
 			cache_key = "mendeley:%s" % url
@@ -104,33 +102,6 @@ module Vocabularise ; module Mendeley
 
 			rdebug "result = %s" % json.inspect
 			return json
-		end
-
-
-		#
-		#
-		def _make_url base, params
-			l_params = params.dup 
-			l_params[:consumer_key] = @consumer_key
-			url = base.dup
-			url_has_params = false
-			l_params.each do |key,val|
-				# skip parameter called limit
-				next if key == :limit
-				if url =~ /:#{key.to_s}/ then
-					# match & replace
-					url = url.gsub(/:#{key.to_s}/,CGI::escape(val.to_s))
-				else
-					url += if url_has_params then "&"
-						   else
-							   url_has_params = true
-							   "?"
-						   end
-					url = url + key.to_s + "=" + CGI::escape(val.to_s)
-					# add in url
-				end
-			end
-			return url
 		end
 
 	end
