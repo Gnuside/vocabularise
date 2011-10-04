@@ -111,9 +111,9 @@ module VocabulariSe
 					rdebug 'loop start (sleep)'
 					sleep 1
 					# get first in queue, by priority
+					next if @queue.empty?
 					rdebug 'queue first'
 					req = @queue.first
-					next if req.nil?
 
 					rdebug 'handling %s' % req.inspect
 					# call proper handler for request
