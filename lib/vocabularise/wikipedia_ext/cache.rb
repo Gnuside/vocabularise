@@ -1,7 +1,7 @@
 
 require 'open-uri'
 
-module VocabulariSe ; module Wikipedia
+module VocabulariSe ; module WikipediaExt
 
 	#
 	# A simple mixin adding Cache support to Wikipedia class from
