@@ -13,7 +13,7 @@ module VocabulariSe
 		property :cquery,   String, :unique_index => :u1
 		property :handler, String, :unique_index => :u1
 		property :priority, Integer, :default => 0
-		property :created_at, Integer, :required => true                        
+		property :created_at, Integer, :required => true
 
 		validates_uniqueness_of :cquery, :scope => :handler
 	end
@@ -59,16 +59,20 @@ module VocabulariSe
 
 
 		def first
-			req = { 
+			req = {
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
 			resp = CrawlerQueueEntry.first req
-			return resp.handler, resp.cquery, resp.priority
+			if resp
+				then return resp.handler, resp.cquery, resp.priority
+			else
+				raise EmptyQueueError
+			end
 		end
 
 
 		def shift
-			req = { 
+			req = {
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
 			resp = CrawlerQueueEntry.first req
@@ -91,8 +95,8 @@ module VocabulariSe
 		def each &blk
 			now = Time.now
 			resp = CrawlerQueueEntry.all
-			resp.each do |x| 
-				yield x 
+			resp.each do |x|
+				yield x
 			end
 			raise RuntimeError
 		end
