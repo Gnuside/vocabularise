@@ -144,10 +144,12 @@ module VocabulariSe
 			end
 		end
 
-		def process handle, query, mode
-			find_handlers( handle ).each do |handler|
+		def process handler, query, mode
+			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query, mode ]
+			sleep 20
+			find_handlers( handler ).each do |handler|
 				begin
-					handler.new(self,query,mode).process
+					handler.new( self, handler, query, mode ).process
 				end
 			end
 		end
