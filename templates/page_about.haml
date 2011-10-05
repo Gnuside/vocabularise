@@ -1,8 +1,10 @@
 -# vim: set ts=4 sw=4 noet :
 
 .span-12.prepend-6.last
+	%h2#title The social network of your research objects
+
 	%p
-		%a{ :href => "/" } vocabulari.se 
+		%a{ :href => "/" } vocabulari.se
 		is a search tool addressed to researchers to explore a social
 		network of research objects, help them choose the wording of their
 		abstracts or the tagging of their papers, and discover their research
@@ -14,31 +16,31 @@
 		linking device of words…
 
 	%p
-		%a{ :href => "/" } vocabulari.se 
+		%a{ :href => "/" } vocabulari.se
 		searches for terms related to a given term (i.e. a research
 		object, treated as a Mendeley tag or a Wikipedia entry) according to three
 		qualities of relationships:
 	%ol
-		%li 
+		%li
 			Unexpected relationships (i.e. not frequent yet effective) that give
-			originality to research ;
-		%li 
+			originality to research
+		%li
 			Controversial relationships (i.e most discussed on Wikipedia) that
-			widen the audience P ;
-		%li 
+			widen the audience P
+		%li
 			Aggregating relationships (i.e. most multidisciplinary Mendeley
 			associations) that bridge the gap with other disciplines'
 			interests.
 
-	%p 
+	%p
 		The classifications are reversible since it may be preferred to know
 		about expected, uncontroversial or disaggregating relationships. It is
 		up to you!
 
 	%p
-		Now for the geeks among you...
+		%strong Now for the geeks among you&hellip;
 		%br
-		%a{ :href => "/" } vocabulari.se 
+		%a{ :href => "/" } vocabulari.se
 		is a mash-up of Mendeley and Wikipedia APIs. Our
 		algorithms start from an ensemble of related tags obtained through
 		co-occurrence analysis in Mendeley data. Then we sort the results
@@ -48,9 +50,9 @@
 		multidisciplinarity of Mendeley publications readership (algorithm 3).
 
 	%p
-		The code of vocabulari.se is published under the 
+		The code of vocabulari.se is published under the
 		%a{ :href=> "http://www.gnu.org/licenses/agpl.html" }
-			GNU Affero GPL 
+			GNU Affero GPL
 		license.
 		Hence you can (and are invited to) contribute improvements,
 		implement your own version of the tool or dissect our amazing
