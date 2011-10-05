@@ -25,8 +25,9 @@ module Mendeley
 		RATELIMIT_EXCEEDED_LIMIT = 5
 		JSON_ERROR_KEY = "error"
 
-		class RateLimitExceeded < RuntimeError ; end
-		class ServiceUnavailable < RuntimeError ; end
+		class ClientError < RuntimeError ; end
+		class RateLimitExceeded < ClientError ; end
+		class ServiceUnavailable < ClientError ; end
 
 		#
 		#
