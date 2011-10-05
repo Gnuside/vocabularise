@@ -46,6 +46,8 @@ module VocabulariSe
 			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query, mode ]
 
 			result = nil
+			deferred = false
+
 			@monitor.synchronize do 
 				cache_key = _cache_key(handler, query)
 				if @config.cache.include? cache_key then
@@ -59,7 +61,7 @@ module VocabulariSe
 					# FIXME: increase queue priority
 					# you'll have to wait
 					
-					result = nil
+					deferred = true
 				else
 					rdebug "request nowhere (%s, %s)" % [handler, query]
 					# neither in cache nor in queue
@@ -70,9 +72,10 @@ module VocabulariSe
 							   else 1
 							   end
 					@queue.push handler, query, priority
-					result = nil
+					deferred = true
 				end
 			end
+			raise DeferredError if deferred
 			return result
 		end
 
