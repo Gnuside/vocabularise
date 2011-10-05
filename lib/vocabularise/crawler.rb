@@ -11,6 +11,8 @@ module VocabulariSe
 
 	class Crawler
 
+		class DeferredRequestError < RuntimeError ; end
+
 		MODE_INTERACTIVE = :interactive
 		MODE_PASSIVE = :passive
 
@@ -75,7 +77,7 @@ module VocabulariSe
 					deferred = true
 				end
 			end
-			raise DeferredError if deferred
+			raise DeferredRequestError if deferred
 			return result
 		end
 
