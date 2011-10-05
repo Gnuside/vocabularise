@@ -33,6 +33,7 @@ function show_resultlist( elem, resp, color ) {
 		}
 		// make change happen
 		elem.fadeIn();
+		elem.data("tagListHeight", elem.height());
 	});
 }
 
@@ -76,20 +77,32 @@ function load_aggregating( query ) {
 }
 
 function move_list ( element, delta ) {
-	var classes = $(element).attr("class"), tag_class, re = new RegExp("tag_[a-z]+"), ul;
+	var classes = $(element).attr("class"), tag_class,
+		re = new RegExp("tag_[a-z]+"), ul, divListHeight, tagListPos, tagListHeight;
 	tag_class = re.exec( classes );
 	ul = $("div." + tag_class + " > ul.taglist");
+	tagListPos = ul.data("tagListPos");
+	divListHeight = ul.data("divListHeight");
+	tagListHeight = ul.data("tagListHeight");
+	// stop scroll when first or last element already shown
+	if ( 0 === tagListPos && 0 > delta ) {
+		return;
+	} else if ( (tagListHeight + tagListPos < divListHeight) && 0 < delta ) {
+		return;
+	}
+	tagListPos -= delta;
 	ul.animate(
-		{ top: delta + "px" }, "normal"
+		{ top: tagListPos + "px" }, "normal"
 	);
+	ul.data("tagListPos", tagListPos);
 }
 
 function move_list_up ( element ) {
-	move_list( element, "+=" + SLIDE_DELTA );
+	move_list( element, -SLIDE_DELTA );
 }
 
 function move_list_down ( element ) {
-	move_list( element, "-=" + SLIDE_DELTA );
+	move_list( element, SLIDE_DELTA );
 }
 
 $(document).ready(function() {
@@ -103,6 +116,10 @@ $(document).ready(function() {
 	load_controversial( query );
 	load_aggregating( query );
 
+	$("ul.taglist").each(function (){
+		$(this).data("tagListPos", 0);
+		$(this).data("divListHeight", $(this).parent().height());
+	});
 	$("img.top_arrow").click(function(event){
 		event.preventDefault();
 		move_list_up( this );
