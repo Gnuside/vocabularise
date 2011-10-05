@@ -1,32 +1,11 @@
 
-require 'dm-core'
-#require 'dm-types/support/dirty_minder'
-
 require 'monitor'
 require 'base64'
 require 'rdebug/base'
 
+require 'vocabularise/model'
+
 module VocabulariSe
-
-	class CacheEntry
-		include DataMapper::Resource
-
-		property :id,   String, :length => 200, :key => true
-		property :created_at, Integer, :required => true                        
-		property :expires_at, Integer, :required => true                        
-
-		has n, :cache_chunks
-	end
-
-	class CacheChunk
-		include DataMapper::Resource
-
-		property :id, Serial
-		property :part, Integer, :required => true 
-		property :data, Text, :required => true 
-
-		belongs_to :cache_entry
-	end
 
 	class Cache
 
