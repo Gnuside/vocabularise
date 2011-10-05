@@ -48,7 +48,7 @@ module VocabulariSe
 	class CacheEntry
 		include DataMapper::Resource
 
-		property :id,   String, :key => true
+		property :id,   String, :length => 200, :key => true
 		property :created_at, Integer, :required => true                        
 		property :expires_at, Integer, :required => true                        
 
@@ -91,6 +91,7 @@ module VocabulariSe
 		def []= key, value
 
 
+		#	CacheEntry.raise_on_save_failure = true 
 			CacheEntry.transaction do
 				now = Time.now
 
@@ -108,7 +109,15 @@ module VocabulariSe
 					resp.destroy
 				end
 
-				resp = CacheEntry.create req_update
+				begin
+					resp = CacheEntry.new req_update
+				rescue DataMapper::SaveFailureError => e
+					#STDERR.puts resp.errors
+					STDERR.puts CacheEntry.errors
+					STDERR.puts e.message
+					raise e
+				end
+
 
 				value_marshal = ::Marshal.dump(value) if value
 				value_64 = Base64.encode64(value_marshal)
@@ -128,7 +137,15 @@ module VocabulariSe
 					part += 1
 				end
 
-				raise RuntimeError unless resp.save 
+				begin
+					resp.save
+				rescue DataMapper::SaveFailureError => e
+					pp resp.errors
+					#STDERR.puts CacheEntry.errors
+					STDERR.puts e.message
+					raise e
+				end
+
 
 				return self.include? key
 			end
