@@ -9,9 +9,10 @@ a:hover {  color: black; text-decoration: underline; }
 
 ol { margin-left: 1em; }
 
-dl, dt, dd { float: left; margin-bottom: 1em; }
+dl, dt, dd { margin-bottom: 1em; }
 dl { margin: 2em 0; }
-dt { clear: both; color: #7f7f7f; }
+dt { color: #7f7f7f; }
+dd img { vertical-align: middle; }
 
 #footer {
     margin: 1em 0;
@@ -119,6 +120,10 @@ h2 { font-size: 130%; text-align: center; }
 
 .col_content li a { text-decoration: none; }
 .col_content li a:hover { text-decoration: underline; cursor: pointer; }
+
+p.powered img {
+	vertical-align: middle;
+}
 
 hr.tag { border: 0; display: block; height: 1px; margin: 0 0 5px 0; }
 #tooltip hr.tag { margin: 0 0 2px 0; }

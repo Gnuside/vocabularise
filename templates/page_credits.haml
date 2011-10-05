@@ -8,7 +8,8 @@
 		%dd<
 			%a{ :href => "mailto:axel_meunier@yahoo.fr" } Axel Meunier
 			and
-			%a{ :href => "http://www.deuxieme-labo.fr" } Deuxi&egrave;me labo
+			%a{ :href => "http://www.deuxieme-labo.fr" }
+				%img(src="images/logo_deuxieme_labo_32.jpg" alt="Deuxi&egrave;me labo")
 
 		%dt Code development &amp; integration
 		%dd<
@@ -37,8 +38,13 @@
 	%p &nbsp;
 
 	.col_content
-		%p<
-			Powered by Mendeley and Wikipedia
+		%p.powered<
+			Powered by&nbsp;
+			%a(href="http://www.mendeley.com")
+				%img(src="images/logo_mendeley_32.png" alt="Mendeley")>
+			&nbsp;and&nbsp;
+			%a(href="http://www.wikipedia.org")
+				%img(src="images/logo_wikipedia_32.png" alt="Wikipedia")>
 			/[logos voir dans droopbox + liens vers les sites]
 
 		%p &nbsp;
