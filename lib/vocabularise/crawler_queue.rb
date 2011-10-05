@@ -52,7 +52,8 @@ module VocabulariSe
 					:created_at => now.to_i
 				}
 				req_create[:priority] = priority.to_i unless priority.nil?
-				resp = CrawlerQueueEntry.first
+
+				resp = CrawlerQueueEntry.first req_find
 				if resp.nil? then
 					resp = CrawlerQueueEntry.new req_create
 				end
