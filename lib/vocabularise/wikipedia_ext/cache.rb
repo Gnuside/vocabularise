@@ -1,5 +1,6 @@
 
 require 'open-uri'
+require 'rdebug/base'
 
 module VocabulariSe ; module WikipediaExt
 
