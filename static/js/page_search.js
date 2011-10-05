@@ -12,6 +12,34 @@ var SLIDE_DELTA = 30;
 
 var _expected, _controversial, _aggregating;
 
+function reverse_list ( list_header ) {
+	var tag_class = get_tag_class( $(list_header).parent("div.tag") ), ul, lis;
+	switch ( tag_class ) {
+		case "tag_expected" :
+			_expected.reverse();
+			ul = $("#list_expected");
+			break;
+		case "tag_controversial" :
+			_controversial.reverse();
+			ul = $("#list_controversial");
+			break;
+		case "tag_aggregating" :
+			_aggregating.reverse();
+			ul = $("#list_aggregating");
+			break;
+		default :
+			return;
+			break;
+	}
+	ul.fadeOut("normal", function () {
+		lis = $.makeArray( ul.find("li") );
+		ul.empty();
+		lis.reverse();
+		$(lis).appendTo( ul );
+		$(this).fadeIn("slow");
+	});
+}
+
 function show_resultlist( elem, resp, color ) {
 	elem.fadeOut(function() {
 		elem.empty();
@@ -86,8 +114,9 @@ function load_aggregating( query ) {
 }
 
 function get_tag_class ( element ) {
-	var re = new RegExp("tag_[a-z]+")
-	return re.exec( $(element).attr("class") );
+	var re = new RegExp("tag_[a-z]+"), res;
+	res = re.exec( $(element).attr("class") );
+	return res[0];
 }
 
 function move_list ( element, delta, tag_class_element ) {
@@ -150,5 +179,6 @@ $(document).ready(function() {
 	$("div.col_header h2").click(function(event){
 		event.preventDefault();
 		$(this).toggleClass("reverse");
+		reverse_list( this );
 	});
 });
