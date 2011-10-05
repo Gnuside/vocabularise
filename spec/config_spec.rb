@@ -10,21 +10,18 @@ require 'json'
 
 require 'vocabularise/config'
 
-#$:.unshift '../lib'
+require 'spec/spec_helper'
 
 describe 'Config' do
-	DB_PATH = "tmp/test/vocabularise.sqlite3"
 
 	before(:all) do
-		FileUtils.mkdir_p File.dirname DB_PATH
-		FileUtils.rm_f DB_PATH
 		json = {
 			"cache_dir" => "tmp/test/cache",
 			"cache_duration" => 7200,
 			"consumer_key" => "d0d46ad71eb6691a44fb608424ad71c704e160d23",
 			"consumer_secret" => "4fb7cd67cd36e341be6966db0b4dd261",
 			"db_adapter" => "sqlite3",
-			"db_database" => DB_PATH
+			"db_database" => "tmp/test/config.sqlite3"
 		}
 
 		@config = VocabulariSe::Config.new json
