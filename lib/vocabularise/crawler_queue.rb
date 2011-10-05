@@ -10,8 +10,8 @@ module VocabulariSe
 		include DataMapper::Resource
 
 		property :id, Serial
-		property :cquery,   String, :unique_index => :u1
-		property :handler, String, :unique_index => :u1
+		property :cquery,   String, :length => 200, :unique_index => :u1
+		property :handler, String, :length => 200, :unique_index => :u1
 		property :priority, Integer, :default => 0
 		property :created_at, Integer, :required => true
 
@@ -32,7 +32,7 @@ module VocabulariSe
 		def include? handler, query
 			req = {
 				:handler => handler,
-			   	:cquery => query
+				:cquery => query
 			}
 			resp = CrawlerQueueEntry.first req
 			return (not resp.nil?)
@@ -52,8 +52,17 @@ module VocabulariSe
 					:created_at => now.to_i
 				}
 				req_create[:priority] = priority.to_i unless priority.nil?
-				resp = CrawlerQueueEntry.first_or_create req_find, req_create
-				resp.save
+				resp = CrawlerQueueEntry.first
+				if resp.nil? then
+					resp = CrawlerQueueEntry.new req_create
+				end
+
+				begin
+					resp.save
+				rescue DataMapper::SaveFailureError => e
+					pp resp.errors
+					raise e
+				end
 			end
 		end
 
