@@ -79,35 +79,44 @@ module Mendeley
 		# FIXME: remove hard limit
 		DOCUMENTS_TAGGED_PAGE_LIMIT = 10
 
+		#
 		# Static
 		#
 		def self.search_tagged client, tag, &blk
 			page = 0
 			total_pages = 0
+			documents = []
 			while true do
-				# first json snippets count as a hit
-				# but all following count as cached
-				cached = false
-				resp = client.documents_tagged({
-				   	:tag => tag, 
-					:page => page 
-			#		:limit => DOCUMENTS_TAGGED_LIMIT 
-				})
-				total_pages = resp["total_pages"]
-				if resp["documents"].nil? then
-				   	pp resp 
-					next
-				end
-				resp["documents"].each do |resp_doc|
-					resp_doc[JSON_CACHE_KEY] = cached
-					doc = Document.new resp_doc
-					yield doc
-					cached = true
-				end
-				page += 1
-				break if page >= total_pages
-				break if page >= DOCUMENTS_TAGGED_PAGE_LIMIT
+					# first json snippets count as a hit
+					# but all following count as cached
+					cached = false
+					begin
+						resp = client.documents_tagged({
+							:tag => tag, 
+							:page => page 
+							#		:limit => DOCUMENTS_TAGGED_LIMIT 
+						})
+					rescue Mendeley::Client::ClientError => e
+						# got no document list
+						break
+					end
+					total_pages = resp["total_pages"]
+					if resp["documents"].nil? then
+						pp resp 
+						next
+					end
+					resp["documents"].each do |resp_doc|
+						resp_doc[JSON_CACHE_KEY] = cached
+						doc = Document.new resp_doc
+						documents << doc
+						yield doc if block_given?
+						cached = true
+					end
+					page += 1
+					break if page >= total_pages
+					break if page >= DOCUMENTS_TAGGED_PAGE_LIMIT
 			end
+			return documents
 		end
 	end
 end
