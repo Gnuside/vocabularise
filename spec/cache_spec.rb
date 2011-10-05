@@ -21,6 +21,7 @@ describe 'DatabaseCache' do
 
 	before :each do
 		@cache = VocabulariSe::DatabaseCache.new( CACHE_TIMEOUT )               
+		@cache.empty!
 	end
 	
 	it 'should store' do
@@ -33,8 +34,19 @@ describe 'DatabaseCache' do
 		@cache['A'] = '1'
 		@cache['A'] = '1'
 	end
+	
+	it 'should be able to store big data' do
+		@cache['A'] = '1' * 100
+		@cache['A'] = '2' * 1000
+		#@cache['A'] = '3' * 10000
+		#@cache['A'] = '4' * 100000
+		@cache['A'] = '1'
+	end
 
 	it 'should answer to include correctly' do
+		@cache['A'] = '1'
+		@cache['B'] = '2'
+		@cache['C'] = '3'
 		@cache.include?('A').should == true
 		@cache.include?('B').should == true
 		@cache.include?('C').should == true
@@ -42,6 +54,9 @@ describe 'DatabaseCache' do
 	end
 
 	it 'should retrieve' do
+		@cache['A'] = '1'
+		@cache['B'] = '2'
+		@cache['C'] = '3'
 		@cache['A'].should == '1'
 		@cache['B'].should == '2'
 		@cache['C'].should == '3'
