@@ -15,25 +15,33 @@ require 'json'
 require 'common/indent'
 require 'vocabularise/config'
 require 'vocabularise/utils'
+require 'vocabularise/crawler'
 require 'vocabularise/controversial_algorithm'
 
 require 'mendeley'
 require 'wikipedia'
 
-json = JSON.load File.open 'config/vocabularise.json'
-config = VocabulariSe::Config.new json
-algo = VocabulariSe::ControversialAlgorithm.new config
+module VocabulariSe
+	json = JSON.load File.open 'config/vocabularise.json'
+	config = Config.new json
+	algo = ControversialAlgorithm.new config
 
-puts "Algo II"
-print "tag ? "
-STDOUT.flush
-intag = STDIN.gets.strip
+	crawler = Crawler.new config
+	# set crawler
+	config.mendeley_client.crawler = crawler
 
-related_tags = VocabulariSe::Utils.related_tags config, intag
-result = algo.exec intag, related_tags
+	#crawler.run
 
-puts "AlgoII - result :"
-pp JSON.generate(result[0..4])
+	puts "Algo II"
+	print "tag ? "
+	STDOUT.flush
+	intag = STDIN.gets.strip
 
-exit 0
+	related_tags = VocabulariSe::Utils.related_tags config, intag
+	result = algo.exec intag, related_tags
 
+	puts "AlgoII - result :"
+	pp JSON.generate(result[0..4])
+
+	exit 0
+end

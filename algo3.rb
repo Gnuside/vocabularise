@@ -15,26 +15,33 @@ require 'json'
 require 'common/indent'
 require 'vocabularise/config'
 require 'vocabularise/utils'
+require 'vocabularise/crawler'
 require 'vocabularise/generic_algorithm'
 require 'vocabularise/aggregating_algorithm'
 
 require 'mendeley'
 require 'wikipedia'
 
-json = JSON.load File.open 'config/vocabularise.json'
-config = VocabulariSe::Config.new json
+module VocabulariSe
+	json = JSON.load File.open 'config/vocabularise.json'
+	config = Config.new json
+	algo = AggregatingAlgorithm.new config
 
-puts "Algo III"
-print "tag ? "
-STDOUT.flush
-intag = STDIN.gets.strip
+	crawler = Crawler.new config
+	# set crawler
+	config.mendeley_client.crawler = crawler
 
-algo = VocabulariSe::AggregatingAlgorithm.new config
-related_tags = VocabulariSe::Utils.related_tags config, intag
-result = algo.exec intag, related_tags
+	puts "Algo III"
+	print "tag ? "
+	STDOUT.flush
+	intag = STDIN.gets.strip
 
-# FIXME : limit to 3 or 5 results only
-#pp result[0..4].map{ |x| x[0] }
-pp JSON.generate(result[0..4])
+	related_tags = Utils.related_tags config, intag
+	result = algo.exec intag, related_tags
 
-exit 0
+	# FIXME : limit to 3 or 5 results only
+	#pp result[0..4].map{ |x| x[0] }
+	pp JSON.generate(result[0..4])
+
+	exit 0
+end

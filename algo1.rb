@@ -28,6 +28,9 @@ module VocabulariSe
 	config = VocabulariSe::Config.new json
 
 	crawler = Crawler.new config
+	# set crawler
+	config.mendeley_client.crawler = crawler
+
 	crawler.run
 
 	rman = RequestManager.new config
