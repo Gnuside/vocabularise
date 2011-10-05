@@ -12,7 +12,7 @@ require 'datamapper'
 require 'dm-core'
 require 'dm-sqlite-adapter'                                                     
 
-require 'vocabularise/config'
+require 'vocabularise/cache'
 
 require 'spec/spec_helper'
 
@@ -20,7 +20,7 @@ describe 'DatabaseCache' do
 	CACHE_TIMEOUT = 5
 
 	before :each do
-		@cache = VocabulariSe::DatabaseCache.new( CACHE_TIMEOUT )               
+		@cache = VocabulariSe::Cache.new( CACHE_TIMEOUT )               
 		@cache.empty!
 	end
 	
@@ -38,8 +38,8 @@ describe 'DatabaseCache' do
 	it 'should be able to store big data' do
 		@cache['A'] = '1' * 100
 		@cache['A'] = '2' * 1000
-		#@cache['A'] = '3' * 10000
-		#@cache['A'] = '4' * 100000
+		@cache['A'] = '3' * 10000
+		@cache['A'] = '4' * 100000
 		@cache['A'] = '1'
 	end
 
@@ -82,6 +82,24 @@ describe 'DatabaseCache' do
 		@cache['A'] = '1'
 		@cache['B'] = '2'
 		@cache['C'] = '3'
+		@cache.each do |entry|
+			inside.include?(entry.id).should == true
+			outside.include?(entry.id).should == false
+		end
+	end
+
+	it 'should be expungeable' do
+		@cache.should respond_to(:expunge!)
+
+		inside = [ 'A', 'B', 'C' ]
+		outside = ['D']
+
+		@cache['A'] = '1'
+		@cache['B'] = '2'
+		@cache['C'] = '3'
+
+		@cache.expunge!
+
 		@cache.each do |entry|
 			inside.include?(entry.id).should == true
 			outside.include?(entry.id).should == false
