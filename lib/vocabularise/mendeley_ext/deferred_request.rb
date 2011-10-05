@@ -39,11 +39,11 @@ module VocabulariSe ; module MendeleyExt
 		#
 		#
 		#
-		def stat_authors params
+		def stats_authors params
 			begin
 				@crawler.request REQUEST_STATS_AUTHORS, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "stats_authors"
 			end
 		end
 
@@ -55,7 +55,7 @@ module VocabulariSe ; module MendeleyExt
 			begin
 				@crawler.request REQUEST_STATS_PAPERS, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "stats_papers"
 			end
 		end
 
@@ -67,7 +67,7 @@ module VocabulariSe ; module MendeleyExt
 			begin
 				@crawler.request REQUEST_STATS_PUBLICATIONS, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "stats_publications"
 			end
 		end
 
@@ -79,7 +79,7 @@ module VocabulariSe ; module MendeleyExt
 			begin
 				@crawler.request REQUEST_STATS_TAGS, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "stats_tags"
 			end
 		end
 
@@ -90,7 +90,7 @@ module VocabulariSe ; module MendeleyExt
 			begin
 				@crawler.request REQUEST_DOCUMENTS_SEARCH, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "documents_search"
 			end
 		end
 
@@ -101,7 +101,7 @@ module VocabulariSe ; module MendeleyExt
 			begin
 				@crawler.request REQUEST_DOCUMENTS_DETAILS, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "documents_details"
 			end
 		end
 
@@ -112,7 +112,7 @@ module VocabulariSe ; module MendeleyExt
 			begin
 				@crawler.request REQUEST_DOCUMENTS_TAGGED, params
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				raise ::Mendeley::Client::DeferredRequest
+				raise ::Mendeley::Client::DeferredRequest, "documents_tagged"
 			end
 		end
 
