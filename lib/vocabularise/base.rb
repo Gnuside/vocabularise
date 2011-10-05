@@ -6,19 +6,19 @@ module VocabulariSe
 
 	class Base < ::Sinatra::Base
 
-		enable :sessions                                                                                                
-		enable :run 
+		enable :sessions
+		enable :run
 
 		set :haml, :format => :html5 # default Haml format is :xhtml
 
-		set :static, true                                                                                               
-		set :public, File.expand_path( File.dirname(__FILE__) + '/../../static' )                                          
-		set :views, File.expand_path( File.dirname(__FILE__) + '/../../templates' )     
+		set :static, true
+		set :public, File.expand_path( File.dirname(__FILE__) + '/../../static' )
+		set :views, File.expand_path( File.dirname(__FILE__) + '/../../templates' )
 
-		mime_type :ttf, "application/octet-stream"                                                                      
-		mime_type :eot, "application/octet-stream"                                                                      
-		mime_type :otf, "application/octet-stream"                                                                      
-		mime_type :woff, "application/octet-stream"   
+		mime_type :ttf, "application/octet-stream"
+		mime_type :eot, "application/octet-stream"
+		mime_type :otf, "application/octet-stream"
+		mime_type :woff, "application/octet-stream"
 
 		helpers Sinatra::ContentFor
 
@@ -48,9 +48,9 @@ module VocabulariSe
 
 
 		# Static page
-		get "/contact" do
-			@title = "Contact"
-			haml :page_contact
+		get "/credits" do
+			@title = "Credits"
+			haml :page_credits
 		end
 
 		#
@@ -78,7 +78,7 @@ module VocabulariSe
 
 
 		# Show current cache
-		get "/status/cache" do 
+		get "/status/cache" do
 			haml :page_cache
 		end
 
@@ -91,7 +91,7 @@ module VocabulariSe
 			if result.nil? then
 				status(503)
 			else
-				JSON.generate( { 
+				JSON.generate( {
 					:algorithm => "expected",
 					:result => result
 				} )
@@ -102,12 +102,12 @@ module VocabulariSe
 		# Return results for aggregating algorithm
 		get "/search/controversial" do
 			@query = params[:query]
-			
+
 			result = settings.manager.request :controversial, @query
 			if result.nil? then
 				status(503)
 			else
-				JSON.generate( { 
+				JSON.generate( {
 					:algorithm => "controversial",
 					:result => result
 				} )
@@ -116,7 +116,7 @@ module VocabulariSe
 		end
 
 
-		# Return information about wikipedia pages for tag tag :tag 
+		# Return information about wikipedia pages for tag tag :tag
 		get "/search/aggregating" do
 			@query = params[:query]
 
@@ -124,7 +124,7 @@ module VocabulariSe
 			if result.nil? then
 				status(503)
 			else
-				JSON.generate( { 
+				JSON.generate( {
 					:algorithm => "aggregating",
 					:result => result
 				} )
