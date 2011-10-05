@@ -29,13 +29,13 @@ module VocabulariSe
 				# ws de disciplines
 				begin
 					VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
-						# FIXME: lister les disciplines du document
-						# pour chaque discipline :
-						#  * ajouter les % de readers
-						#  * incrément de la discipline
+						# list disciplines of the document
 						disciplines = doc.disciplines(config.mendeley_client)
 						#pp disciplines
 
+						# for each discipline :
+						#  * add the % of readers
+						#  * increment discipline
 						disciplines.each do |disc|
 							disc_name = disc["name"].to_s
 							disc_id = disc["id"].to_i
@@ -49,7 +49,6 @@ module VocabulariSe
 							#puts "ws:"
 							#pp discipline_ws
 						end
-						# FIXME : associer à chaque tag les disciplines trouvées
 
 						# limit to X real hits
 						hit_count += 1 #unless doc.cached?
@@ -57,6 +56,10 @@ module VocabulariSe
 						break if hit_count > limit
 					end
 				rescue Mendeley::Client::RateLimitExceeded => e
+					# we got an error here, but we can continue on next tag
+					next
+				rescue Mendeley::Client::DeferredRequest => e
+					# we got an error here, but we can continue on next tag
 					next
 				end
 
@@ -69,6 +72,7 @@ module VocabulariSe
 				pp sorted_discipline_ws
 				puts "major_discipline = %s" % major_discipline
 
+				#  associate to each tag found disciplines
 				sorted_discipline_ws.shift
 				tag_ws[reltag] = { 
 					:disc_list => sorted_discipline_ws,
