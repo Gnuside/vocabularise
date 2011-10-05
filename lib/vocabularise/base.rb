@@ -25,14 +25,15 @@ module VocabulariSe
 
 		# Common configuration
 		configure do
+			# set config
 			json = JSON.load File.open 'config/vocabularise.json'
 			config = VocabulariSe::Config.new json
+			# set crawler
 			crawler = VocabulariSe::Crawler.new config
-			#OBSOLETE:crawler = VocabulariSe::RequestManager.new config, crawler.queue
+			config.mendeley_client.crawler = crawler
 
 			set :crawler, crawler
 			set :config, config
-			#OBSOLETE:set :crawler, manager
 
 			# run crawler thread ;-)
 			crawler.run

@@ -91,6 +91,7 @@ module VocabulariSe
 			
 			@mendeley_client = ::Mendeley::Client.new( json["consumer_key"] )
 			@mendeley_client.extend(::VocabulariSe::MendeleyExt::Cache)
+			@mendeley_client.extend(::VocabulariSe::MendeleyExt::DeferredRequest)
 			@mendeley_client.cache = cache
 
 			@wikipedia_client = ::Wikipedia::Client.new
