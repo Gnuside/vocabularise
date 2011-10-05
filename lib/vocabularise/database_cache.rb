@@ -104,6 +104,11 @@ module VocabulariSe
 			end
 		end
 
+
+		def empty!
+			DatabaseCacheEntry.all.destroy
+		end
+
 		def each &blk
 			now = Time.now
 			req = { 
