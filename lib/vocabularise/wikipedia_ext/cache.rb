@@ -12,8 +12,8 @@ module VocabulariSe ; module WikipediaExt
 		attr_accessor :cache
 
 		def request options
-			url = url_for( options )
-			cache_key = "wikipedia:request:%s" % url
+			url = url_for options
+			cache_key = _cache_key options
 
 			cache_used = false
 			resp = nil
@@ -31,6 +31,16 @@ module VocabulariSe ; module WikipediaExt
 			return resp
 		end
 
+		private
+
+		def _cache_key options
+			id_str = options.to_a.
+				sort{ |a,b| a[0].to_s <=> b[0].to_s }.
+				map { |x| x.join '=' }.
+				join ','
+
+			cache_key = "wikipedia:%s" % id_str
+		end
 	end
 
 end ; end
