@@ -20,7 +20,6 @@ module VocabulariSe ; module MendeleyExt
 
 		attr_accessor :crawler
 
-		class DeferredRequest 
 		#
 		#
 		def initialize consumer_key, crawler
