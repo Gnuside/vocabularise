@@ -74,7 +74,8 @@ module VocabulariSe
 				raise RuntimeError, "unknown database adapter"
 			end
 
-			DataMapper::Logger.new(STDERR, :info)
+			#DataMapper::Logger.new(STDERR, :info)
+			DataMapper::Logger.new(STDERR, :debug)
 			DataMapper.finalize
 			DataMapper.setup(:default, @database)
 			DataMapper::Model.raise_on_save_failure = true                      
