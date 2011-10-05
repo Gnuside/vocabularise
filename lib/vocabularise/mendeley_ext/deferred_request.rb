@@ -6,6 +6,11 @@ require 'cgi'
 
 require 'vocabularise/crawler_handler'
 
+module Mendeley ; class Client 
+		class DeferredRequest < ::Mendeley::Client::ClientError ; end
+end ; end
+
+
 module VocabulariSe ; module MendeleyExt
 
 	module DeferredRequest
@@ -19,6 +24,7 @@ module VocabulariSe ; module MendeleyExt
 		REQUEST_DOCUMENTS_TAGGED = "mendeley:documents_tagged"
 
 		attr_accessor :crawler
+
 
 		#
 		#
@@ -34,7 +40,11 @@ module VocabulariSe ; module MendeleyExt
 		#
 		#
 		def stat_authors params
-			@crawler.request REQUEST_STATS_AUTHORS, params
+			begin
+				@crawler.request REQUEST_STATS_AUTHORS, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 
@@ -42,7 +52,11 @@ module VocabulariSe ; module MendeleyExt
 		#
 		#
 		def stats_papers params                                                                                         
-			@crawler.request REQUEST_STATS_PAPERS, params
+			begin
+				@crawler.request REQUEST_STATS_PAPERS, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 
@@ -50,7 +64,11 @@ module VocabulariSe ; module MendeleyExt
 		#
 		#
 		def stats_publications params                                                                                   
-			@crawler.request REQUEST_STATS_PUBLICATIONS, params
+			begin
+				@crawler.request REQUEST_STATS_PUBLICATIONS, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 
@@ -58,28 +76,44 @@ module VocabulariSe ; module MendeleyExt
 		#
 		#
 		def stats_tags params                                                                                           
-			@crawler.request REQUEST_STATS_TAGS, params
+			begin
+				@crawler.request REQUEST_STATS_TAGS, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 		#
 		#
 		#
 		def documents_search params                                                                                     
-			@crawler.request REQUEST_DOCUMENTS_SEARCH, params
+			begin
+				@crawler.request REQUEST_DOCUMENTS_SEARCH, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 		#
 		#
 		#
 		def documents_details params                                                                                    
-			@crawler.request REQUEST_DOCUMENTS_DETAILS, params
+			begin
+				@crawler.request REQUEST_DOCUMENTS_DETAILS, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 		#
 		#
 		#
 		def documents_tagged params                                                                                     
-			@crawler.request REQUEST_DOCUMENTS_TAGGED, params
+			begin
+				@crawler.request REQUEST_DOCUMENTS_TAGGED, params
+			rescue VocabulariSe::Crawler::DeferredRequest => e
+				raise ::Mendeley::Client::DeferredRequest
+			end
 		end
 
 	end
