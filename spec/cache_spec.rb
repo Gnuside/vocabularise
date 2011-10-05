@@ -16,8 +16,26 @@ require 'vocabularise/cache'
 
 require 'spec/spec_helper'
 
-describe 'DatabaseCache' do
+describe 'Cache' do
 	CACHE_TIMEOUT = 5
+
+	before :all do
+		hash = {                                                   
+			"adapter"   => 'sqlite3',                                   
+			"database"  => 'tmp/test/cache.sqlite3',
+			"username"  => "",                                          
+			"password"  => "",                                          
+			"host"      => "",                                          
+			"timeout"   => 15000                                        
+		} 
+
+		#DataMapper::Logger.new(STDERR, :debug)
+		DataMapper::Logger.new(STDERR, :info)
+		DataMapper.finalize
+		DataMapper.setup(:default, hash)                               
+		DataMapper::Model.raise_on_save_failure = true                                  
+		DataMapper.auto_migrate!
+	end
 
 	before :each do
 		@cache = VocabulariSe::Cache.new( CACHE_TIMEOUT )               
