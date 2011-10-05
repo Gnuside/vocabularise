@@ -5,7 +5,7 @@ require 'wikipedia'
 require 'datamapper'
 require 'dm-core'                                                               
 
-require 'vocabularise/database_cache'
+require 'vocabularise/cache'
 require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia_ext'
 require 'vocabularise/mendeley_ext'
@@ -87,7 +87,7 @@ module VocabulariSe
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
 			raise ConfigurationError, "no cache duration specified" unless json.include? "cache_duration"
 
-			@cache = VocabulariSe::DatabaseCache.new(60 * 60 * 2)
+			@cache = VocabulariSe::Cache.new(60 * 60 * 2)
 			
 			@mendeley_client = ::Mendeley::Client.new( json["consumer_key"] )
 			@mendeley_client.extend(::VocabulariSe::MendeleyExt::Cache)
