@@ -40,7 +40,7 @@ describe 'Vocabularise::MendeleyExt::Cache' do
 	end
 
 	it 'should retrieve without any request' do
-		# FIXME
+		pending("test that a request was really made")
 		Mendeley::Document.search_tagged @mendeley_client, "love" do |doc|
 			break
 		end
