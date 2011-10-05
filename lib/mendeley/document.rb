@@ -82,6 +82,16 @@ module Mendeley
 		#
 		# Static
 		#
+		# search_tagged
+		#   * if cached return result
+		#   * look for all pages _from cache_
+		#   * +request two more pages (search_tagged_page tag, page)
+		#   * for cached pages, compute tags on documents
+		#   * add computation in cache
+		# 
+		# search_tagged_callback:
+		#
+		#
 		def self.search_tagged client, tag, &blk
 			page = 0
 			total_pages = 0
