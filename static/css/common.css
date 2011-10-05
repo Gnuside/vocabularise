@@ -72,6 +72,10 @@ a:hover {  color: black; text-decoration: underline; }
     text-align: center;
 }
 
+#tooltip { background: white; position: absolute; }
+#tooltip.tooltip_title { width: 320px; }
+#tooltip p { margin: 10px; }
+
 .col_header .tag { border-bottom: 2px; border-color: #7f7f7f; border-style: dotted; padding-bottom: .5em; }
 .col_footer .tag { border-top: 2px; border-color: #7f7f7f; border-style: dotted; padding-top: .5em; }
 
@@ -92,7 +96,7 @@ h2 { font-size: 130%; text-align: center; }
 .tag_expected h2.reverse { color: #7f7f7f; }
 .tag_expected h2.reverse a { color: #3ca52b; }
 
-.col_content div { height: 100px; margin: .5em 0; overflow: hidden; }
+.col_content div { height: 300px; margin: .5em 0; overflow: hidden; }
 .tag_controversial h2 { color: #e75018; }
 .tag_controversial h2 a { color: #7f7f7f; }
 .tag_controversial h2.reverse { color: #7f7f7f; }
@@ -113,6 +117,7 @@ h2 { font-size: 130%; text-align: center; }
 .col_content li a:hover { text-decoration: underline; cursor: pointer; }
 
 hr.tag { border: 0; display: block; height: 1px; margin: 0 0 5px 0; }
+#tooltip hr.tag { margin: 0 0 2px 0; }
 hr.tag_expected { background-color: #3ca52b; }
 hr.tag_controversial { background-color: #e75018; }
 hr.tag_aggregating { background-color: #008bd0; }
