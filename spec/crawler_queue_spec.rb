@@ -23,15 +23,17 @@ describe 'CrawlerQueue' do
 		@queue = ::VocabulariSe::CrawlerQueue.new
 	end
 
+	before :each do
+		VocabulariSe::CrawlerQueueEntry.all.destroy
+	end
+
 	def helper_make_samepriority
-		@queue.empty!
 		@queue.push :related, 'love'
 		@queue.push :expected, 'death'
 		@queue.push :aggregating, 'love'
 	end
 
 	def helper_make_diffpriority
-		@queue.empty!
 		@queue.push :related, 'love', 2
 		@queue.push :expected, 'death', 0
 		@queue.push :aggregating, 'love', 1
@@ -51,7 +53,9 @@ describe 'CrawlerQueue' do
 
 		@queue.push :related, 'love'
 		@queue.size.should == 1
+		puts @queue.size
 		@queue.push :expected, 'love'
+		puts @queue.size
 		@queue.size.should == 2
 		@queue.empty?.should == false
 	end
@@ -60,6 +64,8 @@ describe 'CrawlerQueue' do
 	#
 	it 'should by empty-able' do
 		@queue.should respond_to :empty!
+
+		helper_make_samepriority
 
 		@queue.size.should >= 0
 		@queue.empty!
@@ -72,7 +78,6 @@ describe 'CrawlerQueue' do
 	it 'should allow test on included (handle,query)' do
 		@queue.should respond_to :include?
 
-		@queue.empty!
 		@queue.include?(:related, 'love').should == false
 		@queue.push :related, 'love'
 		@queue.include?(:related, 'love').should == true
@@ -122,14 +127,12 @@ describe 'CrawlerQueue' do
 
 	#
 	it 'should not first an empty queue' do
-		@queue.empty!
 
 		lambda{ @queue.first }.should raise_error VocabulariSe::CrawlerQueue::EmptyQueueError
 	end
 
 	#
 	it 'should not shift an empty queue' do
-		@queue.empty!
 
 		lambda{ @queue.shift }.should raise_error VocabulariSe::CrawlerQueue::EmptyQueueError
 	end
