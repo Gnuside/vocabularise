@@ -37,6 +37,9 @@ module VocabulariSe
 	intag = STDIN.gets.strip
 
 	related_tags = Utils.related_tags config, intag
+	puts "Algo III - related tags"
+	pp related_tags
+	STDIN.gets
 	result = algo.exec intag, related_tags
 
 	# FIXME : limit to 3 or 5 results only
