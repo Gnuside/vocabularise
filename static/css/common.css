@@ -72,8 +72,10 @@ a:hover {  color: black; text-decoration: underline; }
     text-align: center;
 }
 
-#tooltip { background: white; position: absolute; }
-#tooltip.tooltip_title { width: 320px; }
+#tooltip { background: white; font-size: 95%; opacity: 0.95; position: absolute; width: 320px; }
+#tooltip.tooltip_expected { background: #3ca52b; }
+#tooltip.tooltip_controversial { background: #e75018; }
+#tooltip.tooltip_aggregating { background: #008bd0; }
 #tooltip p { margin: 10px; }
 
 .col_header .tag { border-bottom: 2px; border-color: #7f7f7f; border-style: dotted; padding-bottom: .5em; }
@@ -88,7 +90,6 @@ h2 { font-size: 130%; text-align: center; }
 .tag_controversial { color: #e75018; }
 .tag_aggregating { color: #008bd0; }
 
-/*.col_header .tag { margin: 0 2em 0 2em; }*/
 .col_header h2 { color: inherit; font-size: 200%; margin-bottom:0; text-decoration: underline; }
 .col_header p { color: #7f7f7f; }
 .tag_expected h2 a { color: #7f7f7f; }
