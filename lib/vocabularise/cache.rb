@@ -6,43 +6,6 @@ require 'monitor'
 require 'base64'
 require 'rdebug/base'
 
-=begin
-module DataMapper
-	class Property
-		class Marshal < Text
-			class BigdataError < RuntimeError ; end
-
-			primitive ::Object
-			#load_as ::Object
-
-			def load(value64)
-				#@debug = true
-				#rdebug "loading value = %s" % value64.inspect
-				value = Base64.decode64(value64) if value64
-				::Marshal.load(value) if value
-			end
-
-			def dump(value)
-				#@debug = true
-				#rdebug "dumping value = %s" % value.inspect
-				value64 = ::Marshal.dump(value) if value
-				res = Base64.encode64(value64) if value64
-				if res.size > 125000 then
-					raise BigdataError, res.size.to_s
-				end
-				res
-			end
-
-			def typecast(value)
-				value
-			end
-
-		#	include ::DataMapper::Property::DirtyMinder
-		end
-	end
-end
-=end
-
 module VocabulariSe
 
 	class CacheEntry
