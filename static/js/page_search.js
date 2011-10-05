@@ -8,7 +8,7 @@ var TEXTSIZE_MIN = 0.6;
 var TEXTSIZE_MAX = 2;
 
 var AJAX_TIMEOUT = 8000;
-var MAX_TAGS_LENGTH = 10;
+var SLIDE_DELTA = 30;
 
 function show_resultlist( elem, resp, color ) {
 	//alert("got "+result);
@@ -24,7 +24,7 @@ function show_resultlist( elem, resp, color ) {
 				Math.floor(color[1] - ( factor * (color[1] - COLOR_BLACK[1]) )),
 				Math.floor(color[2] - ( factor * (color[2] - COLOR_BLACK[2]) ))
 			];
-			elem.append('<li'+ ( (MAX_TAGS_LENGTH <= idx) ? ' style="display:none;"' : '' ) + '>' +
+			elem.append('<li>' +
 				'<a href="#" style="'+
 				'font-size: '+res_size+'em; '+
 				'color: rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');'+
@@ -70,17 +70,26 @@ function load_aggregating( query ) {
 		timeout: AJAX_TIMEOUT,
 		success: function( resp ){ show_resultlist( $(this), resp, COLOR_AGGREGATING ); },
 		error: function( req, error ) {
-			setTimeout(function(){ load_aggregating(query); }, 2000);
+			setTimeout(function(){ load_aggregating(query); }, 2000);
 		}
 	});
 }
 
-function move_list_up ( imageElement ) {
-	// TODO
+function move_list ( element, delta ) {
+	var classes = $(element).attr("class"), tag_class, re = new RegExp("tag_[a-z]+"), ul;
+	tag_class = re.exec( classes );
+	ul = $("div." + tag_class + " > ul.taglist");
+	ul.animate(
+		{ top: delta + "px" }, "normal"
+	);
 }
 
-function move_list_down ( imageElement ) {
-	// TODO
+function move_list_up ( element ) {
+	move_list( element, "+=" + SLIDE_DELTA );
+}
+
+function move_list_down ( element ) {
+	move_list( element, "-=" + SLIDE_DELTA );
 }
 
 $(document).ready(function() {
@@ -102,5 +111,11 @@ $(document).ready(function() {
 		event.preventDefault();
 		move_list_down( this );
 	});
+	$("div.col_content div").mousewheel(function(event, delta){
+		if (delta > 0) {
+			move_list_up( this );
+		} else {
+			move_list_down( this );
+		}
+	});
 });
-
