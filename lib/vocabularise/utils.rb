@@ -83,6 +83,8 @@ module VocabulariSe
 		# Search related tags on mendeley
 		#
 		def self.related_tags_mendeley config, intag, limit=RELATED_TAGS_DEFAULT_HITLIMIT
+			rdebug "intag = %s" % intag
+
 			tags = Hash.new 0
 
 			begin
@@ -110,6 +112,11 @@ module VocabulariSe
 			rescue Mendeley::Client::RateLimitExceeded => e
 				# try to resist ;-)
 			rescue Mendeley::Client::ClientError => e
+				oldval = @debug
+				@debug = true
+				STDERR.puts "got a clienterror !"
+				rdebug "got a clienterror !"
+				@debug = oldval
 				raise e
 			end
 
@@ -126,6 +133,7 @@ module VocabulariSe
 		# Search related tags on wikipedia
 		#
 		def self.related_tags_wikipedia config, intag, limit=RELATED_TAGS_DEFAULT_HITLIMIT
+			rdebug "intag = %s" % intag
 			tags = Hash.new 0
 
 			page_json = config.wikipedia_client.request_page intag
@@ -141,6 +149,7 @@ module VocabulariSe
 		# Return an hash of related tags with associated occurencies 
 		# for given input tag
 		def self.related_tags config, intag, limit=RELATED_TAGS_DEFAULT_HITLIMIT
+			rdebug "intag = %s" % intag
 			# set count to zero
 			tags = Hash.new 0
 
@@ -151,6 +160,9 @@ module VocabulariSe
 					oldval + newval
 				end
 			end
+			pp tags
+			STDIN.gets #DEBUG
+
 			# try wikipedia
 			if tags.empty? 
 				wikipedia_related = related_tags_wikipedia config, intag, limit
