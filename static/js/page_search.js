@@ -10,9 +10,9 @@ var TEXTSIZE_MAX = 2;
 var AJAX_TIMEOUT = 8000;
 var SLIDE_DELTA = 30;
 
-function show_resultlist( elem, resp, color ) {
-	//alert("got "+result);
+var _expected, _controversial, _aggregating;
 
+function show_resultlist( elem, resp, color ) {
 	elem.fadeOut(function() {
 		elem.empty();
 		for(var idx=0;idx<resp.result.length;idx++){
@@ -43,7 +43,10 @@ function load_expected( query ) {
 		context: $('#list_expected'),
 		dataType: 'json',
 		timeout: AJAX_TIMEOUT,
-		success: function( resp ){ show_resultlist( $(this), resp, COLOR_EXPECTED ); },
+		success: function( resp ){
+			show_resultlist( $(this), resp, COLOR_EXPECTED );
+			_expected = resp.result;
+		},
 		error: function( req, error ) {
 			setTimeout(function(){ load_expected(query); },2000);
 		}
@@ -56,7 +59,10 @@ function load_controversial( query ) {
 		context: $('#list_controversial'),
 		dataType: 'json',
 		timeout: AJAX_TIMEOUT,
-		success: function( resp ){ show_resultlist( $(this), resp, COLOR_CONTROVERSIAL ); },
+		success: function( resp ){
+			show_resultlist( $(this), resp, COLOR_CONTROVERSIAL );
+			_controversial = resp.result;
+		},
 		error: function( req, error ) {
 			setTimeout(function(){ load_controversial(query); }, 2000);
 		}
@@ -69,17 +75,23 @@ function load_aggregating( query ) {
 		context: $('#list_aggregating'),
 		dataType: 'json',
 		timeout: AJAX_TIMEOUT,
-		success: function( resp ){ show_resultlist( $(this), resp, COLOR_AGGREGATING ); },
+		success: function( resp ){
+			show_resultlist( $(this), resp, COLOR_AGGREGATING );
+			_aggregating = resp.result;
+		},
 		error: function( req, error ) {
 			setTimeout(function(){ load_aggregating(query); }, 2000);
 		}
 	});
 }
 
-function move_list ( element, delta ) {
-	var classes = $(element).attr("class"), tag_class,
-		re = new RegExp("tag_[a-z]+"), ul, divListHeight, tagListPos, tagListHeight;
-	tag_class = re.exec( classes );
+function get_tag_class ( element ) {
+	var re = new RegExp("tag_[a-z]+")
+	return re.exec( $(element).attr("class") );
+}
+
+function move_list ( element, delta, tag_class_element ) {
+	var tag_class = get_tag_class( tag_class_element || element ), ul, divListHeight, tagListPos, tagListHeight;
 	ul = $("div." + tag_class + " > ul.taglist");
 	tagListPos = ul.data("tagListPos");
 	divListHeight = ul.data("divListHeight");
@@ -98,11 +110,11 @@ function move_list ( element, delta ) {
 }
 
 function move_list_up ( element ) {
-	move_list( element, -SLIDE_DELTA );
+	move_list( element, -SLIDE_DELTA, $(element).parent("div.tag") );
 }
 
 function move_list_down ( element ) {
-	move_list( element, SLIDE_DELTA );
+	move_list( element, SLIDE_DELTA, $(element).parent("div.tag") );
 }
 
 $(document).ready(function() {
@@ -130,9 +142,13 @@ $(document).ready(function() {
 	});
 	$("div.col_content div").mousewheel(function(event, delta){
 		if (delta > 0) {
-			move_list_up( this );
+			move_list( this, -SLIDE_DELTA );
 		} else {
-			move_list_down( this );
+			move_list( this, SLIDE_DELTA );
 		}
+	});
+	$("div.col_header h2").click(function(event){
+		event.preventDefault();
+		$(this).toggleClass("reverse");
 	});
 });

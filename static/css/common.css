@@ -97,7 +97,7 @@ h2 { font-size: 130%; text-align: center; }
 .tag_controversial { color: #e75018; }
 .tag_aggregating { color: #008bd0; }
 
-.col_header h2 { color: inherit; font-size: 200%; margin-bottom:0; text-decoration: underline; }
+.col_header h2 { color: inherit; cursor: pointer; font-size: 200%; margin-bottom:0; text-decoration: underline; }
 .col_header p { color: #7f7f7f; }
 .tag_expected h2 a { color: #7f7f7f; }
 .tag_expected h2.reverse { color: #7f7f7f; }
