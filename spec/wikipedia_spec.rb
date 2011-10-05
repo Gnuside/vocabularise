@@ -9,7 +9,7 @@ require 'rspec'
 require 'json'
 
 require 'wikipedia'
-require 'vocabularise/wikipedia'
+require 'vocabularise/wikipedia_ext'
 
 describe 'Wikipedia' do
 
@@ -18,7 +18,7 @@ describe 'Wikipedia' do
 	end
 	
 	it 'should search' do
-		@wikipedia_client.extend(::VocabulariSe::Wikipedia::Search)                              
+		@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Search)                              
 
 		@wikipedia_client.should respond_to(:search)
 		result = @wikipedia_client.search "Love"
@@ -39,7 +39,7 @@ describe 'Wikipedia' do
 
 	it 'should use the cache' do
 		cache = {}
-		@wikipedia_client.extend(::VocabulariSe::Wikipedia::Cache)                              
+		@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Cache)                              
 		@wikipedia_client.cache = cache
 		result = @wikipedia_client.request_page "Love"
 		cache.empty?.should == false
