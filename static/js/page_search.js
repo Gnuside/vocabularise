@@ -42,12 +42,13 @@ function reverse_list ( list_header ) {
 
 function show_resultlist( elem, resp, color ) {
 	elem.fadeOut(function() {
+		var idx, tag, factor, res_size, res_rgb, li, tag_class = get_tag_class( elem, "id", "list" );
 		elem.empty();
-		for(var idx=0;idx<resp.result.length;idx++){
-			var tag = resp.result[idx][0];
-			var factor = ((idx + 0) / resp.result.length);
-			var res_size = TEXTSIZE_MAX - ( factor * (TEXTSIZE_MAX - TEXTSIZE_MIN));
-			var res_rgb = [
+		for(idx=0;idx<resp.result.length;idx++){
+			tag = resp.result[idx][0];
+			factor = ((idx + 0) / resp.result.length);
+			res_size = TEXTSIZE_MAX - ( factor * (TEXTSIZE_MAX - TEXTSIZE_MIN));
+			res_rgb = [
 				Math.floor(color[0] - ( factor * (color[0] - COLOR_BLACK[0]) )),
 				Math.floor(color[1] - ( factor * (color[1] - COLOR_BLACK[1]) )),
 				Math.floor(color[2] - ( factor * (color[2] - COLOR_BLACK[2]) ))
