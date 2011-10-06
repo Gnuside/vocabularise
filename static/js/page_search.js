@@ -32,8 +32,7 @@ function reverse_list ( list_header ) {
 			break;
 	}
 	ul.fadeOut("normal", function () {
-		lis = $.makeArray( ul.find("li") );
-		ul.empty();
+		lis = ul.children("li").detach().get();
 		lis.reverse();
 		$(lis).appendTo( ul );
 		$(this).fadeIn("slow");
@@ -53,17 +52,84 @@ function show_resultlist( elem, resp, color ) {
 				Math.floor(color[1] - ( factor * (color[1] - COLOR_BLACK[1]) )),
 				Math.floor(color[2] - ( factor * (color[2] - COLOR_BLACK[2]) ))
 			];
-			elem.append('<li>' +
+			// create li element
+			li = $('<li>' +
 				'<a href="#" style="'+
 				'font-size: '+res_size+'em; '+
 				'color: rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');'+
 				'">' + tag + '</a>' +
 				'</li>');
+			// add data
+			li.data({
+				tag: tag,
+				links: resp.result[idx][1].links
+			});
+			// attach fancybox
+			li.fancybox({
+				autoScale: true,
+				autoDimensions: true,
+				width: 950,
+				centerOnScroll: true,
+				content: '<div id="tag_details"><img src="/images/ajax-loader-bar.gif" alt="" width="220" height="19" /></div>',
+				hideOnOverlayClick: true,
+				overlayColor: "#ffffff",
+				scrolling: "no",
+				showCloseButton: false,
+				titleShow: false,
+				onComplete: function (curArr, curIdx, curOpts) {
+					var view = [
+						$(window).width() - (curOpts.margin * 2),
+						$(window).height() - (curOpts.margin * 2),
+						$(document).scrollLeft() + curOpts.margin,
+						$(document).scrollTop() + curOpts.margin
+					],
+					tag = $(curArr).data("tag"),
+					data = [
+						'<div class="col_content span-24 last">',
+							'<div class="tag_expected span-8">',
+								get_links( curArr, tag, tag_class, "expected" ),
+							'</div>',
+							'<div class="tag_controversial span-8">',
+								get_links( curArr, tag, tag_class, "controversial" ),
+							'</div>',
+							'<div class="tag_aggregating span-8 last">',
+								get_links( curArr, tag, tag_class, "aggregating" ),
+							'</div>',
+						'</div>'
+					];
+					$("#tag_details").html( data.join("") );
+					$.fancybox.resize();
+					$("#fancybox-wrap").animate({
+						width: 970,
+						//left: 320
+						top: parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - $("#fancybox-content").height() - 40) * 0.5) - curOpts.padding)), // @see fancybox center
+						left: parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - 950 - 40) * 0.5) - curOpts.padding)) // @see fancybox center
+					}, {
+						duration: "fast",
+						step: function ( now, fx ) {
+							if ( "width" === fx.prop ) {
+								var left = $("#fancybox-wrap").css( "left" );
+								$("#fancybox-content").width( now - 20 );
+							}
+						},
+						complete: function () {
+							//$.fancybox.center();
+						}
+					});
+				}
+			});
+			// append to list
+			li.appendTo( elem );
 		}
 		// make change happen
 		elem.fadeIn();
 		elem.data("tagListHeight", elem.height());
 	});
+}
+
+function get_links ( liElement, tag, tag_class, type ) {
+	// TODO
+	return [];
 }
 
 function load_expected( query ) {
@@ -162,8 +228,10 @@ $(document).ready(function() {
 	load_aggregating( query );
 
 	$("ul.taglist").each(function (){
-		$(this).data("tagListPos", 0);
-		$(this).data("divListHeight", $(this).parent().height());
+		$(this).data({
+			tagListPos: 0,
+			divListHeight: $(this).parent().height()
+		});
 	});
 	$("img.top_arrow").click(function(event){
 		event.preventDefault();
