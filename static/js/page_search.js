@@ -72,31 +72,22 @@ function attach_fancybox ( li, tag_class ) {
 					'</div>',
 				'</div>'
 			];
-			$("#tag_details").html( data.join("") );
-			$.fancybox.resize();
-			$("#fancybox-wrap").animate({
-				width: 970,
-				//left: 320
-				top: parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - $("#fancybox-content").height() - 40) * 0.5) - curOpts.padding)), // @see fancybox center
-				left: parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - 950 - 40) * 0.5) - curOpts.padding)) // @see fancybox center
-			}, {
-				duration: "fast",
-				step: function ( now, fx ) {
-					if ( "width" === fx.prop ) {
-						var left = $("#fancybox-wrap").css( "left" );
-						$("#fancybox-content").width( now - 20 );
-					}
-				},
-				complete: function () {
-					//$.fancybox.center();
-				}
-			});
+			$("#fancybox-wrap").fadeOut( "slow", function () {
+				$("#fancybox-content").css({
+					width: 950
+				});
+				$("#fancybox-wrap").css({
+					width: 970,
+					top: parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - $("#fancybox-content").height() - 40) * 0.5) - curOpts.padding)), // @see fancybox center
+					left: parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - 950 - 40) * 0.5) - curOpts.padding)) // @see fancybox center
+				});
+				$("#tag_details").html( data.join("") );
+			}).fadeIn( "slow" );
 		}
 	});
 }
 
 function get_tag_data ( liElement, tag, color, tag_class, type ) {
-	// TODO
 	var data = [], links = $(liElement).data( "links" ) || [],
 		lisElements = $("div.tag_" + type + " > ul.taglist").children(),
 		rank = 0, tagLisElements, tagRank = 0, factor, res_rgb;
