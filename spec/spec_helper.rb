@@ -6,7 +6,7 @@ require 'dm-core'
 RSpec.configure do |config|
 
 	config.before(:suite) do
-		STDERR.puts "HELPER - BEFORE SUITE"
+		#STDERR.puts "HELPER - BEFORE SUITE"
 	end
 
 
@@ -26,7 +26,7 @@ RSpec.configure do |config|
 		DataMapper.setup(:default, hash)                               
 		DataMapper::Model.raise_on_save_failure = true                                  
 		DataMapper.auto_migrate!
-		STDERR.puts "HELPER - BEFORE ALL"
+		#STDERR.puts "HELPER - BEFORE ALL"
 	end
 
 
