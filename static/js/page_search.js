@@ -39,6 +39,62 @@ function reverse_list ( list_header ) {
 	});
 }
 
+function attach_fancybox ( li, tag_class ) {
+	li.fancybox({
+		autoScale: true,
+		autoDimensions: true,
+		width: 950,
+		centerOnScroll: true,
+		content: '<div id="tag_details"><img src="/images/ajax-loader-bar.gif" alt="" width="220" height="19" /></div>',
+		hideOnOverlayClick: true,
+		overlayColor: "#ffffff",
+		scrolling: "no",
+		showCloseButton: false,
+		titleShow: false,
+		onComplete: function (curArr, curIdx, curOpts) {
+			var view = [
+				$(window).width() - (curOpts.margin * 2),
+				$(window).height() - (curOpts.margin * 2),
+				$(document).scrollLeft() + curOpts.margin,
+				$(document).scrollTop() + curOpts.margin
+			],
+			tag = $(curArr).data("tag"),
+			data = [
+				'<div class="col_content span-24 last">',
+					'<div class="tag_expected span-8">',
+						get_links( curArr, tag, tag_class, "expected" ),
+					'</div>',
+					'<div class="tag_controversial span-8">',
+						get_links( curArr, tag, tag_class, "controversial" ),
+					'</div>',
+					'<div class="tag_aggregating span-8 last">',
+						get_links( curArr, tag, tag_class, "aggregating" ),
+					'</div>',
+				'</div>'
+			];
+			$("#tag_details").html( data.join("") );
+			$.fancybox.resize();
+			$("#fancybox-wrap").animate({
+				width: 970,
+				//left: 320
+				top: parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - $("#fancybox-content").height() - 40) * 0.5) - curOpts.padding)), // @see fancybox center
+				left: parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - 950 - 40) * 0.5) - curOpts.padding)) // @see fancybox center
+			}, {
+				duration: "fast",
+				step: function ( now, fx ) {
+					if ( "width" === fx.prop ) {
+						var left = $("#fancybox-wrap").css( "left" );
+						$("#fancybox-content").width( now - 20 );
+					}
+				},
+				complete: function () {
+					//$.fancybox.center();
+				}
+			});
+		}
+	});
+}
+
 function show_resultlist( elem, resp, color ) {
 	elem.fadeOut(function() {
 		var idx, tag, factor, res_size, res_rgb, li, tag_class = get_tag_class( elem, "id", "list" );
@@ -65,59 +121,7 @@ function show_resultlist( elem, resp, color ) {
 				links: resp.result[idx][1].links
 			});
 			// attach fancybox
-			li.fancybox({
-				autoScale: true,
-				autoDimensions: true,
-				width: 950,
-				centerOnScroll: true,
-				content: '<div id="tag_details"><img src="/images/ajax-loader-bar.gif" alt="" width="220" height="19" /></div>',
-				hideOnOverlayClick: true,
-				overlayColor: "#ffffff",
-				scrolling: "no",
-				showCloseButton: false,
-				titleShow: false,
-				onComplete: function (curArr, curIdx, curOpts) {
-					var view = [
-						$(window).width() - (curOpts.margin * 2),
-						$(window).height() - (curOpts.margin * 2),
-						$(document).scrollLeft() + curOpts.margin,
-						$(document).scrollTop() + curOpts.margin
-					],
-					tag = $(curArr).data("tag"),
-					data = [
-						'<div class="col_content span-24 last">',
-							'<div class="tag_expected span-8">',
-								get_links( curArr, tag, tag_class, "expected" ),
-							'</div>',
-							'<div class="tag_controversial span-8">',
-								get_links( curArr, tag, tag_class, "controversial" ),
-							'</div>',
-							'<div class="tag_aggregating span-8 last">',
-								get_links( curArr, tag, tag_class, "aggregating" ),
-							'</div>',
-						'</div>'
-					];
-					$("#tag_details").html( data.join("") );
-					$.fancybox.resize();
-					$("#fancybox-wrap").animate({
-						width: 970,
-						//left: 320
-						top: parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - $("#fancybox-content").height() - 40) * 0.5) - curOpts.padding)), // @see fancybox center
-						left: parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - 950 - 40) * 0.5) - curOpts.padding)) // @see fancybox center
-					}, {
-						duration: "fast",
-						step: function ( now, fx ) {
-							if ( "width" === fx.prop ) {
-								var left = $("#fancybox-wrap").css( "left" );
-								$("#fancybox-content").width( now - 20 );
-							}
-						},
-						complete: function () {
-							//$.fancybox.center();
-						}
-					});
-				}
-			});
+			attach_fancybox( li, tag_class );
 			// append to list
 			li.appendTo( elem );
 		}
