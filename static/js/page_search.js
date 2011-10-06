@@ -170,6 +170,7 @@ $(document).ready(function() {
 		move_list_down( this );
 	});
 	$("div.col_content div").mousewheel(function(event, delta){
+		event.preventDefault();
 		if (delta > 0) {
 			move_list( this, -SLIDE_DELTA );
 		} else {
