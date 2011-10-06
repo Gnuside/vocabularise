@@ -98,6 +98,10 @@ function get_tag_data ( liElement, tag, color, tag_class, type ) {
 			return false;
 		}
 	});
+	// tag not in list
+	if ( 0 === rank ) {
+		return "<p>Not in list</p>";
+	}
 	// tag name or arrows
 	if ( tag_class === type ) {
 		factor = (rank - 1) / lisElements.length;
