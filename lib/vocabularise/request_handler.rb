@@ -23,7 +23,8 @@ module VocabulariSe
 			end
 
 			def handles? handle
-				raise NotImplementedError, "override #handles? in a subclass"
+				@handlers.include? handle
+				#raise NotImplementedError, "override #handles? in a subclass"
 			end
 
 			def cache_result
@@ -48,11 +49,6 @@ module VocabulariSe
 				include mod
 			end
 
-			def find_handlers handle
-				@subclasses.select do |rh|
-					rh.handles? handle
-				end
-			end
 
 		end
 
