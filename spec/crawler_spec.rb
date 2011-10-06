@@ -27,23 +27,26 @@ describe 'Crawler' do
 		}
 
 		@config = VocabulariSe::Config.new json
-		@crawler = VocabulariSe::Crawler.new
+		@crawler = VocabulariSe::Crawler.new @config
 
 		# set crawler
-		@config.mendeley_client.crawler = crawler
+		@config.mendeley_client.crawler = @crawler
 		#crawler.run
 	end
 
 	before :each do
-		CrawlerQueueEntry.all.destroy
+		VocabulariSe::CrawlerQueueEntry.all.destroy
 	end
+
 
 	#
 	it 'should find handlers' do
-		@crawler.should respond_to :find_handlers
+		@crawler.should respond_to(:find_handlers)
 
+		pending("test returned handlers")
 		# FIXME:
-		@crawler.find_handler handle do |handler|
+		@crawler.find_handlers "example" do |handler|
+			pp handler
 		end
 	end
 
