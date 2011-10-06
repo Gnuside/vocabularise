@@ -34,7 +34,7 @@ function reverse_list ( list_header ) {
 	});
 }
 
-function attach_fancybox ( li, tag_class ) {
+function attach_fancybox ( li, tag_class, li_color ) {
 	li.fancybox({
 		autoScale: true,
 		autoDimensions: true,
@@ -57,13 +57,13 @@ function attach_fancybox ( li, tag_class ) {
 			data = [
 				'<div class="col_content span-24 last">',
 					'<div class="tag_expected span-8">',
-						get_tag_data( curArr, tag, COLOR_EXPECTED, tag_class, "expected" ),
+						get_tag_data( curArr, tag, li_color, COLOR_EXPECTED, tag_class, "expected" ),
 					'</div>',
 					'<div class="tag_controversial span-8">',
-						get_tag_data( curArr, tag, COLOR_CONTROVERSIAL, tag_class, "controversial" ),
+						get_tag_data( curArr, tag, li_color, COLOR_CONTROVERSIAL, tag_class, "controversial" ),
 					'</div>',
 					'<div class="tag_aggregating span-8 last">',
-						get_tag_data( curArr, tag, COLOR_AGGREGATING, tag_class, "aggregating" ),
+						get_tag_data( curArr, tag, li_color, COLOR_AGGREGATING, tag_class, "aggregating" ),
 					'</div>',
 				'</div>'
 			];
@@ -82,7 +82,7 @@ function attach_fancybox ( li, tag_class ) {
 	});
 }
 
-function get_tag_data ( liElement, tag, color, tag_class, type ) {
+function get_tag_data ( liElement, tag, li_color, color, tag_class, type ) {
 	var data = [], links = $(liElement).data( "links" ) || [],
 		lisElements = $("div.tag_" + type + " > ul.taglist").children(),
 		rank = 0, tagLisElements, tagRank = 0, factor, res_rgb;
@@ -99,9 +99,7 @@ function get_tag_data ( liElement, tag, color, tag_class, type ) {
 	}
 	// tag name or arrows
 	if ( tag_class === type ) {
-		factor = (rank - 1) / lisElements.length;
-		res_rgb = get_color_related_index( color, factor );
-		data.push( '<h3 style="color: rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');">' + tag + "</h3>" );
+		data.push( '<h3 style="color: rgb(' + li_color[0] + ',' + li_color[1] + ',' + li_color[2] + ');">' + tag + "</h3>" );
 	} else {
 		tagLisElements = $("div.tag_" + tag_class + " > ul.taglist").children();
 		tagLisElements.each( function ( index) {
@@ -162,7 +160,7 @@ function show_resultlist( elem, resp, color ) {
 				links: resp.result[idx][1].links
 			});
 			// attach fancybox
-			attach_fancybox( li, tag_class );
+			attach_fancybox( li, tag_class, res_rgb );
 			// append to list
 			li.appendTo( elem );
 		}
