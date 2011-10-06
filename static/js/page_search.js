@@ -39,7 +39,7 @@ function reverse_list ( list_header ) {
 	});
 }
 
-function attach_fancybox ( li, tag_class, color ) {
+function attach_fancybox ( li, tag_class ) {
 	li.fancybox({
 		autoScale: true,
 		autoDimensions: true,
@@ -62,13 +62,13 @@ function attach_fancybox ( li, tag_class, color ) {
 			data = [
 				'<div class="col_content span-24 last">',
 					'<div class="tag_expected span-8">',
-						get_tag_data( curArr, tag, color, tag_class, "expected" ),
+						get_tag_data( curArr, tag, COLOR_EXPECTED, tag_class, "expected" ),
 					'</div>',
 					'<div class="tag_controversial span-8">',
-						get_tag_data( curArr, tag, color, tag_class, "controversial" ),
+						get_tag_data( curArr, tag, COLOR_CONTROVERSIAL, tag_class, "controversial" ),
 					'</div>',
 					'<div class="tag_aggregating span-8 last">',
-						get_tag_data( curArr, tag, color, tag_class, "aggregating" ),
+						get_tag_data( curArr, tag, COLOR_AGGREGATING, tag_class, "aggregating" ),
 					'</div>',
 				'</div>'
 			];
@@ -97,9 +97,9 @@ function attach_fancybox ( li, tag_class, color ) {
 
 function get_tag_data ( liElement, tag, color, tag_class, type ) {
 	// TODO
-	var data = [], links = $(liElement).data( "links" ),
+	var data = [], links = $(liElement).data( "links" ) || [],
 		lisElements = $("div.tag_" + type + " > ul.taglist").children(),
-		rank = 0, tagLisElements, tagRank = 0;
+		rank = 0, tagLisElements, tagRank = 0, factor, res_rgb;
 	// find rank
 	lisElements.each( function ( index ) {
 		if ( tag === $(this).data("tag") ) {
@@ -109,7 +109,9 @@ function get_tag_data ( liElement, tag, color, tag_class, type ) {
 	});
 	// tag name or arrows
 	if ( tag_class === type ) {
-		data.push( '<h3 style="color: rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ');">' + tag + "</h3>" );
+		factor = (rank - 1) / lisElements.length;
+		res_rgb = get_color_related_index( color, factor );
+		data.push( '<h3 style="color: rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');">' + tag + "</h3>" );
 	} else {
 		tagLisElements = $("div.tag_" + tag_class + " > ul.taglist").children();
 		tagLisElements.each( function ( index) {
@@ -119,11 +121,12 @@ function get_tag_data ( liElement, tag, color, tag_class, type ) {
 			}
 		});
 		if ( rank > tagRank ) {
-			data.push( '<p>down</p>' );
+			data.push( '<img src="/images/bottom-arrow-' + type + '-tiny.png" alt="" width="27" height="12" />' );
 		} else if ( rank < tagRank ) {
-			data.push( '<p>up</p>' );
+			data.push( '<img src="/images/top-arrow-' + type + '-tiny.png" alt="" width="27" height="12" />' );
 		} else {
-			data.push( '<p>equals</p>' );
+			data.push( '<img src="/images/top-arrow-' + type + '-tiny.png" alt="" width="27" height="12" />' );
+			data.push( '<img src="/images/bottom-arrow-' + type + '-tiny.png" alt="" width="27" height="12" />' );
 		}
 	}
 	// rank
@@ -131,10 +134,20 @@ function get_tag_data ( liElement, tag, color, tag_class, type ) {
 	// links list
 	data.push( "<ul>");
 	for ( i = 0; i < links.length; i++ ) {
-		data.push( "<li><a href=" + links[i].href + ">" + links[i].text + "</a></li>");
+		factor = i / links.length;
+		res_rgb = get_color_related_index( color, factor );
+		data.push( '<li><a href="' + links[i].href + '" style="color:rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');">' + links[i].text + "</a></li>");
 	}
 	data.push( "</ul>");
 	return data.join("");
+}
+
+function get_color_related_index ( color, factor ) {
+	return [
+		Math.floor(color[0] - ( factor * (color[0] - COLOR_BLACK[0]) )),
+		Math.floor(color[1] - ( factor * (color[1] - COLOR_BLACK[1]) )),
+		Math.floor(color[2] - ( factor * (color[2] - COLOR_BLACK[2]) ))
+	];
 }
 
 function show_resultlist( elem, resp, color ) {
@@ -145,11 +158,7 @@ function show_resultlist( elem, resp, color ) {
 			tag = resp.result[idx][0];
 			factor = ((idx + 0) / resp.result.length);
 			res_size = TEXTSIZE_MAX - ( factor * (TEXTSIZE_MAX - TEXTSIZE_MIN));
-			res_rgb = [
-				Math.floor(color[0] - ( factor * (color[0] - COLOR_BLACK[0]) )),
-				Math.floor(color[1] - ( factor * (color[1] - COLOR_BLACK[1]) )),
-				Math.floor(color[2] - ( factor * (color[2] - COLOR_BLACK[2]) ))
-			];
+			res_rgb = get_color_related_index( color, factor );
 			// create li element
 			li = $('<li>' +
 				'<a href="#" style="'+
@@ -163,7 +172,7 @@ function show_resultlist( elem, resp, color ) {
 				links: resp.result[idx][1].links
 			});
 			// attach fancybox
-			attach_fancybox( li, tag_class, res_rgb );
+			attach_fancybox( li, tag_class );
 			// append to list
 			li.appendTo( elem );
 		}
