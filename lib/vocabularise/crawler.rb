@@ -136,6 +136,12 @@ module VocabulariSe
 			end
 		end
 
+		def find_handlers handle
+			RequestHandler.subclasses.select do |rh|
+				rh.handles? handle
+			end
+		end
+
 		private
 
 		# no need to be synchronized
@@ -143,11 +149,6 @@ module VocabulariSe
 			key = "%s:%s" % [action,intag]	
 		end
 
-		def find_handlers handle
-			CrawlerHandler::Base.subclasses.find_all do |handler|
-				handler.handles? handle
-			end
-		end
 
 		def process handler, query, mode
 			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query, mode ]
