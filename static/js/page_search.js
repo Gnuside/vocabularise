@@ -10,21 +10,16 @@ var TEXTSIZE_MAX = 2;
 var AJAX_TIMEOUT = 8000;
 var SLIDE_DELTA = 30;
 
-var _expected, _controversial, _aggregating;
-
 function reverse_list ( list_header ) {
 	var tag_class = get_tag_class( $(list_header).parent("div.tag") ), ul, lis;
 	switch ( tag_class ) {
 		case "expected" :
-			_expected.reverse();
 			ul = $("#list_expected");
 			break;
 		case "controversial" :
-			_controversial.reverse();
 			ul = $("#list_controversial");
 			break;
 		case "aggregating" :
-			_aggregating.reverse();
 			ul = $("#list_aggregating");
 			break;
 		default :
@@ -185,7 +180,6 @@ function load_expected( query ) {
 		timeout: AJAX_TIMEOUT,
 		success: function( resp ){
 			show_resultlist( $(this), resp, COLOR_EXPECTED );
-			_expected = resp.result;
 		},
 		error: function( req, error ) {
 			setTimeout(function(){ load_expected(query); },2000);
@@ -201,7 +195,6 @@ function load_controversial( query ) {
 		timeout: AJAX_TIMEOUT,
 		success: function( resp ){
 			show_resultlist( $(this), resp, COLOR_CONTROVERSIAL );
-			_controversial = resp.result;
 		},
 		error: function( req, error ) {
 			setTimeout(function(){ load_controversial(query); }, 2000);
@@ -217,7 +210,6 @@ function load_aggregating( query ) {
 		timeout: AJAX_TIMEOUT,
 		success: function( resp ){
 			show_resultlist( $(this), resp, COLOR_AGGREGATING );
-			_aggregating = resp.result;
 		},
 		error: function( req, error ) {
 			setTimeout(function(){ load_aggregating(query); }, 2000);
