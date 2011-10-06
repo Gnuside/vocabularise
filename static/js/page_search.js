@@ -15,15 +15,15 @@ var _expected, _controversial, _aggregating;
 function reverse_list ( list_header ) {
 	var tag_class = get_tag_class( $(list_header).parent("div.tag") ), ul, lis;
 	switch ( tag_class ) {
-		case "tag_expected" :
+		case "expected" :
 			_expected.reverse();
 			ul = $("#list_expected");
 			break;
-		case "tag_controversial" :
+		case "controversial" :
 			_controversial.reverse();
 			ul = $("#list_controversial");
 			break;
-		case "tag_aggregating" :
+		case "aggregating" :
 			_aggregating.reverse();
 			ul = $("#list_aggregating");
 			break;
@@ -113,15 +113,18 @@ function load_aggregating( query ) {
 	});
 }
 
-function get_tag_class ( element ) {
-	var re = new RegExp("tag_[a-z]+"), res;
-	res = re.exec( $(element).attr("class") );
-	return res[0];
+function get_tag_class ( element, attribute, prefix ) {
+	var attribute = attribute || "class",
+		prefix = prefix || "tag",
+		re = new RegExp(prefix + "_([a-z]+)"),
+		res;
+	res = re.exec( $(element).attr( attribute ) );
+	return res[1];
 }
 
 function move_list ( element, delta, tag_class_element ) {
 	var tag_class = get_tag_class( tag_class_element || element ), ul, divListHeight, tagListPos, tagListHeight;
-	ul = $("div." + tag_class + " > ul.taglist");
+	ul = $("div.tag_" + tag_class + " > ul.taglist");
 	tagListPos = ul.data("tagListPos");
 	divListHeight = ul.data("divListHeight");
 	tagListHeight = ul.data("tagListHeight");
