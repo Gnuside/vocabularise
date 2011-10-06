@@ -39,7 +39,7 @@ function reverse_list ( list_header ) {
 	});
 }
 
-function attach_fancybox ( li, tag_class ) {
+function attach_fancybox ( li, tag_class, color ) {
 	li.fancybox({
 		autoScale: true,
 		autoDimensions: true,
@@ -62,13 +62,13 @@ function attach_fancybox ( li, tag_class ) {
 			data = [
 				'<div class="col_content span-24 last">',
 					'<div class="tag_expected span-8">',
-						get_links( curArr, tag, tag_class, "expected" ),
+						get_tag_data( curArr, tag, color, tag_class, "expected" ),
 					'</div>',
 					'<div class="tag_controversial span-8">',
-						get_links( curArr, tag, tag_class, "controversial" ),
+						get_tag_data( curArr, tag, color, tag_class, "controversial" ),
 					'</div>',
 					'<div class="tag_aggregating span-8 last">',
-						get_links( curArr, tag, tag_class, "aggregating" ),
+						get_tag_data( curArr, tag, color, tag_class, "aggregating" ),
 					'</div>',
 				'</div>'
 			];
@@ -93,6 +93,48 @@ function attach_fancybox ( li, tag_class ) {
 			});
 		}
 	});
+}
+
+function get_tag_data ( liElement, tag, color, tag_class, type ) {
+	// TODO
+	var data = [], links = $(liElement).data( "links" ),
+		lisElements = $("div.tag_" + type + " > ul.taglist").children(),
+		rank = 0, tagLisElements, tagRank = 0;
+	// find rank
+	lisElements.each( function ( index ) {
+		if ( tag === $(this).data("tag") ) {
+			rank = index + 1;
+			return false;
+		}
+	});
+	// tag name or arrows
+	if ( tag_class === type ) {
+		data.push( '<h3 style="color: rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ');">' + tag + "</h3>" );
+	} else {
+		tagLisElements = $("div.tag_" + tag_class + " > ul.taglist").children();
+		tagLisElements.each( function ( index) {
+			if ( tag === $(this).data("tag") ) {
+				tagRank = index + 1;
+				return false;
+			}
+		});
+		if ( rank > tagRank ) {
+			data.push( '<p>down</p>' );
+		} else if ( rank < tagRank ) {
+			data.push( '<p>up</p>' );
+		} else {
+			data.push( '<p>equals</p>' );
+		}
+	}
+	// rank
+	data.push( '<p class="rank">(rank ' + rank + ')</p>' );
+	// links list
+	data.push( "<ul>");
+	for ( i = 0; i < links.length; i++ ) {
+		data.push( "<li><a href=" + links[i].href + ">" + links[i].text + "</a></li>");
+	}
+	data.push( "</ul>");
+	return data.join("");
 }
 
 function show_resultlist( elem, resp, color ) {
@@ -121,7 +163,7 @@ function show_resultlist( elem, resp, color ) {
 				links: resp.result[idx][1].links
 			});
 			// attach fancybox
-			attach_fancybox( li, tag_class );
+			attach_fancybox( li, tag_class, res_rgb );
 			// append to list
 			li.appendTo( elem );
 		}
@@ -129,11 +171,6 @@ function show_resultlist( elem, resp, color ) {
 		elem.fadeIn();
 		elem.data("tagListHeight", elem.height());
 	});
-}
-
-function get_links ( liElement, tag, tag_class, type ) {
-	// TODO
-	return [];
 }
 
 function load_expected( query ) {

@@ -131,4 +131,5 @@ hr.tag_aggregating { background-color: #008bd0; }
 	padding: 0px;
 }
 
-#fancybox-content h3 { text-transform: capitalize; }
+#fancybox-content h3 { margin-bottom: 0; text-transform: capitalize; }
+#fancybox-content p.rank { color: #000000; }
