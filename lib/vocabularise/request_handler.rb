@@ -52,7 +52,7 @@ module VocabulariSe
 
 		end
 
-		def initialize config, crawler
+		def initialize config, crawler 
 			@config = config
 			@crawler = crawler
 			@store_result ||= false
