@@ -16,12 +16,13 @@ module VocabulariSe
 		PRIORITY_LOW = 25
 
 
-		def initialize
-
+		def initialize name
+			@name = name.to_s
 		end
 
 		def include? handler, query
 			req = {
+				:queue => @name,
 				:handler => handler,
 				:cquery => query
 			}
@@ -34,10 +35,12 @@ module VocabulariSe
 			QueueEntry.transaction do
 				now = Time.now
 				req_find = {
+					:queue => @name,
 					:handler => handler,
 					:cquery => query
 				}
 				req_create = {
+					:queue => @name,
 					:handler => handler,
 					:cquery => query,
 					:created_at => now.to_i
@@ -61,6 +64,7 @@ module VocabulariSe
 
 		def first
 			req = {
+				:queue => @name,
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
 			resp = QueueEntry.first req
@@ -74,6 +78,7 @@ module VocabulariSe
 
 		def shift
 			req = {
+				:queue => @name,
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
 			resp = QueueEntry.first req
@@ -95,7 +100,7 @@ module VocabulariSe
 
 		def each &blk
 			now = Time.now
-			resp = QueueEntry.all
+			resp = QueueEntry.all :queue => @name
 			resp.each do |x|
 				yield x
 			end
@@ -104,7 +109,7 @@ module VocabulariSe
 
 		def empty!
 			QueueEntry.transaction do
-				resp = QueueEntry.all
+				resp = QueueEntry.all :queue => @name
 				resp.each { |x| x.destroy }
 			end
 			self
@@ -115,7 +120,7 @@ module VocabulariSe
 		end
 
 		def size
-			return QueueEntry.count
+			return QueueEntry.count( :queue => @name )
 		end
 	end
 end

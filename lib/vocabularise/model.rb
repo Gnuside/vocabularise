@@ -8,6 +8,7 @@ module VocabulariSe
 		include DataMapper::Resource
 
 		property :id, Serial
+		property :queue, String, :length => 200
 		property :cquery,   String, :length => 200, :unique_index => :u1
 		property :handler, String, :length => 200, :unique_index => :u1
 		property :priority, Integer, :default => 0

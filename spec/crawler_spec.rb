@@ -35,7 +35,7 @@ describe 'Crawler' do
 	end
 
 	before :each do
-		VocabulariSe::CrawlerQueueEntry.all.destroy
+		VocabulariSe::QueueEntry.all.destroy
 	end
 
 

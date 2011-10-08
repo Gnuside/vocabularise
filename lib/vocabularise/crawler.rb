@@ -60,41 +60,39 @@ module VocabulariSe
 					rdebug "request in cache (%s, %s)" % [handler, query]
 					# send result from cache
 					result = @config.cache[cache_key]
-				 
-				else
-					
-					found = false
-					
-					@queue.each |key,queue| do
-						if queue.include? handler, query then
-							rdebug "request in internal queue (%s, %s)" % [handler, query]
-
-							# increase queue priority if passive mode
-							queue.stress handler, query if mode == MODE_PASSIVE
-
-							# you'll have to wait
-							deferred = true
-							found = true
-							break
-						end
-					end
-
-				else
-					rdebug "request nowhere (%s, %s)" % [handler, query]
-					# neither in cache nor in queue
-					# we add request to the queue
-					
-					priority = priority_from_mode mode
-
-
-					@queue.each do |key,queue| do
-						if handler =~ /^#{key}/ then
-							queue.push handler, query, priority
-						end
-					end
-
-					deferred = true
+					break
 				end
+					
+				found = false
+				@queue.each do |key,queue|
+					if queue.include? handler, query then
+						rdebug "request in #{key} queue (%s, %s)" % [handler, query]
+
+						# increase queue priority if passive mode
+						queue.stress handler, query if mode == MODE_PASSIVE
+
+						# you'll have to wait
+						deferred = true
+						found = true
+						break
+					end
+				end
+				break if found
+
+				rdebug "request nowhere (%s, %s)" % [handler, query]
+				# neither in cache nor in queue
+				# we add request to the queue
+
+				priority = priority_from_mode mode
+
+
+				@queue.each do |key,queue|
+					if handler =~ /^#{key}/ then
+						queue.push handler, query, priority
+					end
+				end
+
+				deferred = true
 			end
 			raise DeferredRequest if deferred
 			return result

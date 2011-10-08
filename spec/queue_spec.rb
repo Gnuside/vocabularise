@@ -25,7 +25,7 @@ describe 'Queue' do
 	REQ_OTHER = "other:noop"
 
 	before :all do
-		@queue = ::VocabulariSe::Queue.new
+		@queue = ::VocabulariSe::Queue.new :example
 	end
 
 	before :each do
