@@ -73,9 +73,17 @@ module VocabulariSe
 			# FIXME: use cache for search
 			@query = params[:query]
 
-			settings.crawler.request( Crawler::REQUEST_RELATED, 
-									 @query,
-									 Crawler::MODE_INTERACTIVE )
+			if @query.empty? then 
+				redirect '/'
+			end
+
+			begin
+				settings.crawler.request( Crawler::REQUEST_RELATED, 
+										 @query,
+										 Crawler::MODE_INTERACTIVE )
+			rescue Crawler::DeferredRequest
+				# does not hurt ;-)
+			end
 
 			haml :page_search
 		end
@@ -96,16 +104,16 @@ module VocabulariSe
 		get "/search/expected" do
 			@query = params[:query]
 
-			result = settings.crawler.request( Crawler::REQUEST_EXPECTED, 
-											  @query, 
-											  Crawler::MODE_INTERACTIVE )
-			if result.nil? then
-				status(503)
-			else
+			begin
+				result = settings.crawler.request( Crawler::REQUEST_INTERNAL_EXPECTED, 
+												  @query, 
+												  Crawler::MODE_INTERACTIVE )
 				JSON.generate( { 
 					:algorithm => "expected",
 					:result => result
 				} )
+			rescue Crawler::DeferredRequest
+				status(503)
 			end
 		end
 
@@ -114,18 +122,17 @@ module VocabulariSe
 		get "/search/controversial" do
 			@query = params[:query]
 			
-			result = settings.crawler.request( Crawler::REQUEST_CONTROVERSIAL, 
-											  @query,
-											  Crawler::MODE_INTERACTIVE )
-			if result.nil? then
-				status(503)
-			else
+			begin
+				result = settings.crawler.request( Crawler::REQUEST_INTERNAL_CONTROVERSIAL, 
+												  @query,
+												  Crawler::MODE_INTERACTIVE )
 				JSON.generate( { 
 					:algorithm => "controversial",
 					:result => result
 				} )
+			rescue Crawler::DeferredRequest
+				status(503)
 			end
-
 		end
 
 
@@ -133,16 +140,16 @@ module VocabulariSe
 		get "/search/aggregating" do
 			@query = params[:query]
 
-			result = settings.crawler.request( Crawler::REQUEST_AGGREGATING, 
-											  @query,
-											  Crawler::MODE_INTERACTIVE )
-			if result.nil? then
-				status(503)
-			else
+			begin
+				result = settings.crawler.request( Crawler::REQUEST_INTERNAL_AGGREGATING, 
+												  @query,
+												  Crawler::MODE_INTERACTIVE )
 				JSON.generate( { 
 					:algorithm => "aggregating",
 					:result => result
 				} )
+			rescue Crawler::DeferredRequest
+				status(503)
 			end
 		end
 
