@@ -1,6 +1,9 @@
 
 require 'vocabularise/config'
 require 'vocabularise/crawler'
+
+# load various handlers
+require 'vocabularise/internal_handler'
 require 'vocabularise/expected_handler'
 require 'vocabularise/controversial_handler'
 require 'vocabularise/aggregating_handler'
@@ -85,7 +88,7 @@ module VocabulariSe
 
 			begin
 				settings.crawler.request \
-					Crawler::REQUEST_RELATED, 
+					HANDLE_INTERNAL_RELATED_TAGS, 
 					{ :query => @query },
 					Crawler::MODE_INTERACTIVE
 
@@ -154,7 +157,7 @@ module VocabulariSe
 
 			begin
 				result = settings.crawler.request \
-					Crawler::REQUEST_INTERNAL_AGGREGATING, 
+					HANDLE_INTERNAL_AGGREGATING,
 					{ :query => @query },
 					Crawler::MODE_INTERACTIVE
 
