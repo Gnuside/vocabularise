@@ -84,7 +84,6 @@ module VocabulariSe
 
 				priority = priority_from_mode mode
 
-
 				@queue.each do |key,queue|
 					if handler =~ /^#{key}/ then
 						queue.push handler, query, priority
@@ -99,47 +98,20 @@ module VocabulariSe
 
 
 
-=begin
-		# no need to be synchronized
-		def handle req
-			rdebug "begin-run %s, %s" % [req.handler, req.cquery]
-
-			result = nil
-			cache_key = _cache_key(req.handler, req.cquery)
-
-			find_handlers( req.handler ) do |handler|
-				handler.process req
-			end
-
-			case req.handler
-			when REQUEST_RELATED then
-				result = VocabulariSe::Utils.related_tags @config, req.cquery
-				rdebug "related tags = %s" % result.inspect
-
-			when REQUEST_EXPECTED then 
-				# do something
-			else
-				rdebug "unknown handler for %s" % req.inspect
-			end
-
-			@config.cache[cache_key] = result if result
-			STDERR.puts "request end-run %s, %s" % [req.handler, req.cquery]
-		end
-=end
-
-
 		# no need to be synchronized
 		def run
 			Thread.abort_on_exception = true
 			@queue.each do |key,queue|
-				Thread.new do
+				Thread.new( key, queue ) do |key, queue|
 					rdebug "/#{key}/ crawler up and running!"
-					while true
-						rdebug "/#{key}/ loop start (sleep)"
-						sleep 1
+					loop do
+						rdebug "/#{key}/ loop start"
+						
 						# get first in queue, by priority
-						next if queue.empty?
-						rdebug "/#{key}/ queue first"
+						if queue.empty? then
+							sleep 1
+							next
+						end
 
 						e_handler, e_query, e_priority = queue.pop
 
@@ -150,7 +122,7 @@ module VocabulariSe
 							process e_handler, e_query, e_priority
 						rescue DeferredRequest
 							# execution failed, try it again later
-							rdebug "/#{key}/ pushing back in queue"
+							rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query, e_priority ]
 							queue.push e_handler, e_query, (e_priority - 1)
 						end
 
@@ -173,17 +145,25 @@ module VocabulariSe
 		end
 
 
-		def process handler, query, mode
-			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query.inspect, mode ]
-			sleep 20
+		def process handle, query, mode
+			rdebug "handle = %s, query = %s, mode = %s" % [ handle, query.inspect, mode ]
+			sleep 10 #DEBUG FIXME
 			found = false
-			find_handlers( handler ).each do |handler|
+			find_handlers( handle ).each do |handler_class|
+				rdebug "handler found for #{handle} : #{handler_class}"
 				found = true
 				begin
-					handler.new( self, handler, query, mode ).process
+					handler_instance = handler_class.new( @config, self )
+
+					# may raise a DeferredRequest :-)
+					result = handler_instance.process( handle, query, mode )
+
+					# may not be executed (do not worry) ;-)
+					cache_key = _cache_key(handle, query)
+					@cache[cache_key] = result if handler_instance.cache_result?
 				end
 			end
-			rdebug "no handler found for #{handler}!" unless found
+			rdebug "no handler found for #{handle}!" unless found
 		end
 		
 		def priority_from_mode mode
