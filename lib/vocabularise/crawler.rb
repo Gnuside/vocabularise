@@ -34,11 +34,10 @@ module VocabulariSe
 			
 			# prepare multiple queues for multiple threads,
 			# to be more efficient & not being blocked by a given api
-			@queue[:wikipedia] = Queue.new
-			@queue[:mendeley] = Queue.new
-			@queue[:internal] = Queue.new
-
-			@queue.each { |k,queue| queue.empty! }
+			[:wikipedia,:mendeley,:internal].each do |key|
+				@queue[key] = Queue.new key
+				@queue[key].empty!
+			end
 
 			@debug = true
 			@monitor = Monitor.new
