@@ -48,7 +48,7 @@ module VocabulariSe
 		#
 		# if request is in cache then send a result
 		def request handler, query, mode=MODE_PASSIVE
-			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query, mode ]
+			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query.inspect, mode ]
 
 			result = nil
 			deferred = false
@@ -56,7 +56,7 @@ module VocabulariSe
 			@monitor.synchronize do 
 				cache_key = _cache_key(handler, query)
 				if @config.cache.include? cache_key then
-					rdebug "request in cache (%s, %s)" % [handler, query]
+					rdebug "request in cache (%s, %s)" % [handler, query.inspect]
 					# send result from cache
 					result = @config.cache[cache_key]
 					break
@@ -65,7 +65,7 @@ module VocabulariSe
 				found = false
 				@queue.each do |key,queue|
 					if queue.include? handler, query then
-						rdebug "request in #{key} queue (%s, %s)" % [handler, query]
+						rdebug "request in #{key} queue (%s, %s)" % [handler, query.inspect]
 
 						# increase queue priority if passive mode
 						queue.stress handler, query if mode == MODE_PASSIVE
@@ -133,27 +133,27 @@ module VocabulariSe
 			Thread.abort_on_exception = true
 			@queue.each do |key,queue|
 				Thread.new do
-					rdebug 'crawler up and running!'
+					rdebug "/#{key}/ crawler up and running!"
 					while true
-						rdebug 'loop start (sleep)'
-						sleep 5
+						rdebug "/#{key}/ loop start (sleep)"
+						sleep 1
 						# get first in queue, by priority
 						next if queue.empty?
-						rdebug 'queue first'
+						rdebug "/#{key}/ queue first"
 
 						e_handler, e_query, e_priority = queue.pop
 
-						rdebug 'handling %s, %s, %s' % [ e_handler, e_query, e_priority ]
+						rdebug "/#{key}/ handling %s, %s, %s" % [ e_handler, e_query, e_priority ]
 	
 						begin
 							# call proper handler for request
 							process e_handler, e_query, e_priority
 						rescue DeferredRequest
 							# execution failed, try it again later
+							rdebug "/#{key}/ pushing back in queue"
 							queue.push e_handler, e_query, (e_priority - 1)
 						end
 
-						rdebug 'shifting queue'
 					end
 				end
 			end
@@ -174,13 +174,16 @@ module VocabulariSe
 
 
 		def process handler, query, mode
-			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query, mode ]
+			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query.inspect, mode ]
 			sleep 20
+			found = false
 			find_handlers( handler ).each do |handler|
+				found = true
 				begin
 					handler.new( self, handler, query, mode ).process
 				end
 			end
+			rdebug "no handler found for #{handler}!" unless found
 		end
 		
 		def priority_from_mode mode
