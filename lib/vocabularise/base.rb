@@ -1,6 +1,12 @@
 
 require 'vocabularise/config'
 require 'vocabularise/crawler'
+require 'vocabularise/expected_handler'
+require 'vocabularise/controversial_handler'
+require 'vocabularise/aggregating_handler'
+require 'vocabularise/wikipedia_handler'
+require 'vocabularise/mendeley_handler'
+
 
 module VocabulariSe
 
