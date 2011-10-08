@@ -4,7 +4,7 @@ require 'rdebug/base'
 require 'mendeley/cache'
 require 'cgi'
 
-require 'vocabularise/crawler_handler'
+require 'vocabularise/request_handler'
 
 module Mendeley
 
