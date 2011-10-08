@@ -1,6 +1,7 @@
 cache
 vendor/*
 .bundle
+coverage
 config/vocabularise.json*
 !config/vocabularise.json.example
 *.sqlite3
