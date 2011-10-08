@@ -78,9 +78,11 @@ module VocabulariSe
 			end
 
 			begin
-				settings.crawler.request( Crawler::REQUEST_RELATED, 
-										 @query,
-										 Crawler::MODE_INTERACTIVE )
+				settings.crawler.request \
+					Crawler::REQUEST_RELATED, 
+					{ :query => @query },
+					Crawler::MODE_INTERACTIVE
+
 			rescue Crawler::DeferredRequest
 				# does not hurt ;-)
 			end
@@ -105,9 +107,11 @@ module VocabulariSe
 			@query = params[:query]
 
 			begin
-				result = settings.crawler.request( Crawler::REQUEST_INTERNAL_EXPECTED, 
-												  @query, 
-												  Crawler::MODE_INTERACTIVE )
+				result = settings.crawler.request \
+					Crawler::REQUEST_INTERNAL_EXPECTED, 
+					{ :query => @query }, 
+					Crawler::MODE_INTERACTIVE
+
 				JSON.generate( { 
 					:algorithm => "expected",
 					:result => result
@@ -123,9 +127,11 @@ module VocabulariSe
 			@query = params[:query]
 			
 			begin
-				result = settings.crawler.request( Crawler::REQUEST_INTERNAL_CONTROVERSIAL, 
-												  @query,
-												  Crawler::MODE_INTERACTIVE )
+				result = settings.crawler.request \
+					Crawler::REQUEST_INTERNAL_CONTROVERSIAL, 
+					{ :query => @query },
+					Crawler::MODE_INTERACTIVE
+
 				JSON.generate( { 
 					:algorithm => "controversial",
 					:result => result
@@ -141,9 +147,11 @@ module VocabulariSe
 			@query = params[:query]
 
 			begin
-				result = settings.crawler.request( Crawler::REQUEST_INTERNAL_AGGREGATING, 
-												  @query,
-												  Crawler::MODE_INTERACTIVE )
+				result = settings.crawler.request \
+					Crawler::REQUEST_INTERNAL_AGGREGATING, 
+					{ :query => @query },
+					Crawler::MODE_INTERACTIVE
+
 				JSON.generate( { 
 					:algorithm => "aggregating",
 					:result => result
