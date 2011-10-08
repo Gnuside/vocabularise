@@ -4,7 +4,7 @@ require 'dm-validations'
 
 module VocabulariSe
 	# a queue entry
-	class CrawlerQueueEntry
+	class QueueEntry
 		include DataMapper::Resource
 
 		property :id, Serial

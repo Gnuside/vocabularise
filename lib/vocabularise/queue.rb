@@ -5,11 +5,15 @@ require 'vocabularise/model'
 module VocabulariSe
 
 
-	class CrawlerQueue
+	class Queue
 		#
 		# FIXME: do something for priority
 
 		class EmptyQueueError < RuntimeError ; end
+
+		PRIORITY_HIGH = 100
+		PRIORITY_NORMAL = 50
+		PRIORITY_LOW = 25
 
 
 		def initialize
@@ -21,13 +25,13 @@ module VocabulariSe
 				:handler => handler,
 				:cquery => query
 			}
-			resp = CrawlerQueueEntry.first req
+			resp = QueueEntry.first req
 			return (not resp.nil?)
 		end
 
 
 		def push handler, query, priority=nil
-			CrawlerQueueEntry.transaction do
+			QueueEntry.transaction do
 				now = Time.now
 				req_find = {
 					:handler => handler,
@@ -40,9 +44,9 @@ module VocabulariSe
 				}
 				req_create[:priority] = priority.to_i unless priority.nil?
 
-				resp = CrawlerQueueEntry.first req_find
+				resp = QueueEntry.first req_find
 				if resp.nil? then
-					resp = CrawlerQueueEntry.new req_create
+					resp = QueueEntry.new req_create
 				end
 
 				begin
@@ -59,7 +63,7 @@ module VocabulariSe
 			req = {
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
-			resp = CrawlerQueueEntry.first req
+			resp = QueueEntry.first req
 			if resp
 				then return resp.handler, resp.cquery, resp.priority
 			else
@@ -72,7 +76,7 @@ module VocabulariSe
 			req = {
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
-			resp = CrawlerQueueEntry.first req
+			resp = QueueEntry.first req
 			if resp then resp.destroy
 			else raise EmptyQueueError
 			end
@@ -82,7 +86,7 @@ module VocabulariSe
 
 		def pop
 			handler, query, priority = nil, nil, nil
-			CrawlerQueueEntry.transaction do
+			QueueEntry.transaction do
 				handler, query, priority = self.first
 				shift
 			end
@@ -91,7 +95,7 @@ module VocabulariSe
 
 		def each &blk
 			now = Time.now
-			resp = CrawlerQueueEntry.all
+			resp = QueueEntry.all
 			resp.each do |x|
 				yield x
 			end
@@ -99,10 +103,11 @@ module VocabulariSe
 		end
 
 		def empty!
-			CrawlerQueueEntry.transaction do
-				resp = CrawlerQueueEntry.all
+			QueueEntry.transaction do
+				resp = QueueEntry.all
 				resp.each { |x| x.destroy }
 			end
+			self
 		end
 
 		def empty?
@@ -110,7 +115,7 @@ module VocabulariSe
 		end
 
 		def size
-			return CrawlerQueueEntry.count
+			return QueueEntry.count
 		end
 	end
 end

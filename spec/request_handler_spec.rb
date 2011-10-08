@@ -21,6 +21,8 @@ describe 'RequestHandler' do
 		no_cache_result
 
 		process do |handle,query,priority|
+			#@crawler.request :good_example, query, priority + 1
+
 			puts "hello world"
 		end
 	end

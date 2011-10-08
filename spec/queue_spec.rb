@@ -13,11 +13,11 @@ require 'dm-core'
 require 'dm-sqlite-adapter'                                                     
 
 require 'wikipedia'
-require 'vocabularise/crawler_queue'
+require 'vocabularise/queue'
 
 require 'spec/spec_helper'
 
-describe 'CrawlerQueue' do
+describe 'Queue' do
 
 	REQ_RELATED = "internal:related"
 	REQ_EXPECTED = "internal:expected"
@@ -25,11 +25,11 @@ describe 'CrawlerQueue' do
 	REQ_OTHER = "other:noop"
 
 	before :all do
-		@queue = ::VocabulariSe::CrawlerQueue.new
+		@queue = ::VocabulariSe::Queue.new
 	end
 
 	before :each do
-		VocabulariSe::CrawlerQueueEntry.all.destroy
+		VocabulariSe::QueueEntry.all.destroy
 	end
 
 	def helper_make_samepriority
@@ -40,11 +40,11 @@ describe 'CrawlerQueue' do
 
 	def helper_make_diffpriority
 		@queue.push REQ_RELATED, 'love', 
-			VocabulariSe::CrawlerQueue::PRIORITY_HIGH
+			VocabulariSe::Queue::PRIORITY_HIGH
 		@queue.push REQ_EXPECTED, 'death', 
-			VocabulariSe::CrawlerQueue::PRIORITY_LOW
+			VocabulariSe::Queue::PRIORITY_LOW
 		@queue.push REQ_AGGREGATING, 'love', 
-			VocabulariSe::CrawlerQueue::PRIORITY_NORMAL
+			VocabulariSe::Queue::PRIORITY_NORMAL
 	end
 
 	describe '#size' do
@@ -63,7 +63,17 @@ describe 'CrawlerQueue' do
 		end
 	end
 
-	describe '#empty' do
+	describe '#empty!' do
+		it 'should empty the queue' do
+			pending("test not implemented")
+		end
+
+		it 'should return the queue object' do
+			@queue.empty!.should == @queue
+		end
+	end
+
+	describe '#empty?' do
 		it 'should respond true at start' do
 			@queue.should respond_to :empty?
 
@@ -104,10 +114,10 @@ describe 'CrawlerQueue' do
 			@queue.should respond_to :push
 
 			@queue.push REQ_RELATED, 'love', 
-				VocabulariSe::CrawlerQueue::PRIORITY_LOW
+				VocabulariSe::Queue::PRIORITY_LOW
 			@queue.size.should == 1
 			@queue.push REQ_EXPECTED, 'love', 
-				VocabulariSe::CrawlerQueue::PRIORITY_HIGH
+				VocabulariSe::Queue::PRIORITY_HIGH
 			@queue.size.should == 2
 			@queue.empty?.should == false
 		end
@@ -176,13 +186,13 @@ describe 'CrawlerQueue' do
 		#
 		it 'should fail on an empty queue' do
 
-			lambda{ @queue.first }.should raise_error VocabulariSe::CrawlerQueue::EmptyQueueError
+			lambda{ @queue.first }.should raise_error VocabulariSe::Queue::EmptyQueueError
 		end
 
 		#
 		it 'should not shift an empty queue' do
 
-			lambda{ @queue.shift }.should raise_error VocabulariSe::CrawlerQueue::EmptyQueueError
+			lambda{ @queue.shift }.should raise_error VocabulariSe::Queue::EmptyQueueError
 		end
 
 		#

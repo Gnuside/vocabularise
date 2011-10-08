@@ -2,7 +2,7 @@
 require 'thread'
 require 'monitor'
 
-require 'vocabularise/crawler_queue'
+require 'vocabularise/queue'
 require 'vocabularise/hit_counter'
 
 require 'rdebug/base'
@@ -23,21 +23,25 @@ module VocabulariSe
 		COUNTER_MENDELEY_CURRENT = :mendeley_current
 
 
-		REQUEST_RELATED = 'related'
-		REQUEST_EXPECTED = 'expected'
-		REQUEST_CONTROVERSIAL = 'controversial'
-		REQUEST_AGGREGATING = 'aggregating'
+		REQUEST_INTERNAL_RELATED = 'internal:related'
+		REQUEST_INTERNAL_EXPECTED = 'internal:expected'
+		REQUEST_INTERNAL_CONTROVERSIAL = 'internal:controversial'
+		REQUEST_INTERNAL_AGGREGATING = 'internal:aggregating'
 
 		def initialize config
 			@config = config
-			@queue = CrawlerQueue.new
-			@queue.empty!
+			@queue = {}
+			
+			# prepare multiple queues for multiple threads,
+			# to be more efficient & not being blocked by a given api
+			@queue[:wikipedia] = Queue.new
+			@queue[:mendeley] = Queue.new
+			@queue[:internal] = Queue.new
+
+			@queue.each { |k,queue| queue.empty! }
 
 			@debug = true
 			@monitor = Monitor.new
-
-			# FIXME: add multiple crawling threads for more efficiency
-			# or to prevent blocked requests
 		end
 
 
@@ -56,24 +60,39 @@ module VocabulariSe
 					rdebug "request in cache (%s, %s)" % [handler, query]
 					# send result from cache
 					result = @config.cache[cache_key]
-
-				elsif @queue.include? handler, query then
-					rdebug "request in queue (%s, %s)" % [handler, query]
-
-					# FIXME: increase queue priority
-					# you'll have to wait
+				 
+				else
 					
-					deferred = true
+					found = false
+					
+					@queue.each |key,queue| do
+						if queue.include? handler, query then
+							rdebug "request in internal queue (%s, %s)" % [handler, query]
+
+							# increase queue priority if passive mode
+							queue.stress handler, query if mode == MODE_PASSIVE
+
+							# you'll have to wait
+							deferred = true
+							found = true
+							break
+						end
+					end
+
 				else
 					rdebug "request nowhere (%s, %s)" % [handler, query]
 					# neither in cache nor in queue
 					# we add request to the queue
-					priority = case mode 
-							   when MODE_INTERACTIVE then 5
-							   when MODE_PASSIVE then 1
-							   else 1
-							   end
-					@queue.push handler, query, priority
+					
+					priority = priority_from_mode mode
+
+
+					@queue.each do |key,queue| do
+						if handler =~ /^#{key}/ then
+							queue.push handler, query, priority
+						end
+					end
+
 					deferred = true
 				end
 			end
@@ -115,23 +134,30 @@ module VocabulariSe
 		# no need to be synchronized
 		def run
 			Thread.abort_on_exception = true
-			Thread.new do
-				rdebug 'crawler up and running!'
-				while true
-					rdebug 'loop start (sleep)'
-					sleep 1
-					# get first in queue, by priority
-					next if @queue.empty?
-					rdebug 'queue first'
+			@queue.each do |key,queue|
+				Thread.new do
+					rdebug 'crawler up and running!'
+					while true
+						rdebug 'loop start (sleep)'
+						sleep 5
+						# get first in queue, by priority
+						next if queue.empty?
+						rdebug 'queue first'
 
-					e_handler, e_query, e_priority = @queue.first
+						e_handler, e_query, e_priority = queue.pop
 
-					rdebug 'handling %s, %s, %s' % [ e_handler, e_query, e_priority ]
-					# call proper handler for request
-					process e_handler, e_query, e_priority
+						rdebug 'handling %s, %s, %s' % [ e_handler, e_query, e_priority ]
+	
+						begin
+							# call proper handler for request
+							process e_handler, e_query, e_priority
+						rescue DeferredRequest
+							# execution failed, try it again later
+							queue.push e_handler, e_query, (e_priority - 1)
+						end
 
-					rdebug 'shifting queue'
-					@queue.shift
+						rdebug 'shifting queue'
+					end
 				end
 			end
 		end
@@ -158,6 +184,14 @@ module VocabulariSe
 					handler.new( self, handler, query, mode ).process
 				end
 			end
+		end
+		
+		def priority_from_mode mode
+			priority = case mode 
+					   when MODE_INTERACTIVE then Queue::PRIORITY_HIGH
+					   when MODE_PASSIVE then Queue::PRIORITY_LOW
+					   else Queue::PRIORITY_NORMAL
+					   end
 		end
 	end
 
