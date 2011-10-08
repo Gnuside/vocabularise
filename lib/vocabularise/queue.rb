@@ -1,5 +1,6 @@
 
 
+require 'json'
 require 'vocabularise/model'
 
 module VocabulariSe
@@ -24,7 +25,7 @@ module VocabulariSe
 			req = {
 				:queue => @name,
 				:handler => handler,
-				:cquery => query
+				:cquery => JSON.generate([query])
 			}
 			resp = QueueEntry.first req
 			return (not resp.nil?)
@@ -37,12 +38,12 @@ module VocabulariSe
 				req_find = {
 					:queue => @name,
 					:handler => handler,
-					:cquery => query
+					:cquery => JSON.generate([query])
 				}
 				req_create = {
 					:queue => @name,
 					:handler => handler,
-					:cquery => query,
+					:cquery => JSON.generate([query]),
 					:created_at => now.to_i
 				}
 				req_create[:priority] = priority.to_i unless priority.nil?
@@ -59,6 +60,7 @@ module VocabulariSe
 					raise e
 				end
 			end
+			return self
 		end
 
 
@@ -69,7 +71,7 @@ module VocabulariSe
 			}
 			resp = QueueEntry.first req
 			if resp
-				then return resp.handler, resp.cquery, resp.priority
+				then return resp.handler, JSON.parse(resp.cquery).first, resp.priority
 			else
 				raise EmptyQueueError
 			end
