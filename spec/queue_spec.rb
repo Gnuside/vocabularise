@@ -47,6 +47,10 @@ describe 'Queue' do
 			VocabulariSe::Queue::PRIORITY_NORMAL
 	end
 
+	it 'should separate queues with different names' do
+		pending "test not implemented"
+	end
+
 	describe '#size' do
 		it 'should be zero at start' do
 			@queue.size.should == 0
