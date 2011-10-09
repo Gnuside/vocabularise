@@ -71,7 +71,7 @@ module VocabulariSe
 			# may fail
 			documents = @crawler.request \
 				HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED,
-				query
+				{ :tag => intag }
 
 			documents.each do |doc|
 				document_tags = doc.tags
