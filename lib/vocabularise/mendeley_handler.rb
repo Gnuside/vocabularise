@@ -22,7 +22,7 @@ module VocabulariSe
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			tag = query['tag']
 
-			page = 0                                                            
+			page_counter = 0                                                            
 			total_pages = 0                                                     
 			deferred_counter = 0
 			pages = []
@@ -30,21 +30,27 @@ module VocabulariSe
  
 			rdebug "requesting new pages for %s" % handle_str
 			# looking for three new pages
-			while (deferred_counter < 3) do
+			while (deferred_counter < 2) do
 				begin
 					resp = @crawler.request \
 						HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE,
-						{ :tag => tag, :page => page }
+						{ :tag => tag, :page => page_counter }
+					raise NotImplementedError
 					pages << resp
 				rescue Crawler::DeferredRequest
+					rdebug "pages %s, %s was deferred" % [ tag, page_counter ]
 					deferred_counter += 1
 				end
-				page += 1
+				page_counter += 1
 			end
 			# but fail if not enough pages are accessible
-			raise Crawler::DeferredRequest if pages.size < 1
+			if pages.size < 1 then
+				rdebug "not enough pages (=%s)  available for %s" % [ pages.size, handle_str]
+				raise Crawler::DeferredRequest
+			end
 
 			rdebug "adding documents for %s" % handle_str
+
 			pages.each do |resp|
 				# first json snippets count as a hit                        
 				# but all following count as cached                         
@@ -59,8 +65,6 @@ module VocabulariSe
 					documents << doc                                        
 				end                                                         
 				page += 1                                                   
-				break if page >= total_pages                                
-				break if page >= DOCUMENTS_TAGGED_PAGE_LIMIT                
 			end                                                                 
 			return documents
 		end
@@ -68,7 +72,7 @@ module VocabulariSe
 
 
 	#
-	# Request a page and all of its documents
+	# Request a page of tagged documents (and all of the documents details)
 	#
 	class MendeleyDocumentSearchTaggedPage < RequestHandler
 
@@ -89,9 +93,9 @@ module VocabulariSe
 			# make the request
 			# FIXME: make items/page configurable
 			resp = @config.mendeley_client.documents_tagged({  
-				:tag => tag,                                        
-				:page => page,                                       
-				:items => 5 
+				"tag" => tag,                                        
+				"page" => page,                                       
+				"items" => 5 
 			})                                                      
 			documents = []
 			resp["documents"].each do |resp_doc|                        
@@ -108,6 +112,9 @@ module VocabulariSe
 
 
 
+	# 
+	# Request document details by uuid
+	#
 	class MendeleyDocumentDetails < RequestHandler
 		handles HANDLE_MENDELEY_DOCUMENT_DETAILS
 		cache_result
