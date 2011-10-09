@@ -100,7 +100,7 @@ module VocabulariSe
 				}
 				resp = QueueEntry.first req
 				if resp then
-					resp.priority = resp.priority + 3
+					resp.priority = resp.priority + PRIORITY_NORMAL
 					resp.save
 				end
 				self
