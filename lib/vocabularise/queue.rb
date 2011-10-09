@@ -118,18 +118,17 @@ module VocabulariSe
 		end
 
 		def each &blk
-			now = Time.now
-			resp = QueueEntry.all :queue => @name
-			resp.each do |x|
-				yield x
+			QueueEntry.transaction do
+				resp = QueueEntry.all( :queue => @name )
+				resp.each do |entry|
+					yield entry.handler, entry.cquery, entry.priority
+				end
 			end
-			raise RuntimeError
 		end
 
 		def empty!
 			QueueEntry.transaction do
-				resp = QueueEntry.all :queue => @name
-				resp.each { |x| x.destroy }
+				resp = QueueEntry.all( :queue => @name ).destroy
 			end
 			self
 		end
@@ -139,7 +138,19 @@ module VocabulariSe
 		end
 
 		def size
-			return QueueEntry.count( :queue => @name )
+			count = 0
+			QueueEntry.transaction do
+				count = QueueEntry.all( :queue => @name ).count
+			end
+			return count
+		end
+
+		def dump prefix
+			each do |h,q,p|
+				puts ""
+				puts "queue /%s/ => %s, %s, %s" % [prefix, h, q, p]
+				puts ""
+			end
 		end
 	end
 end
