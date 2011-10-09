@@ -22,37 +22,38 @@ module VocabulariSe
 				[ handle, query.inspect, priority ]
 			rdebug "config = %s, crawler = %s" % [ @config, @crawler ]
 
-              tags = Hash.new 0                                                   
-                                                                                  
-              # try mendeley                                                      
-              if tags.empty?                                                      
-                  mendeley_related = @crawler.request \
-					  HANDLE_INTERNAL_RELATED_TAGS_MENDELEY,
-					  query,
-					  priority
+			tags = Hash.new 0                                                   
 
-                  tags.merge!( mendeley_related ) do |key,oldval,newval|          
-                      oldval + newval                                             
-                  end                                                             
-              end                                                                 
-			  rdebug tags.inspect            
+			rdebug "try mendeley"
+			# try mendeley                                                      
+			if tags.empty?                                                      
+				mendeley_related = @crawler.request \
+					HANDLE_INTERNAL_RELATED_TAGS_MENDELEY,
+					query
 
-			  # try wikipedia                                                     
-			  if tags.empty?                                                      
-				  wikipedia_related = @crawler.request \
-					  HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA, 
-					  query, 
-					  priority
-				  tags.merge!( wikipedia_related ) do |key,oldval,newval|         
-					  oldval + newval                                             
-				  end                                                             
-			  end                                                                 
-			  # or fail                                                           
+				tags.merge!( mendeley_related ) do |key,oldval,newval|          
+					oldval + newval                                             
+				end                                                             
+			end                                                                 
+			rdebug tags.inspect            
 
-			  # FIXME: cleanup common tags                                        
-			  tags.delete(intag)                                                  
-			  rdebug "result tags = %s" % tags.inspect                            
-			  return tags 
+			rdebug "try wikipedia"
+			# try wikipedia                                                     
+			if tags.empty?                                                      
+				wikipedia_related = @crawler.request \
+					HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA, 
+					query
+
+				tags.merge!( wikipedia_related ) do |key,oldval,newval|         
+					oldval + newval                                             
+				end                                                             
+			end                                                                 
+			# or fail                                                           
+
+			# FIXME: cleanup common tags                                        
+			tags.delete(intag)                                                  
+			rdebug "result tags = %s" % tags.inspect                            
+			return tags 
 		end
 	end
 
@@ -70,8 +71,7 @@ module VocabulariSe
 			# may fail
 			documents = @crawler.request \
 				HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED,
-				query,
-				priority
+				query
 
 			documents.each do |doc|
 				document_tags = doc.tags
