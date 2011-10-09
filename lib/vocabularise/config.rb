@@ -104,6 +104,7 @@ module VocabulariSe
 			@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Search)
 			@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Cache)
 			@wikipedia_client.cache = cache
+			@wikipedia_client.hit_counter = @counter
 
 		end
 	end
