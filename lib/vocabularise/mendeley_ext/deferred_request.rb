@@ -6,10 +6,10 @@ require 'cgi'
 
 require 'vocabularise/request_handler'
 
+=begin
 module Mendeley ; class Client 
 		class DeferredRequest < ::Mendeley::Client::ClientError ; end
 end ; end
-
 
 module VocabulariSe ; module MendeleyExt
 
@@ -118,3 +118,4 @@ module VocabulariSe ; module MendeleyExt
 
 	end
 end ; end
+=end
