@@ -15,9 +15,8 @@ module VocabulariSe
 		process do |handle, query, priority|
 
 			@crawler.request \
-				HANDLE_INTERNAL_RELATED_TAGS,                               
-				{ :query => @query },                                       
-				priority
+				HANDLE_INTERNAL_RELATED_TAGS,
+				{ :query => @query }
 
 			@debug = true
 			rdebug "hello world"
