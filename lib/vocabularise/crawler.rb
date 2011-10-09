@@ -103,8 +103,8 @@ module VocabulariSe
 						
 						# get first in queue, by priority
 						if queue.empty? then
-							rdebug "/#{key}/ queue empty"
-							sleep 1
+	#						rdebug "/#{key}/ queue empty"
+							sleep 0.1
 							next
 						end
 
@@ -146,7 +146,7 @@ module VocabulariSe
 
 		def process handle, query, priority
 			rdebug "handle = %s, query = %s, priority = %s" % [ handle, query.inspect, priority ]
-			sleep 10 #DEBUG FIXME
+			sleep 5 #DEBUG FIXME
 			found = false
 			find_handlers( handle ).each do |handler_class|
 				rdebug "handler found for #{handle} : #{handler_class}"
