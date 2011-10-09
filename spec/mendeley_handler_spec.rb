@@ -53,9 +53,9 @@ describe 'RequestHandler' do
 				page0 = @crawler.request VocabulariSe::HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE,
 					{ "tag" => intag, "page" => 0 }, VocabulariSe::Crawler::MODE_INTERACTIVE
 			rescue VocabulariSe::Crawler::DeferredRequest => e
-				puts "deferred" + e.message
-				puts e.backtrace
-				sleep 0.1
+				#puts "deferred" + e.message
+				#puts e.backtrace
+				sleep 1
 			end
 		end
 		pp page0
