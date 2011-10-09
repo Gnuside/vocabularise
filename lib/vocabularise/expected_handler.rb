@@ -11,7 +11,7 @@ module VocabulariSe
 	class InternalAggregating < RequestHandler
 
 		handles HANDLE_INTERNAL_EXPECTED
-		no_cache_result
+		cache_result
 
 		process do |handle, query, priority|
 			intag = query[:query]
