@@ -31,7 +31,7 @@ module VocabulariSe
 
 	crawler = Crawler.new config
 	# set crawler
-	config.mendeley_client.crawler = crawler
+	#config.mendeley_client.crawler = crawler
 
 	crawler.run
 
@@ -45,7 +45,7 @@ module VocabulariSe
 	loop do
 		begin
 			related_tags = crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
-				intag, 
+				{ "tag" => intag }, 
 				Crawler::MODE_INTERACTIVE
 			break
 		rescue Crawler::DeferredRequest
