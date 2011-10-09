@@ -61,7 +61,7 @@ module VocabulariSe
 			tail_limit = tail_arr.size.to_f * head_limit
 
 			# FIXME: hit count = #tags * #limit => that makes a lot
-			
+
 			# for tail
 			unless tail_arr.empty? then
 				tail_documents = self.related_documents_multiple config, tail_arr, tail_limit
@@ -77,8 +77,9 @@ module VocabulariSe
 
 			return head_documents.to_a
 		end
-		
 
+
+=begin
 		#
 		# Search related tags on mendeley
 		#
@@ -127,8 +128,9 @@ module VocabulariSe
 			end
 			return tags
 		end
-		
+	=end	
 
+=begin
 		#
 		# Search related tags on wikipedia
 		#
@@ -143,9 +145,10 @@ module VocabulariSe
 			# FIXME: cleanup wikipedia-specific tags
 			return tags
 		end
+=end
 
 
-
+=begin
 		# Return an hash of related tags with associated occurencies 
 		# for given input tag
 		def self.related_tags config, intag, limit=RELATED_TAGS_DEFAULT_HITLIMIT
@@ -177,6 +180,7 @@ module VocabulariSe
 			rdebug "result tags = %s" % tags.inspect
 			return tags
 		end 
+=end
 
 	end # class
 end # module
