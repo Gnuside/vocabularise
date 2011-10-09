@@ -14,13 +14,14 @@ module VocabulariSe
 	class InternalRelatedTags < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS
-		no_cache_result
+		cache_result
 
 		process do |handle, query, priority|
 			@debug = true
 			rdebug "handle = %s, query = %s, priority = %s " % \
 				[ handle, query.inspect, priority ]
-			rdebug "config = %s, crawler = %s" % [ @config, @crawler ]
+			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
+			intag = query['tag']
 
 			tags = Hash.new 0                                                   
 
@@ -29,7 +30,7 @@ module VocabulariSe
 			if tags.empty?                                                      
 				mendeley_related = @crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS_MENDELEY,
-					query
+					{ :tag => intag }
 
 				tags.merge!( mendeley_related ) do |key,oldval,newval|          
 					oldval + newval                                             
@@ -42,7 +43,7 @@ module VocabulariSe
 			if tags.empty?                                                      
 				wikipedia_related = @crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA, 
-					query
+					{ :tag => intag }
 
 				tags.merge!( wikipedia_related ) do |key,oldval,newval|         
 					oldval + newval                                             
@@ -61,10 +62,14 @@ module VocabulariSe
 	class InternalRelatedTagsMendeley < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_MENDELEY
-		no_cache_result
+		cache_result
 
 		process do |handle, query, priority|
-			intag = query[:query]
+			@debug = true
+			rdebug "handle = %s, query = %s, priority = %s " % \
+				[ handle, query.inspect, priority ]
+			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
+			intag = query['tag']
 
 			tags = Hash.new 0                                                   
 
@@ -87,10 +92,6 @@ module VocabulariSe
 					end                                                     
 				end                                                         
 				rdebug "merged tags : %s" % tags.inspect                    
-
-				hit_count += 1 unless doc.cached?                           
-				rdebug "hit_count = %s" % hit_count                         
-				break if hit_count > limit                                  
 			end                                                      
 
 			# FIXME: cleanup mendeley-specific tags                             
@@ -108,14 +109,18 @@ module VocabulariSe
 		no_cache_result
 
 		process do |handle, query, priority|
-			intag = query[:query]
+			@debug = true
+			rdebug "handle = %s, query = %s, priority = %s " % \
+				[ handle, query.inspect, priority ]
+			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
+			intag = query['tag']
 
 			rdebug "intag = %s" % intag                                         
 			tags = Hash.new 0                                                   
 
 			page_json = @crawler.request \
 				HANDLE_WIKIPEDIA_REQUEST_PAGE, 
-				query, 
+				{ :tag => intag }, 
 				intag              
 
 			page = Wikipedia::Page.new page_json                                
