@@ -35,7 +35,7 @@ module VocabulariSe ; module WikipediaExt
 				cache_used = true
 			else
 				# count a hit
-				rdebug "HIT TIMING %s%s" % [ base_api_url, url ]
+				rdebug "HIT TIMING %s" % [ url ]
 				@hit_counter.hit :wikipedia
 
 				rdebug "REAL  REQUEST %s" % [ url ]
