@@ -117,7 +117,7 @@ module VocabulariSe
 
 			begin
 				result = settings.crawler.request \
-					Crawler::REQUEST_INTERNAL_EXPECTED, 
+					HANDLE_INTERNAL_EXPECTED,
 					{ :query => @query }, 
 					Crawler::MODE_INTERACTIVE
 
@@ -137,7 +137,7 @@ module VocabulariSe
 			
 			begin
 				result = settings.crawler.request \
-					Crawler::REQUEST_INTERNAL_CONTROVERSIAL, 
+					HANDLE_INTERNAL_CONTROVERSIAL,
 					{ :query => @query },
 					Crawler::MODE_INTERACTIVE
 
