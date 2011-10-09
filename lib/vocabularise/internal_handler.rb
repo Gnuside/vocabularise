@@ -106,7 +106,7 @@ module VocabulariSe
 	class InternalRelatedTagsWikipedia < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA
-		no_cache_result
+		cache_result
 
 		process do |handle, query, priority|
 			@debug = true
@@ -126,8 +126,13 @@ module VocabulariSe
 			page = Wikipedia::Page.new page_json                                
 			page.links.each { |tag| tags[tag] += 1 }                            
 
+			final_tags = []
+			tags.keys.each do |tag|                                             
+				tag.gsub!(/ \(.*\)$/,'')
+				final_tags << tag
+			end                                                                 
 			# FIXME: cleanup wikipedia-specific tags                            
-			return tags  
+			return final_tags
 		end
 	end
 
