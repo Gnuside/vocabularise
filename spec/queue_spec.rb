@@ -25,41 +25,40 @@ describe 'Queue' do
 	REQ_OTHER = "other:noop"
 
 	before :all do
-		@queue = ::VocabulariSe::Queue.new :example
+		@queue = {}
+		@queue[:one] = ::VocabulariSe::Queue.new :one
+		@queue[:two] = ::VocabulariSe::Queue.new :two
 	end
 
 	before :each do
 		VocabulariSe::QueueEntry.all.destroy
 	end
 
-	def helper_make_samepriority
-		@queue.push "internal:related", 'love'
-		@queue.push "internal:expected", 'death'
-		@queue.push "internal:aggregating", 'love'
+	def helper_make_samepriority name
+		@queue[name].push "internal:related", 'love'
+		@queue[name].push "internal:expected", 'death'
+		@queue[name].push "internal:aggregating", 'love'
 	end
 
-	def helper_make_diffpriority
-		@queue.push REQ_RELATED, 'love', 
+	def helper_make_diffpriority name
+		@queue[name].push REQ_RELATED, 'love', 
 			VocabulariSe::Queue::PRIORITY_HIGH
-		@queue.push REQ_EXPECTED, 'death', 
+		@queue[name].push REQ_EXPECTED, 'death', 
 			VocabulariSe::Queue::PRIORITY_LOW
-		@queue.push REQ_AGGREGATING, 'love', 
+		@queue[name].push REQ_AGGREGATING, 'love', 
 			VocabulariSe::Queue::PRIORITY_NORMAL
 	end
 
-	it 'should separate queues with different names' do
-		pending "test not implemented"
-	end
 
 	describe '#size' do
 		it 'should be zero at start' do
-			@queue.size.should == 0
+			@queue[:one].size.should == 0
 		end
 
 		it 'should be increased by each push' do
 			(1..100).each do |x|
-				@queue.push REQ_RELATED, "item#{x}"
-				@queue.size.should == x
+				@queue[:one].push REQ_RELATED, "item#{x}"
+				@queue[:one].size.should == x
 			end
 		end
 
@@ -73,57 +72,80 @@ describe 'Queue' do
 		end
 
 		it 'should return the queue object' do
-			@queue.empty!.should == @queue
+			@queue[:one].empty!.should == @queue[:one]
+		end
+
+		it 'should separate queues with different names' do
+			@queue[:one].size.should == 0
+			@queue[:two].size.should == 0
+
+			@queue[:one].push REQ_RELATED, 'love'
+			@queue[:two].push REQ_RELATED, 'hate'
+
+			@queue[:one].empty!
+
+			@queue[:one].size.should == 0
+			@queue[:two].size.should == 1
 		end
 	end
 
 	describe '#empty?' do
 		it 'should respond true at start' do
-			@queue.should respond_to :empty?
+			@queue[:one].should respond_to :empty?
 
-			@queue.empty?.should == true
+			@queue[:one].empty?.should == true
 		end
 
 		it 'should repond true at start (even with selector)' do
-			@queue.should respond_to :empty?
+			@queue[:one].should respond_to :empty?
 
-			@queue.empty?.should == true
+			@queue[:one].empty?.should == true
 		end
 
 		it 'should remove pushed content' do
-			@queue.should respond_to :empty!
+			@queue[:one].should respond_to :empty!
 
-			helper_make_samepriority
+			helper_make_samepriority :one
 
-			@queue.size.should >= 0
-			@queue.empty!
-			@queue.size.should == 0
-			@queue.empty?.should == true
+			@queue[:one].size.should >= 0
+			@queue[:one].empty!
+			@queue[:one].size.should == 0
+			@queue[:one].empty?.should == true
 		end
 	end
 	#
 
 	describe '#push' do
 		it 'should add t-uples of (handle,query)' do
-			@queue.should respond_to :push
+			@queue[:one].should respond_to :push
 
-			@queue.push :related, 'love'
-			@queue.size.should == 1
-			@queue.push :expected, 'love'
-			@queue.size.should == 2
-			@queue.empty?.should == false
+			@queue[:one].push :related, 'love'
+			@queue[:one].size.should == 1
+			@queue[:one].push :expected, 'love'
+			@queue[:one].size.should == 2
+			@queue[:one].empty?.should == false
 		end
 
 		it 'should add t-uples of (handle,query,priority)' do
-			@queue.should respond_to :push
+			@queue[:one].should respond_to :push
 
-			@queue.push REQ_RELATED, 'love', 
+			@queue[:one].push REQ_RELATED, 'love', 
 				VocabulariSe::Queue::PRIORITY_LOW
-			@queue.size.should == 1
-			@queue.push REQ_EXPECTED, 'love', 
+			@queue[:one].size.should == 1
+			@queue[:one].push REQ_EXPECTED, 'love', 
 				VocabulariSe::Queue::PRIORITY_HIGH
-			@queue.size.should == 2
-			@queue.empty?.should == false
+			@queue[:one].size.should == 2
+			@queue[:one].empty?.should == false
+		end
+
+		it 'should separate queues with different names' do
+			@queue[:one].size.should == 0
+			@queue[:two].size.should == 0
+
+			@queue[:one].push REQ_RELATED, 'love'
+
+			@queue[:one].size.should == 1
+			@queue[:two].size.should == 0
 		end
 	end
 
@@ -133,23 +155,23 @@ describe 'Queue' do
 	describe '#include?' do
 		#
 		it 'should allow test on included (handle,query)' do
-			@queue.should respond_to :include?
+			@queue[:one].should respond_to :include?
 
-			@queue.include?(:related, 'love').should == false
-			@queue.push :related, 'love'
-			@queue.include?(:related, 'love').should == true
-			@queue.include?(:expected, 'love').should == false
+			@queue[:one].include?(:related, 'love').should == false
+			@queue[:one].push :related, 'love'
+			@queue[:one].include?(:related, 'love').should == true
+			@queue[:one].include?(:expected, 'love').should == false
 		end
 	end
 
 
 	describe '#first' do
 		it 'should allow access to first' do
-			@queue.should respond_to :first
+			@queue[:one].should respond_to :first
 
-			helper_make_samepriority
+			helper_make_samepriority :one
 
-			handler, query, priority = @queue.first
+			handler, query, priority = @queue[:one].first
 			handler.should == REQ_RELATED
 			query.should == 'love'
 		end
@@ -158,13 +180,13 @@ describe 'Queue' do
 
 	describe '#shift' do
 		it 'should be shift-able' do
-			@queue.should respond_to :shift
+			@queue[:one].should respond_to :shift
 
-			helper_make_samepriority
+			helper_make_samepriority :one
 
-			@queue.shift.shift
+			@queue[:one].shift.shift
 
-			handler, query, priority = @queue.first
+			handler, query, priority = @queue[:one].first
 			handler.should == REQ_AGGREGATING
 			query.should == 'love'
 		end
@@ -173,12 +195,12 @@ describe 'Queue' do
 
 	describe '#pop' do
 		it 'should be pop-able' do
-			@queue.should respond_to :shift
+			@queue[:one].should respond_to :shift
 
-			helper_make_samepriority
+			helper_make_samepriority :one
 
-			@queue.shift
-			handler, query, priority = @queue.pop
+			@queue[:one].shift
+			handler, query, priority = @queue[:one].pop
 
 			handler.should == REQ_EXPECTED
 			query.should == 'death'
@@ -190,13 +212,13 @@ describe 'Queue' do
 		#
 		it 'should fail on an empty queue' do
 
-			lambda{ @queue.first }.should raise_error VocabulariSe::Queue::EmptyQueueError
+			lambda{ @queue[:one].first }.should raise_error VocabulariSe::Queue::EmptyQueueError
 		end
 
 		#
 		it 'should not shift an empty queue' do
 
-			lambda{ @queue.shift }.should raise_error VocabulariSe::Queue::EmptyQueueError
+			lambda{ @queue[:one].shift }.should raise_error VocabulariSe::Queue::EmptyQueueError
 		end
 
 		#
@@ -213,15 +235,15 @@ describe 'Queue' do
 
 	describe '#each' do
 		it 'should iterate through entries' do
-			@queue.should respond_to :each
+			@queue[:one].should respond_to :each
 
 			pending("test not implemented")
 		end
 
 		it 'should preserve order' do
-			@queue.push :A, 1
-			@queue.push :B, 2
-			@queue.push :C, 3
+			@queue[:one].push :A, 1
+			@queue[:one].push :B, 2
+			@queue[:one].push :C, 3
 
 			pending("test not implemented")
 		end
