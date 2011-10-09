@@ -3,11 +3,13 @@ require 'vocabularise/request_handler'
 
 module VocabulariSe
 
+
 	HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED = "mendeley:document:search_tagged"
 	HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE = "mendeley:document:search_tagged:page"
 	HANDLE_MENDELEY_DOCUMENT_DETAILS = "mendeley:document:details"
 
 	class MendeleyDocumentSearchTagged < RequestHandler
+
 		handles HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED
 		cache_result
 
@@ -69,6 +71,7 @@ module VocabulariSe
 	# Request a page and all of its documents
 	#
 	class MendeleyDocumentSearchTaggedPage < RequestHandler
+
 		handles HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE
 		cache_result
 
@@ -84,14 +87,15 @@ module VocabulariSe
 			page = query["page"]
 
 			# make the request
+			# FIXME: make items/page configurable
 			resp = @config.mendeley_client.documents_tagged({  
 				:tag => tag,                                        
-				:page => page                                       
-				#       :limit => DOCUMENTS_TAGGED_LIMIT            
+				:page => page,                                       
+				:items => 5 
 			})                                                      
 			documents = []
 			resp["documents"].each do |resp_doc|                        
-				# FIXME: request document...
+				# request the real document
 				doc_json = @crawler.request \
 					HANDLE_MENDELEY_DOCUMENT_DETAILS,
 					{ :uuid => resp_doc["uuid"] }
