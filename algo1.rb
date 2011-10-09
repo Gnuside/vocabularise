@@ -53,6 +53,8 @@ module VocabulariSe
 			sleep 1
 		end
 	end
+
+	pp related_tags
 	exit 1
 
 	#algo = ExpectedAlgorithm.new config
