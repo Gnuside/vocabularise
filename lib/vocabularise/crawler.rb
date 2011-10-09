@@ -44,49 +44,60 @@ module VocabulariSe
 		#
 		# if request is in cache then send a result
 		def request handler, query, mode=MODE_PASSIVE
-			rdebug "handler = %s, query = %s, mode = %s" % [ handler, query.inspect, mode ]
+			handle_str = "handler = %s, query = %s, mode = %s" % [ handler, query.inspect, mode ]
+			rdebug handle_str
 
 			result = nil
 			deferred = false
 			found = false
+			in_cache = false
+			in_queue = {}
+			some_queue = nil
+			cache_key = _cache_key(handler, query)
 
 			@monitor.synchronize do 
-				cache_key = _cache_key(handler, query)
-				if @config.cache.include? cache_key then
-					rdebug "request in cache (%s, %s)" % [handler, query.inspect]
-					# send result from cache
-					result = @config.cache[cache_key]
-					found = true
-					break
-				elsif result.nil? then
-					@queue.each do |key,queue|
-						if queue.include? handler, query then
-							rdebug "request in #{key} queue (%s, %s)" % [handler, query.inspect]
-
-							# increase queue priority if passive mode
-							queue.stress handler, query if mode == MODE_PASSIVE
-
-							# you'll have to wait
-							deferred = true
-							found = true
-							break
-						end
+				in_cache = @config.cache.include? cache_key
+				@queue.each do |key,queue|
+					in_queue[key] = @queue[key].include? handler, query
+					#DEBUG
+					@queue[key].dump key
+					if in_queue[key] then
+						some_queue = key
+						break
 					end
+				end
+			end
 
-					unless found then
-						rdebug "request nowhere (%s, %s)" % [handler, query]
-						# neither in cache nor in queue
-						# we add request to the queue
+			if in_cache then
+				rdebug "request in cache (%s, %s)" % [handler, query.inspect]
+				# send result from cache
+				result = @config.cache[cache_key]
+			elsif not some_queue.nil? then
+				rdebug "request in #{some_queue} queue (%s)" % handle_str
 
-						priority = priority_from_mode mode
+				# increase queue priority if passive mode
+				@monitor.synchronize do	
+					#DEBUG
+					@queue[some_queue].dump some_queue
+					@queue[some_queue].stress handler, query if mode == MODE_PASSIVE
+				end
 
-						@queue.each do |key,queue|
-							if handler =~ /^#{key}/ then
-								queue.push handler, query, priority
-								deferred = true
-								break
-							end
+				# you'll have to wait
+				deferred = true
+			else
+				rdebug "request nowhere (%s, %s)" % [handler, query]
+				# neither in cache nor in queue
+				# we add request to the queue
+
+				priority = priority_from_mode mode
+
+				@queue.each do |key,queue|
+					if handler =~ /^#{key}/ then
+						@monitor.synchronize do
+							queue.push handler, query, priority
 						end
+						deferred = true
+						break
 					end
 				end
 			end
@@ -103,10 +114,15 @@ module VocabulariSe
 				Thread.new( key, queue ) do |key, queue|
 					rdebug "/#{key}/ crawler up and running!"
 					loop do
-
 						# get first in queue, by priority
-						if queue.empty? then
+						queue_empty = false
+						@monitor.synchronize do 
+							queue_empty = queue.empty? 
+						end
+
+						if queue_empty then
 							rdebug "/#{key}/ queue empty"
+							queue.dump("x" + key.to_s)
 							sleep SLEEP_TIME
 							next
 						end
