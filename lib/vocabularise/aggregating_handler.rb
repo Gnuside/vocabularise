@@ -10,7 +10,7 @@ module VocabulariSe
 	class InternalAggregating < RequestHandler
 
 		handles HANDLE_INTERNAL_AGGREGATING
-		no_cache_result
+		cache_result
 
 		process do |handle, query, priority|
 
@@ -18,9 +18,7 @@ module VocabulariSe
 				HANDLE_INTERNAL_RELATED_TAGS,
 				{ :query => @query }
 
-			@debug = true
-			rdebug "hello world"
-			STDERR.puts "hello world 2"
+			raise NotImplementedError
 		end
 	end
 
