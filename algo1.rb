@@ -53,11 +53,11 @@ module VocabulariSe
 			sleep 1
 		end
 	end
-
-	algo = ExpectedAlgorithm.new config
-	result = algo.exec intag, related_tags
-	pp result
 	exit 1
+
+	#algo = ExpectedAlgorithm.new config
+	#result = algo.exec intag, related_tags
+	#pp result
 
 	puts "AlgoI - result :"
 	pp result
