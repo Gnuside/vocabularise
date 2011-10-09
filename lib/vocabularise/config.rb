@@ -24,6 +24,7 @@ module VocabulariSe
 
 		# cache store
 		attr_reader :cache
+		attr_reader :counter
 
 		def initialize json
 			# default values
