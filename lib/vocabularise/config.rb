@@ -89,20 +89,22 @@ module VocabulariSe
 			raise ConfigurationError, "no cache duration specified" unless json.include? "cache_duration"
 
 			@cache = VocabulariSe::Cache.new(60 * 60 * 2)
+
+			@counter = HitCounter.new
+			@counter.limit :wikipedia, 500
+			@counter.limit :mendeley, 500
 			
 			@mendeley_client = ::Mendeley::Client.new( json["consumer_key"] )
 			@mendeley_client.extend(::VocabulariSe::MendeleyExt::Cache)
-			@mendeley_client.extend(::VocabulariSe::MendeleyExt::DeferredRequest)
+			#@mendeley_client.extend(::VocabulariSe::MendeleyExt::DeferredRequest)
 			@mendeley_client.cache = cache
+			@mendeley_client.hit_counter = @counter
 
 			@wikipedia_client = ::Wikipedia::Client.new
 			@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Search)
 			@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Cache)
 			@wikipedia_client.cache = cache
 
-			@counter = HitCounter.new
-			@counter.limit :wikipedia, 500
-			@counter.limit :mendeley, 500
 		end
 	end
 end
