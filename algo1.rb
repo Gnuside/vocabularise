@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-
+# vim: set ts=4 sw=4 noet path+=lib :
 $:.unshift 'lib'
 
 require 'pp'
@@ -14,7 +14,9 @@ require 'vocabularise/config'
 require 'vocabularise/utils'
 require 'vocabularise/expected_algorithm'
 require 'vocabularise/crawler'
-require 'vocabularise/request_manager'
+require 'vocabularise/request_handler'
+require 'vocabularise/internal_handler'
+require 'vocabularise/expected_handler'
 
 require 'mendeley'
 require 'wikipedia'
@@ -33,8 +35,6 @@ module VocabulariSe
 
 	crawler.run
 
-	rman = RequestManager.new config
-
 	puts "Algo I"
 	print "tag ? "
 	STDOUT.flush
@@ -42,9 +42,16 @@ module VocabulariSe
 
 	#related_tags = VocabulariSe::Utils.related_tags config, intag
 	related_tags = nil
-	while related_tags.nil? do
-		related_tags = crawler.request Crawler::REQUEST_RELATED, intag, Crawler::MODE_INTERACTIVE
-		sleep 1
+	loop do
+		begin
+			related_tags = crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
+				intag, 
+				Crawler::MODE_INTERACTIVE
+			break
+		rescue Crawler::DeferredRequest
+			# wait...
+			sleep 1
+		end
 	end
 
 	algo = ExpectedAlgorithm.new config
