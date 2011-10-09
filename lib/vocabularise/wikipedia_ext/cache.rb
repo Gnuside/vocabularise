@@ -11,6 +11,16 @@ module VocabulariSe ; module WikipediaExt
 	module Cache
 
 		attr_accessor :cache
+		attr_accessor :hit_counter
+
+
+		def initialize
+			super
+
+			@hit_counter = nil
+			@cache = {}
+			@debug = true
+		end
 
 		def request options
 			url = url_for options
@@ -24,6 +34,10 @@ module VocabulariSe ; module WikipediaExt
 				resp = @cache[cache_key]
 				cache_used = true
 			else
+				# count a hit
+				rdebug "HIT TIMING %s%s" % [ base_api_url, url ]
+				@hit_counter.hit :wikipedia
+
 				rdebug "REAL  REQUEST %s" % [ url ]
 				resp = super options
 			end
