@@ -11,12 +11,14 @@ module VocabulariSe ; module MendeleyExt
 	module Cache
 
 		attr_accessor :cache
+		attr_accessor :hit_counter
 
 		#
 		#
 		def initialize consumer_key
 			super
 
+			@hit_counter = nil
 			@cache = {}
 			@debug = true
 		end
@@ -35,6 +37,10 @@ module VocabulariSe ; module MendeleyExt
 				resp = @cache[cache_key]
 				cache_used = true
 			else
+				# count a hit
+				rdebug "HIT TIMING %s%s" % [ base_api_url, url ]
+				@hit_counter.hit :mendeley
+
 				http = Net::HTTP.start(base_api_url.host, base_api_url.port) do |http|
 					rdebug "REAL  REQUEST %s%s" % [ base_api_url, url ]
 					resp = yield http
