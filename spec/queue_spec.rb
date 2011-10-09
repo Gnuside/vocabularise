@@ -206,6 +206,11 @@ describe 'Queue' do
 	end
 
 
+	describe '#stress' do
+		it 'should increase item priority in queue' do
+		end
+	end
+
 	describe '#each' do
 		it 'should iterate through entries' do
 			@queue.should respond_to :each

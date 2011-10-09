@@ -90,6 +90,23 @@ module VocabulariSe
 			return self
 		end
 
+		# increase priority of given handler/query
+		def stress handler, query
+			QueueEntry.transaction do
+				req = {
+					:queue => @name,
+					:handler => handler,
+					:cquery => JSON.generate([query])
+				}
+				resp = QueueEntry.first req
+				if resp then
+					resp.priority = (resp.priority + 1) * 4 / 3
+					resp.save
+				end
+				self
+			end
+		end
+
 
 		def pop
 			handler, query, priority = nil, nil, nil
