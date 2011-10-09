@@ -120,8 +120,8 @@ module VocabulariSe
 							rescue DeferredRequest
 								# execution failed, try it again later
 								rdebug "/#{key}/ failed for %s, %s, %s" % [ e_handler, e_query, (e_priority/2) ]
-								rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query, (e_priority/2) ]
-								queue.push e_handler, e_query, (e_priority/2)
+								rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query, (e_priority - 5) ]
+								queue.push e_handler, e_query, (e_priority - 5)
 							end
 						end
 
@@ -145,8 +145,9 @@ module VocabulariSe
 
 
 		def process handle, query, priority
-			rdebug "handle = %s, query = %s, priority = %s" % [ handle, query.inspect, priority ]
-			sleep 5 #DEBUG FIXME
+			handle_str = "handle = %s, query = %s, priority = %s" % [ handle, query.inspect, priority ]
+			rdebug handle_str
+			sleep 1 #DEBUG FIXME
 			found = false
 			find_handlers( handle ).each do |handler_class|
 				rdebug "handler found for #{handle} : #{handler_class}"
@@ -158,8 +159,14 @@ module VocabulariSe
 					result = handler_instance.process( handle, query, priority )
 
 					# may not be executed (do not worry) ;-)
-					cache_key = _cache_key(handle, query)
-					@cache[cache_key] = result if handler_instance.cache_result?
+					if handler_instance.cache_result? then
+						rdebug "success && caching %s" % handle_str
+
+						cache_key = _cache_key(handle, query)
+						@config.cache[cache_key] = result 
+					else
+						rdebug "success && thrashing %s" % handle_str
+					end
 				end
 			end
 			raise RuntimeError, "no handler found for #{handle}!" unless found
