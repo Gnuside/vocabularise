@@ -9,10 +9,8 @@ module Mendeley
 
 		# Instance
 		#
-		def initialize json
-			# FIXME detect what json it is
-			@short_json = json
-			@long_json = nil
+		def initialize long_json
+			@long_json = long_json
 			@debug = false
 		end
 
@@ -38,46 +36,27 @@ module Mendeley
 			@short_json["uuid"]
 		end
 
-		def cached?
-			#puts "short_json cached = %s" % @short_json[JSON_CACHE_KEY]
-			cached = @short_json[JSON_CACHE_KEY]
-
-			# replace with long json cache status if loaded
-			#puts "long_json cached = %s" % @long_json[JSON_CACHE_KEY] unless @long_json.nil?
-		   	cached = @long_json[JSON_CACHE_KEY] unless @long_json.nil?
-			rdebug "(%s) %s" % [self.uuid, cached]
-			return cached
-		end
-
 		# tags
 		#
-		def tags client
-			self.details client if @long_json.nil?
+		def tags
 			@long_json["tags"].to_a
 		end
-
-		def details client
-			@long_json = client.documents_details( :id => self.uuid )
-		end
-
 
 		#
 		# return a list of hashes
 		# { "name" => ... ; "id" => ... ; "value" => ... }
 		#
-		def disciplines client
-			self.details client if @long_json.nil?
+		def disciplines
 			@long_json["stats"]["discipline"].to_a
 		end
 
-		def readers client
-			self.details client if @long_json.nil?
+		def readers
 			#pp @long_json["stats"]
 			@long_json["stats"]["readers"].to_i
 		end
 
 		# FIXME: remove hard limit
-		DOCUMENTS_TAGGED_PAGE_LIMIT = 10
+		#DOCUMENTS_TAGGED_PAGE_LIMIT = 10
 
 		#
 		# Static
@@ -92,6 +71,8 @@ module Mendeley
 		# search_tagged_callback:
 		#
 		#
+		#
+=begin
 		def self.search_tagged client, tag, &blk
 			page = 0
 			total_pages = 0
@@ -128,5 +109,6 @@ module Mendeley
 			end
 			return documents
 		end
+=end
 	end
 end
