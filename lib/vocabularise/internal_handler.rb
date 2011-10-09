@@ -120,7 +120,7 @@ module VocabulariSe
 
 			page_json = @crawler.request \
 				HANDLE_WIKIPEDIA_REQUEST_PAGE, 
-				{ :tag => intag }, 
+				{ :page => intag }, 
 				intag              
 
 			page = Wikipedia::Page.new page_json                                
