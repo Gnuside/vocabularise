@@ -1,4 +1,5 @@
 
+require 'rdebug/base'
 require 'monitor'
 
 module VocabulariSe
@@ -11,6 +12,7 @@ module VocabulariSe
 			@monitor = Monitor.new
 			@counter = {}
 			@limit = {}
+			@debug = true
 		end
 
 
@@ -32,11 +34,13 @@ module VocabulariSe
 		# for given namespace
 		#
 		def hit ns
+			raise ArgumentError unless @counter.include? ns
 			@monitor.synchronize do
-				@counters[ns]+= 1 
-				@counters[ns] = 0 if @counters[ns] >= @limit[ns]
+				@counter[ns]+= 1 
+				@counter[ns] = 0 if @counter[ns] >= @limit[ns]
 			end
-			sleep (3600.0 / max_per_hour)
+			rdebug "counting a hit for %s" % ns
+			sleep (3600.0 / @limit[ns])
 		end
 	end
 
