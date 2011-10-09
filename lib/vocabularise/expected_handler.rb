@@ -17,6 +17,8 @@ module VocabulariSe
 			intag = query[:query]
 			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS
 
+			raise NotImplementedError
+
 			# Association audacieuse                                            
 			workspace = {}                                                      
 			documents = Set.new   
