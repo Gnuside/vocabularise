@@ -8,13 +8,15 @@ module VocabulariSe
 	class InternalAggregating < RequestHandler
 
 		handles HANDLE_INTERNAL_CONTROVERSIAL
-		no_cache_result
+		cache_result
 
 		# limit the number of considered articles for computation               
 		ARTICLE_LIMIT = 3                                                       
 		def tag_hotness config, tags_arr                                        
 			search_expr = '"%s"' % tags_arr.sort.join('" AND "')                
 			puts search_expr                                                    
+
+			raise NotImplementedError
 
 			resp_json =  config.wikipedia_client.search( search_expr )          
 			resp = JSON.parse resp_json                                         
