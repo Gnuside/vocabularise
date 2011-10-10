@@ -40,7 +40,6 @@ module VocabulariSe
 	STDOUT.flush
 	intag = STDIN.gets.strip
 
-	#related_tags = VocabulariSe::Utils.related_tags config, intag
 	related_tags = nil
 	loop do
 		begin
