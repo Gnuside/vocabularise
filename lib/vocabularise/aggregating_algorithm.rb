@@ -65,11 +65,13 @@ module VocabulariSe
 					b_reader_avg = b[1][:value].to_f / b[1][:count].to_f
 					a_reader_avg <=> b_reader_avg
 				end.reverse
-				major_discipline = sorted_discipline_ws[0][0]
-				pp sorted_discipline_ws
-				puts "major_discipline = %s" % major_discipline
+				if sorted_discipline_ws.size > 0 then
+					major_discipline = sorted_discipline_ws[0][0]
+					pp sorted_discipline_ws
+					puts "major_discipline = %s" % major_discipline
+					sorted_discipline_ws.shift
+				end
 
-				sorted_discipline_ws.shift
 				tag_ws[reltag] = { 
 					:disc_list => sorted_discipline_ws,
 					:disc_count => sorted_discipline_ws.size,
