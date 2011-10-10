@@ -23,18 +23,22 @@ module VocabulariSe
 			rdebug "VocabulariSe::Utils.related_documents config, %s" % intag
 			documents = Set.new
 			hit_count = 0
-			Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
-				raise RuntimeError, "nil document" if doc.nil?
-				raise RuntimeError, "nil document" if doc.kind_of? Array
-				if block_given? then
-					pp doc if @debug or @@debug ;
-					yield doc 
-				end
-				documents.add doc
+			begin
+				Mendeley::Document.search_tagged config.mendeley_client, intag do |doc|
+					raise RuntimeError, "nil document" if doc.nil?
+					raise RuntimeError, "nil document" if doc.kind_of? Array
+					if block_given? then
+						pp doc if @debug or @@debug ;
+						yield doc 
+					end
+					documents.add doc
 
-				hit_count += 1 unless doc.cached?
-				rdebug "hit_count = %s" % hit_count
-				break if hit_count > limit
+					hit_count += 1 unless doc.cached?
+					rdebug "hit_count = %s" % hit_count
+					break if hit_count > limit
+				end
+			rescue Mendeley::Client::RateLimitExceeded
+				# try to survive
 			end
 			return documents
 		end
