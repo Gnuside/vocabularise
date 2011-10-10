@@ -26,6 +26,8 @@ module VocabulariSe
 				# reset discipline ws
 				discipline_ws = {}
 
+				links_ws = Set.new
+
 				# ws de disciplines
 				begin
 					VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
@@ -40,6 +42,10 @@ module VocabulariSe
 							disc_name = disc["name"].to_s
 							disc_id = disc["id"].to_i
 							disc_value = disc["value"].to_i
+							links_ws << {
+								:text =>  disc["name"].to_s,
+								:url => "http://www.mendeley.com/%s/" % (disc["name"].to_s.downcase.gsub(/\s+/,'') )
+							}
 
 							discipline_ws[disc_name] ||= { :value => 0, :count => 0 }
 							discipline_ws[disc_name][:value] += disc_value
@@ -73,6 +79,7 @@ module VocabulariSe
 				end
 
 				tag_ws[reltag] = { 
+					:links => links_ws.to_a,
 					:disc_list => sorted_discipline_ws,
 					:disc_count => sorted_discipline_ws.size,
 					:disc_sum => sorted_discipline_ws.inject(0){ |acc,x| 
