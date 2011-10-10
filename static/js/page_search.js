@@ -122,6 +122,7 @@ function get_tag_data ( liElement, tag, li_color, color, tag_class, type ) {
 	// links list
 	data.push( "<ul>");
 	for ( i = 0; i < links.length; i++ ) {
+		if (i>5) { break; }
 		factor = i / links.length;
 		res_rgb = get_color_related_index( color, factor );
 		data.push( '<li><a href="' + links[i].href + '" style="color:rgb(' + res_rgb[0] + ',' + res_rgb[1] + ',' + res_rgb[2] + ');">' + links[i].text + "</a></li>");
