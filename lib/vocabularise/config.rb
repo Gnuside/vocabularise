@@ -59,9 +59,9 @@ module VocabulariSe
 					"timeout"   => 15000                                                                                
 				}                                                                                                       
 			when 'mysql' then                                                                                           
-				raise ConfigurationError, "no db_password specified" unless json.include "db_password"
-				raise ConfigurationError, "no db_username specified" unless json.include "db_username"
-				raise ConfigurationError, "no db_host specified" unless json.include "db_host"
+				raise ConfigurationError, "no db_password specified" unless json.include? "db_password"
+				raise ConfigurationError, "no db_username specified" unless json.include? "db_username"
+				raise ConfigurationError, "no db_host specified" unless json.include? "db_host"
 				@database = {	
 					"adapter"   => 'mysql',                                                                             
 					"database"  => json["db_database"],
