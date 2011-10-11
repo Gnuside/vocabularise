@@ -53,6 +53,7 @@ describe 'Queue' do
 	describe '#size' do
 		it 'should be zero at start' do
 			@queue[:one].size.should == 0
+			@queue[:two].size.should == 0
 		end
 
 		it 'should be increased by each push' do
@@ -60,9 +61,21 @@ describe 'Queue' do
 				@queue[:one].push REQ_RELATED, "item#{x}"
 				@queue[:one].size.should == x
 			end
+			@queue[:two].size.should == 0
 		end
 
 		it 'should be minored by each pop/shift' do
+			(1..100).each do |x|
+				@queue[:one].push REQ_RELATED, "item#{x}"
+				@queue[:one].size.should == x
+			end
+			@queue[:one].size.should == 100
+			@queue[:two].size.should == 0
+			(1..100).each do |x|
+				@queue[:one].pop
+			end
+			@queue[:one].size.should == 0
+			@queue[:two].size.should == 0
 		end
 	end
 
@@ -89,6 +102,10 @@ describe 'Queue' do
 		end
 	end
 
+
+	#
+	#
+	#
 	describe '#empty?' do
 		it 'should respond true at start' do
 			@queue[:one].should respond_to :empty?
@@ -96,12 +113,20 @@ describe 'Queue' do
 			@queue[:one].empty?.should == true
 		end
 
+
+		#
+		#
+		#
 		it 'should repond true at start (even with selector)' do
 			@queue[:one].should respond_to :empty?
 
 			@queue[:one].empty?.should == true
 		end
 
+
+		#
+		#
+		#
 		it 'should remove pushed content' do
 			@queue[:one].should respond_to :empty!
 
@@ -113,8 +138,11 @@ describe 'Queue' do
 			@queue[:one].empty?.should == true
 		end
 	end
-	#
+	
 
+	#
+	#
+	#
 	describe '#push' do
 		it 'should add t-uples of (handle,query)' do
 			@queue[:one].should respond_to :push
@@ -126,6 +154,11 @@ describe 'Queue' do
 			@queue[:one].empty?.should == false
 		end
 
+
+
+		#
+		#
+		#
 		it 'should add t-uples of (handle,query,priority)' do
 			@queue[:one].should respond_to :push
 
@@ -138,6 +171,22 @@ describe 'Queue' do
 			@queue[:one].empty?.should == false
 		end
 
+
+		it 'should fail when pushing the same element multiple times' do
+
+			@queue[:one].push REQ_RELATED, 'love'
+			lambda {
+				@queue[:one].push REQ_RELATED, 'love'
+			}.should raise_error RuntimeError #FIXME: VocabulariSe::Queue::EmptyQueueError
+
+
+			@queue[:one].size.should == 1
+			@queue[:two].size.should == 0
+		end
+
+		#
+		#
+		#
 		it 'should separate queues with different names' do
 			@queue[:one].size.should == 0
 			@queue[:two].size.should == 0
@@ -146,12 +195,17 @@ describe 'Queue' do
 
 			@queue[:one].size.should == 1
 			@queue[:two].size.should == 0
+
+			# FIXME: it should fail here
+			@queue[:two].push REQ_RELATED, 'love'
+
+			@queue[:one].size.should == 1
+			@queue[:two].size.should == 1
 		end
 	end
 
 
 	#
-
 	describe '#include?' do
 		#
 		it 'should allow test on included (handle,query)' do
