@@ -38,6 +38,15 @@ module Mendeley
 			@short_json["uuid"]
 		end
 
+		# Instance
+		def url
+			@short_json["mendeley_url"]
+		end
+
+		def title
+			@short_json["title"]
+		end
+
 		def cached?
 			#puts "short_json cached = %s" % @short_json[JSON_CACHE_KEY]
 			cached = @short_json[JSON_CACHE_KEY]

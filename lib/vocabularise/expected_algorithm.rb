@@ -12,6 +12,13 @@ module VocabulariSe
 
 			#puts "AlgoI - related tags :"
 			related_tags.each do |reltag,reltag_count|
+				ws_tag = {
+					:links => [],
+					:views => 0,
+					:apparitions => 0,
+					:slope => 0
+				}
+
 				# sum of views for all documents
 				views = 1
 				apparitions = reltag_count
@@ -20,6 +27,13 @@ module VocabulariSe
 				limit = 1
 				VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 					views += doc.readers(config.mendeley_client)
+					ws_tag[:links] << { 
+						:href=> doc.url, 
+						:text => (
+							if doc.title.size > 27 then doc.title[0..27] + "..."
+							else doc.title 
+							end )
+					}
 
 					# limit to X real hits
 					hit_count += 1 unless doc.cached?
@@ -27,11 +41,13 @@ module VocabulariSe
 					break if hit_count > limit
 				end
 				slope =  apparitions.to_f / views.to_f
-				workspace[reltag] = {
+
+				ws_tag.merge!({
 					:views => views,
 					:apparitions => apparitions,
 					:slope => slope
-				}
+				})
+				workspace[reltag] = ws_tag
 			end
 
 			# sort workspace keys (tags) by increasing slope 
