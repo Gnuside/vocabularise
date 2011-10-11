@@ -11,7 +11,7 @@ var AJAX_TIMEOUT = 8000;
 var SLIDE_DELTA = 30;
 
 function reverse_list ( list_header ) {
-	var tag_class = get_tag_class( $(list_header).parent("div.tag") ), ul, lis;
+	var tag_class = get_tag_class( $(list_header).parent("div.tag") ), ul, lis, factor, res_size;
 	switch ( tag_class ) {
 		case "expected" :
 			ul = $("#list_expected");
@@ -29,7 +29,11 @@ function reverse_list ( list_header ) {
 	ul.fadeOut("normal", function () {
 		lis = ul.children("li").detach().get();
 		lis.reverse();
-		$(lis).appendTo( ul );
+		$(lis).appendTo( ul ).each(function (index) {
+			factor = index / lis.length;
+			res_size = TEXTSIZE_MAX - ( factor * (TEXTSIZE_MAX - TEXTSIZE_MIN));
+			$(this).children("a").css("font-size", res_size + "em");
+		});
 		$(this).fadeIn("slow");
 	});
 }
