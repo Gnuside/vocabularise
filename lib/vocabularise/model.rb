@@ -8,13 +8,13 @@ module VocabulariSe
 		include DataMapper::Resource
 
 		property :id, Serial
-		property :queue, String, :length => 200
+		property :queue, String, :length => 200, :unique_index => :u1
 		property :cquery,   String, :length => 200, :unique_index => :u1
 		property :handler, String, :length => 200, :unique_index => :u1
 		property :priority, Integer, :default => 0
 		property :created_at, Integer, :required => true
 
-		validates_uniqueness_of :cquery, :scope => :handler
+		validates_uniqueness_of :cquery, :scope => [:queue,:handler]
 	end
 
 	class CacheEntry
