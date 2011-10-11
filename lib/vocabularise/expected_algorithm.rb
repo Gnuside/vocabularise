@@ -28,7 +28,7 @@ module VocabulariSe
 				VocabulariSe::Utils.related_documents_multiple config, [intag, reltag] do |doc|
 					views += doc.readers(config.mendeley_client)
 					ws_tag[:links] << { 
-						:href=> doc.url, 
+						:url => doc.url, 
 						:text => (
 							if doc.title.size > 27 then doc.title[0..27] + "..."
 							else doc.title 
