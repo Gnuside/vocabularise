@@ -65,6 +65,7 @@ module VocabulariSe
 		get "/search" do
 			# FIXME: use cache for search
 			@query = params[:query]
+			@title = @query
 
 			settings.manager.request :related, @query
 
