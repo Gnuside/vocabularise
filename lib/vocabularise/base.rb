@@ -39,7 +39,6 @@ module VocabulariSe
 			config = VocabulariSe::Config.new json
 			# set crawler
 			crawler = VocabulariSe::Crawler.new config
-			config.mendeley_client.crawler = crawler
 
 			set :crawler, crawler
 			set :config, config
