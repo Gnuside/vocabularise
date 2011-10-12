@@ -88,7 +88,7 @@ dd img { vertical-align: middle; }
 div.arrow { height: 26px; }
 
 h1 { margin-top: 0.5em; }
-h1 a { color: #000000; text-decoration:none; text-transform: capitalize; }
+h1 a { color: #000000; text-decoration:none; }
 
 h2 { font-size: 130%; text-align: center; }
 
