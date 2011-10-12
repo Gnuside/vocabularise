@@ -186,6 +186,7 @@ function show_resultlist( elem, resp, color ) {
 		var parent = elem.parent();
 		if ( TAG_LIST_MAX_HEIGHT < height ) {
 			$(".col_header,.col_footer").children(".tag_" + tag_class).find("div.arrow").animate({opacity: 1}, "slow", function () {
+				$(this).css({cursor: "pointer"});
 				if ($(this).children("img").hasClass("top_arrow")) {
 					$(this).click(function(event){
 						event.preventDefault();
