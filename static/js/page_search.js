@@ -185,14 +185,14 @@ function show_resultlist( elem, resp, color ) {
 		//  - attach events ( click on arrows, and mousewheel )
 		var parent = elem.parent();
 		if ( TAG_LIST_MAX_HEIGHT < height ) {
-			$(".col_header,.col_footer").children(".tag_" + tag_class).find("div.arrow > img").fadeIn(function () {
-				if ($(this).hasClass("top_arrow")) {
-					$(this).parent().click(function(event){
+			$(".col_header,.col_footer").children(".tag_" + tag_class).find("div.arrow").animate({opacity: 1}, "slow", function () {
+				if ($(this).children("img").hasClass("top_arrow")) {
+					$(this).click(function(event){
 						event.preventDefault();
 						move_list_up( this );
 					})
 				} else {
-					$(this).parent().click(function(event){
+					$(this).click(function(event){
 						event.preventDefault();
 						move_list_down( this );
 					})
