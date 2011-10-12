@@ -1,14 +1,12 @@
-
-var COLOR_EXPECTED = [ 60, 165, 43 ]; // #3ca52b
-var COLOR_CONTROVERSIAL = [ 231, 80, 24 ]; // #e75018
-var COLOR_AGGREGATING= [ 0, 139, 208 ]; // #008bd0
-var COLOR_BLACK = [0,0,0];
-
-var TEXTSIZE_MIN = 0.6;
-var TEXTSIZE_MAX = 2;
-
-var AJAX_TIMEOUT = 8000;
-var SLIDE_DELTA = 30;
+var COLOR_EXPECTED = [ 60, 165, 43 ], // #3ca52b
+	COLOR_CONTROVERSIAL = [ 231, 80, 24 ], // #e75018
+	COLOR_AGGREGATING= [ 0, 139, 208 ], // #008bd0
+	COLOR_BLACK = [0,0,0],
+	TEXTSIZE_MIN = 0.6,
+	TEXTSIZE_MAX = 2,
+	AJAX_TIMEOUT = 8000,
+	SLIDE_DELTA = 30,
+	TAG_LIST_MAX_HEIGHT = 300;
 
 function reverse_list ( list_header ) {
 	var tag_class = get_tag_class( $(list_header).parent("div.tag") ), ul, lis, factor, res_size;
@@ -153,8 +151,9 @@ function get_color_related_index ( color, factor ) {
 }
 
 function show_resultlist( elem, resp, color ) {
+	var height, tag_class = get_tag_class( elem, "id", "list" );
 	elem.fadeOut(function() {
-		var idx, tag, factor, res_size, res_rgb, li, tag_class = get_tag_class( elem, "id", "list" );
+		var idx, tag, factor, res_size, res_rgb, li;
 		elem.empty();
 		for(idx=0;idx<resp.result.length;idx++){
 			tag = resp.result[idx][0];
@@ -178,9 +177,37 @@ function show_resultlist( elem, resp, color ) {
 			// append to list
 			li.appendTo( elem );
 		}
-		// make change happen
-		elem.fadeIn();
-		elem.data("tagListHeight", elem.height());
+		height = elem.height();
+		elem.data("tagListHeight", height);
+	}).fadeIn("fast", function() {
+		// need scroll on list :
+		//  - show arrows
+		//  - attach events ( click on arrows, and mousewheel )
+		var parent = elem.parent();
+		if ( TAG_LIST_MAX_HEIGHT < height ) {
+			$(".col_header,.col_footer").children(".tag_" + tag_class).find("div.arrow > img").fadeIn(function () {
+				if ($(this).hasClass("top_arrow")) {
+					$(this).parent().click(function(event){
+						event.preventDefault();
+						move_list_up( this );
+					})
+				} else {
+					$(this).parent().click(function(event){
+						event.preventDefault();
+						move_list_down( this );
+					})
+				}
+			});
+			parent.mousewheel(function(event, delta){
+				event.preventDefault();
+				if (delta > 0) {
+					move_list( this, -SLIDE_DELTA );
+				} else {
+					move_list( this, SLIDE_DELTA );
+				}
+			});
+		}
+		parent.animate({height: Math.min(TAG_LIST_MAX_HEIGHT, height) + "px"});
 	});
 }
 
@@ -281,22 +308,6 @@ $(document).ready(function() {
 			tagListPos: 0,
 			divListHeight: $(this).parent().height()
 		});
-	});
-	$("img.top_arrow").click(function(event){
-		event.preventDefault();
-		move_list_up( this );
-	});
-	$("img.bottom_arrow").click(function(event){
-		event.preventDefault();
-		move_list_down( this );
-	});
-	$("div.col_content div").mousewheel(function(event, delta){
-		event.preventDefault();
-		if (delta > 0) {
-			move_list( this, -SLIDE_DELTA );
-		} else {
-			move_list( this, SLIDE_DELTA );
-		}
 	});
 	$("div.col_header h2").click(function(event){
 		event.preventDefault();

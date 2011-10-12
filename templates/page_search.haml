@@ -24,21 +24,24 @@
 			expected
 		%p<
 			(related scientific articles)
-		%img.top_arrow{ :src => "/images/top-arrow-expected.png", :height => 26, :width => 59 }
+		.arrow
+			%img.top_arrow{ :src => "/images/top-arrow-expected.png", :height => 26, :width => 59, :style => "display:none;" }
 	.tag.tag_controversial.span-8
 		%h2<
 			%a>< (un)
 			controversial
 		%p<
 			(related Wikipedia entries)
-		%img.top_arrow{ :src => "/images/top-arrow-controversial.png", :height => 26, :width => 59 }
+		.arrow
+			%img.top_arrow{ :src => "/images/top-arrow-controversial.png", :height => 26, :width => 59, :style => "display:none;" }
 	.tag.tag_aggregating.span-8.last
 		%h2<
 			%a>< (dis)
 			aggregating
 		%p<
 			(related Mendeley disciplines)
-		%img.top_arrow{ :src => "/images/top-arrow-aggregating.png", :height => 26, :width => 59 }
+		.arrow
+			%img.top_arrow{ :src => "/images/top-arrow-aggregating.png", :height => 26, :width => 59, :style => "display:none;" }
 
 .col_content.span-24.last
 	.fixed_tagheight.tag_expected.span-8
@@ -58,11 +61,14 @@
 
 .col_footer
 	.tag.tag_expected.span-8
-		%img.bottom_arrow{ :src => "/images/bottom-arrow-expected.png", :height => 26, :width => 59 }
+		.arrow
+			%img.bottom_arrow{ :src => "/images/bottom-arrow-expected.png", :height => 26, :width => 59, :style => "display:none;" }
 
 	.tag.tag_controversial.span-8
-		%img.bottom_arrow{ :src => "/images/bottom-arrow-controversial.png", :height => 26, :width => 59 }
+		.arrow
+			%img.bottom_arrow{ :src => "/images/bottom-arrow-controversial.png", :height => 26, :width => 59, :style => "display:none;" }
 
 	.tag.tag_aggregating.span-8.last
-		%img.bottom_arrow{ :src => "/images/bottom-arrow-aggregating.png", :height => 26, :width => 59 }
+		.arrow
+			%img.bottom_arrow{ :src => "/images/bottom-arrow-aggregating.png", :height => 26, :width => 59, :style => "display:none;" }
 
