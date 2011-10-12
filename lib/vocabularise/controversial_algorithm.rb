@@ -19,7 +19,7 @@ module VocabulariSe
 			resp["query"]["search"].each do |article_desc|
 				links << {
 					:text => article_desc["title"],
-					:url => "http://en.wikipedia.org/%s" % article_desc["title"]
+					:url => "http://en.wikipedia.org/wiki/%s" % article_desc["title"]
 				}
 				talk_title = "Talk:%s" % article_desc["title"]
 				puts "  - " + talk_title
