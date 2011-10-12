@@ -178,37 +178,14 @@ function show_resultlist( elem, resp, color ) {
 			li.appendTo( elem );
 		}
 		height = elem.height();
-		elem.data("tagListHeight", height);
 	}).fadeIn("fast", function() {
-		// need scroll on list :
-		//  - show arrows
-		//  - attach events ( click on arrows, and mousewheel )
-		var parent = elem.parent();
-		if ( TAG_LIST_MAX_HEIGHT < height ) {
-			$(".col_header,.col_footer").children(".tag_" + tag_class).find("div.arrow").animate({opacity: 1}, "slow", function () {
-				$(this).css({cursor: "pointer"});
-				if ($(this).children("img").hasClass("top_arrow")) {
-					$(this).click(function(event){
-						event.preventDefault();
-						move_list_up( this );
-					})
-				} else {
-					$(this).click(function(event){
-						event.preventDefault();
-						move_list_down( this );
-					})
-				}
+		elem.parent().animate({height: Math.min(TAG_LIST_MAX_HEIGHT, height) + "px"}, function () {
+			$(this).jScrollPane({
+				showArrows: true,
+				arrowUp: $(".col_header > .tag_" + tag_class + " > div.arrow"),
+				arrowDown: $(".col_footer > .tag_" + tag_class + " > div.arrow")
 			});
-			parent.mousewheel(function(event, delta){
-				event.preventDefault();
-				if (delta > 0) {
-					move_list( this, -SLIDE_DELTA );
-				} else {
-					move_list( this, SLIDE_DELTA );
-				}
-			});
-		}
-		parent.animate({height: Math.min(TAG_LIST_MAX_HEIGHT, height) + "px"});
+		});
 	});
 }
 
@@ -266,33 +243,6 @@ function get_tag_class ( element, attribute, prefix ) {
 	return res[1];
 }
 
-function move_list ( element, delta, tag_class_element ) {
-	var tag_class = get_tag_class( tag_class_element || element ), ul, divListHeight, tagListPos, tagListHeight;
-	ul = $("div.tag_" + tag_class + " > ul.taglist");
-	tagListPos = ul.data("tagListPos");
-	divListHeight = ul.data("divListHeight");
-	tagListHeight = ul.data("tagListHeight");
-	// stop scroll when first or last element already shown
-	if ( 0 === tagListPos && 0 > delta ) {
-		return;
-	} else if ( (tagListHeight + tagListPos < divListHeight) && 0 < delta ) {
-		return;
-	}
-	tagListPos -= delta;
-	ul.animate(
-		{ top: tagListPos + "px" }, "normal"
-	);
-	ul.data("tagListPos", tagListPos);
-}
-
-function move_list_up ( element ) {
-	move_list( element, -SLIDE_DELTA, $(element).parent("div.tag") );
-}
-
-function move_list_down ( element ) {
-	move_list( element, SLIDE_DELTA, $(element).parent("div.tag") );
-}
-
 $(document).ready(function() {
 	/* set focus */
 	$('#searchwidget_query').focus();
@@ -304,12 +254,6 @@ $(document).ready(function() {
 	load_controversial( query );
 	load_aggregating( query );
 
-	$("ul.taglist").each(function (){
-		$(this).data({
-			tagListPos: 0,
-			divListHeight: $(this).parent().height()
-		});
-	});
 	$("div.col_header h2").click(function(event){
 		event.preventDefault();
 		$(this).toggleClass("reverse");

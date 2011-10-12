@@ -76,7 +76,7 @@ dd img { vertical-align: middle; }
 .col_content,
 .col_footer { text-align: center; }
 
-#tooltip { background: white; font-size: 95%; opacity: 0.95; position: absolute; width: 320px; }
+#tooltip { background: white; font-size: 95%; opacity: 0.95; filter: alpha(opacity=95); position: absolute; width: 320px; }
 #tooltip.tooltip_expected { background: #3ca52b; }
 #tooltip.tooltip_controversial { background: #e75018; }
 #tooltip.tooltip_aggregating { background: #008bd0; }
@@ -85,7 +85,7 @@ dd img { vertical-align: middle; }
 .col_header .tag { border-bottom: 2px; border-color: #7f7f7f; border-style: dotted; padding-bottom: .5em; }
 .col_footer .tag { border-top: 2px; border-color: #7f7f7f; border-style: dotted; padding-top: .5em; }
 
-div.arrow { height: 26px; opacity: 0.3; filter: alpha(opacity=30); }
+div.arrow { cursor: pointer; height: 26px; }
 
 h1 { margin-top: 0.5em; }
 h1 a { color: #000000; text-decoration:none; }
@@ -102,7 +102,7 @@ h2 { font-size: 130%; text-align: center; }
 .tag_expected h2.reverse { color: #7f7f7f; }
 .tag_expected h2.reverse a { color: #3ca52b; }
 
-.col_content div { overflow: hidden; }
+/*.col_content div { overflow: hidden; overflow-y: auto; }*/
 .col_content div.fixed_tagheight { height: 19px; }
 .tag_controversial h2 a { color: #7f7f7f; }
 .tag_controversial h2.reverse { color: #7f7f7f; }
