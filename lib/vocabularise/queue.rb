@@ -145,6 +145,9 @@ module VocabulariSe
 			return count
 		end
 
+		#
+		# Display queue content
+		#
 		def dump prefix
 			each do |h,q,p|
 				puts ""
