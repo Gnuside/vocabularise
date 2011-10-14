@@ -2,7 +2,7 @@
 require 'mendeley'
 require 'wikipedia'
 
-require 'datamapper'
+require 'data_mapper'
 require 'dm-core'                                                               
 
 require 'vocabularise/cache'
