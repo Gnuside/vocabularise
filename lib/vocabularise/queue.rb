@@ -11,6 +11,7 @@ module VocabulariSe
 		# FIXME: do something for priority
 
 		class EmptyQueueError < RuntimeError ; end
+		class AlreadyQueuedError < RuntimeError ; end
 
 		PRIORITY_HIGH = 100
 		PRIORITY_NORMAL = 50
@@ -26,6 +27,7 @@ module VocabulariSe
 				:queue => @name,
 				:handler => handler,
 				:cquery => JSON.generate([query])
+				# :locked could be true/false
 			}
 			resp = QueueEntry.first req
 			return (not resp.nil?)
@@ -38,19 +40,23 @@ module VocabulariSe
 				req_find = {
 					:queue => @name,
 					:handler => handler,
-					:cquery => JSON.generate([query])
+					:cquery => JSON.generate([query]),
+					:locked => false
 				}
 				req_create = {
 					:queue => @name,
 					:handler => handler,
 					:cquery => JSON.generate([query]),
-					:created_at => now.to_i
+					:created_at => now.to_i,
+					:locked => false
 				}
 				req_create[:priority] = priority.to_i unless priority.nil?
 
 				resp = QueueEntry.first req_find
 				if resp.nil? then
 					resp = QueueEntry.new req_create
+				else
+					raise AlreadyQueuedError
 				end
 
 				begin
@@ -67,6 +73,7 @@ module VocabulariSe
 		def first
 			req = {
 				:queue => @name,
+				:locked => false,
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
 			resp = QueueEntry.first req
@@ -81,6 +88,7 @@ module VocabulariSe
 		def shift
 			req = {
 				:queue => @name,
+				:locked => false,
 				:order => [:priority.desc, :created_at.asc, :id.asc]
 			}
 			resp = QueueEntry.first req
@@ -96,7 +104,8 @@ module VocabulariSe
 				req = {
 					:queue => @name,
 					:handler => handler,
-					:cquery => JSON.generate([query])
+					:cquery => JSON.generate([query]),
+					:locked => false
 				}
 				resp = QueueEntry.first req
 				if resp then
@@ -107,6 +116,58 @@ module VocabulariSe
 			end
 		end
 
+
+		#
+		# Make that element inacessible in queue
+		#
+		def lock handler, query
+			QueueEntry.transaction do
+				req = {
+					:queue => @name,
+					:handler => handler,
+					:cquery => JSON.generate([query])
+				}
+				resp = QueueEntry.first req
+				if resp then
+					resp.locked = true
+					resp.save
+				end
+				self
+			end
+		end
+
+		def unlock handler, query
+			QueueEntry.transaction do
+				req = {
+					:queue => @name,
+					:handler => handler,
+					:cquery => JSON.generate([query])
+				}
+				resp = QueueEntry.first req
+				if resp then
+					resp.locked = true
+					resp.save
+				end
+				self
+			end
+		end
+
+
+		#
+		# Delete chosen entry
+		#
+		def delete handler, query
+			QueueEntry.transaction do
+				req = {
+					:queue => @name,
+					:handler => handler,
+					:cquery => JSON.generate([query])
+				}
+				resp = QueueEntry.first req
+				resp.destroy if resp
+				self
+			end
+		end
 
 		def pop
 			handler, query, priority = nil, nil, nil

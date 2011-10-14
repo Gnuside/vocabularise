@@ -177,7 +177,7 @@ describe 'Queue' do
 			@queue[:one].push REQ_RELATED, 'love'
 			lambda {
 				@queue[:one].push REQ_RELATED, 'love'
-			}.should raise_error RuntimeError #FIXME: VocabulariSe::Queue::EmptyQueueError
+			}.should raise_error VocabulariSe::Queue::AlreadyQueuedError
 
 
 			@queue[:one].size.should == 1
@@ -300,6 +300,45 @@ describe 'Queue' do
 			@queue[:one].push :C, 3
 
 			pending("test not implemented")
+		end
+	end
+
+	describe '#lock' do
+		it 'should disable the entry' do
+			@queue[:one].push :A, 1
+			@queue[:one].push :B, 2
+			@queue[:one].push :C, 3
+
+			@queue[:one].lock :A, 1
+			h, q, p = @queue[:one].first
+			h.should == 'B'
+			q.should == 2
+		end
+	end
+
+	describe '#delete' do
+		it 'should delete an entry, wherever it is' do
+			@queue[:one].push :A, 1
+			@queue[:one].push :B, 2
+			@queue[:one].push :C, 3
+
+			@queue[:one].delete :A, 1
+			h, q, p = @queue[:one].first
+			h.should == 'B'
+			q.should == 2
+		end
+
+		it 'should delete an entry even locked' do
+			@queue[:one].push :A, 1
+			@queue[:one].push :B, 2
+			@queue[:one].push :C, 3
+
+			@queue[:one].lock :A, 1
+			@queue[:one].delete :A, 1
+			@queue[:one].delete :B, 2
+			h, q, p = @queue[:one].first
+			h.should == 'C'
+			q.should == 3
 		end
 	end
 
