@@ -17,7 +17,7 @@ gem 'sinatra', :require => 'sinatra/base'
 gem 'haml'
 
 # Database
-gem 'datamapper'
+gem 'datamapper', '~> 1.2'
 gem 'dm-migrations'
 gem 'dm-transactions'
 gem 'dm-validations'
