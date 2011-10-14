@@ -10,6 +10,7 @@ module VocabulariSe
 
 	PRELOADED_PAGES = 2
 	REQUIRED_PAGES = 1
+	ITEMS_PER_PAGE = 5
 
 	class MendeleyDocumentSearchTagged < RequestHandler
 
@@ -38,7 +39,6 @@ module VocabulariSe
 					resp = @crawler.request \
 						HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE,
 						{ :tag => tag, :page => page_counter }
-					raise NotImplementedError
 					pages << resp
 				rescue Crawler::DeferredRequest
 					rdebug "pages %s, %s was deferred" % [ tag, page_counter ]
@@ -67,7 +67,6 @@ module VocabulariSe
 					doc = Mendeley::Document.new doc_json
 					documents << doc                                        
 				end                                                         
-				page += 1                                                   
 			end                                                                 
 			return documents
 		end
@@ -98,7 +97,7 @@ module VocabulariSe
 			resp = @config.mendeley_client.documents_tagged({  
 				"tag" => tag,                                        
 				"page" => page,                                       
-				"items" => 5 
+				"items" => ITEMS_PER_PAGE
 			})                                                      
 			documents = []
 			resp["documents"].each do |resp_doc|                        
