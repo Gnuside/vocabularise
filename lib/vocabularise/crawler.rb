@@ -23,7 +23,7 @@ module VocabulariSe
 		COUNTER_MENDELEY_CURRENT = :mendeley_current
 
 
-		SLEEP_TIME = 5
+		SLEEP_TIME = 10
 		def initialize config
 			@config = config
 			@queue = {}
@@ -71,7 +71,9 @@ module VocabulariSe
 			if in_cache then
 				rdebug "request in cache (%s, %s)" % [handler, query.inspect]
 				# send result from cache
-				result = @config.cache[cache_key]
+				@monitor.synchronize do 
+					result = @config.cache[cache_key]
+				end
 			elsif not some_queue.nil? then
 				rdebug "request in #{some_queue} queue (%s)" % handle_str
 
@@ -85,7 +87,7 @@ module VocabulariSe
 				# you'll have to wait
 				deferred = true
 			else
-				rdebug "request nowhere (%s, %s)" % [handler, query]
+				rdebug "request nowhere (%s, %s)" % [handler, query.inspect]
 				# neither in cache nor in queue
 				# we add request to the queue
 
@@ -129,19 +131,24 @@ module VocabulariSe
 
 						e_handler, e_query, e_priority = nil, nil, nil
 						@monitor.synchronize do 
-							e_handler, e_query, e_priority = queue.pop
+							e_handler, e_query, e_priority = queue.first
 						end
 
-						rdebug "/#{key}/ handling %s, %s, %s" % [ e_handler, e_query, e_priority ]
+						rdebug "/#{key}/ handling %s, %s, %s" % [ e_handler, e_query.inspect, e_priority ]
 
 						begin
 							# call proper handler for request
 							process e_handler, e_query, e_priority
+							# success, we remove the request from the queue
+							@monitor.synchronize do 
+								queue.shift
+							end
 						rescue DeferredRequest
 							# execution failed, try it again later
-							rdebug "/#{key}/ failed for %s, %s, %s" % [ e_handler, e_query, (e_priority/2) ]
-							rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query, (e_priority / 2) ]
+							rdebug "/#{key}/ failed for %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority/2) ]
+							rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority / 2) ]
 							@monitor.synchronize do 
+								queue.shift
 								queue.push e_handler, e_query, (e_priority / 2)
 							end
 						end
@@ -171,7 +178,9 @@ module VocabulariSe
 			rdebug handle_str
 			sleep SLEEP_TIME #DEBUG FIXME
 			found = false
-			find_handlers( handle ).each do |handler_class|
+			handlers = find_handlers( handle )
+			rdebug "handlers => %s" % handlers.inspect
+			handlers.each do |handler_class|
 				rdebug "handler found for #{handle} : #{handler_class}"
 				found = true
 				begin
