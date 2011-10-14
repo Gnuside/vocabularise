@@ -194,7 +194,9 @@ module VocabulariSe
 						rdebug "success && caching %s" % handle_str
 
 						cache_key = _cache_key(handle, query)
-						@config.cache[cache_key] = result 
+						@monitor.synchronize do 
+							@config.cache[cache_key] = result 
+						end
 					else
 						rdebug "success && thrashing %s" % handle_str
 					end
