@@ -1,6 +1,6 @@
 
 # all includes
-require 'datamapper'
+require 'data_mapper'
 require 'dm-core'                                                               
 
 RSpec.configure do |config|

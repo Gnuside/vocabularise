@@ -8,7 +8,7 @@ require 'bundler/setup'
 require 'rspec'
 require 'json'
 
-require 'datamapper'
+require 'data_mapper'
 require 'dm-core'
 require 'dm-sqlite-adapter'                                                     
 
