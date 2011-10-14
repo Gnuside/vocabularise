@@ -8,6 +8,9 @@ module VocabulariSe
 	HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE = "mendeley:document:search_tagged:page"
 	HANDLE_MENDELEY_DOCUMENT_DETAILS = "mendeley:document:details"
 
+	PRELOADED_PAGES = 2
+	REQUIRED_PAGES = 1
+
 	class MendeleyDocumentSearchTagged < RequestHandler
 
 		handles HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED
@@ -30,7 +33,7 @@ module VocabulariSe
  
 			rdebug "requesting new pages for %s" % handle_str
 			# looking for three new pages
-			while (deferred_counter < 2) do
+			while (deferred_counter < PRELOADED_PAGES) do
 				begin
 					resp = @crawler.request \
 						HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE,
@@ -44,7 +47,7 @@ module VocabulariSe
 				page_counter += 1
 			end
 			# but fail if not enough pages are accessible
-			if pages.size < 1 then
+			if pages.size < REQUIRED_PAGES then
 				rdebug "not enough pages (=%s)  available for %s" % [ pages.size, handle_str]
 				raise Crawler::DeferredRequest
 			end
