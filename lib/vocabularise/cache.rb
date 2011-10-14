@@ -31,8 +31,6 @@ module VocabulariSe
 		end
 
 		def []= key, value
-
-
 		#	CacheEntry.raise_on_save_failure = true 
 			CacheEntry.transaction do
 				now = Time.now
@@ -130,7 +128,9 @@ module VocabulariSe
 		end
 
 		def empty!
-			CacheEntry.all.destroy
+			CacheEntry.transaction do
+				CacheEntry.all.destroy
+			end
 		end
 
 		def each &blk
