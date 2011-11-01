@@ -14,7 +14,7 @@ module VocabulariSe
 	class InternalRelatedTags < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS
-		cache_result
+		cache_result DURATION_SHORT
 
 		process do |handle, query, priority|
 			@debug = true
@@ -62,7 +62,7 @@ module VocabulariSe
 	class InternalRelatedTagsMendeley < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_MENDELEY
-		cache_result
+		cache_result DURATION_SHORT
 
 		process do |handle, query, priority|
 			@debug = true
@@ -106,7 +106,7 @@ module VocabulariSe
 	class InternalRelatedTagsWikipedia < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA
-		cache_result
+		cache_result DURATION_SHORT
 
 		process do |handle, query, priority|
 			@debug = true
@@ -128,7 +128,8 @@ module VocabulariSe
 
 			final_tags = []
 			tags.keys.each do |tag|                                             
-				tag.gsub!(/ \(.*\)$/,'')
+				ftag = tag.dup # prevent modification on a frozen string
+				ftag.gsub!(/ \(.*\)$/,'')
 				final_tags << tag
 			end                                                                 
 			# FIXME: cleanup wikipedia-specific tags                            
