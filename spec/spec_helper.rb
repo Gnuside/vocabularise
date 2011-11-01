@@ -4,6 +4,8 @@ require 'data_mapper'
 require 'dm-core'                                                               
 
 RSpec.configure do |config|
+	config.fail_fast = true
+
 
 	config.before(:suite) do
 		#STDERR.puts "HELPER - BEFORE SUITE"
@@ -20,8 +22,8 @@ RSpec.configure do |config|
 			"timeout"   => 15000                                        
 		} 
 
-		#DataMapper::Logger.new(STDERR, :debug)
-		DataMapper::Logger.new(STDERR, :info)
+	DataMapper::Logger.new(STDERR, :debug)
+		#DataMapper::Logger.new(STDERR, :info)
 		DataMapper.finalize
 		DataMapper.setup(:default, hash)                               
 		DataMapper::Model.raise_on_save_failure = true                                  
