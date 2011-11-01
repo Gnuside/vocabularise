@@ -11,9 +11,20 @@ module VocabulariSe
 
 		MAX_CHUNK_SIZE = 5000
 
-		def initialize timeout
-			@timeout = timeout
+		TIMEOUT_SHORT = :short
+		TIMEOUT_NORMAL = :normal
+		TIMEOUT_LONG = :long
+
+		def initialize min, max
+			@timeout = {
+				TIMEOUT_SHORT => min,
+				TIMEOUT_NORMAL => (min + min + max)/3,
+				TIMEOUT_LONG => max
+			}
+
 			@monitor = Monitor.new
+			@debug = true
+			rdebug "cache timeout [%s,%s,%s]" % [@timeout[:short],@timeout[:normal],@timeout[:long]]
 			@debug = false
 		end
 
@@ -30,9 +41,22 @@ module VocabulariSe
 			return (not resp.nil?)
 		end
 
+		def set_timeout key, timeout_type
+			CacheEntry.transaction do |transaction|
+				resp = CacheEntry.get key
+				if resp.nil? then
+					raise  NotImplementedError
+				end
+				timeout = @timeout[timeout_type]
+
+				resp.expires_at = resp.created_at + timeout
+				resp.save
+			end
+		end
+
 		def []= key, value
 		#	CacheEntry.raise_on_save_failure = true 
-			CacheEntry.transaction do
+			CacheEntry.transaction do |transaction|
 				now = Time.now
 
 				#:data => data,
@@ -40,13 +64,23 @@ module VocabulariSe
 				req_update = { 
 					:id => key,
 					:created_at => now.to_i,
-					:expires_at => now.to_i + @timeout,
+					:expires_at => now.to_i + @timeout[TIMEOUT_NORMAL],
 				}
 
 				resp = CacheEntry.get key
 				if resp then
-					resp.cache_chunks.destroy
-					resp.destroy
+					puts "HAD A RESP!"
+					res = resp.cache_chunks.all.destroy!
+					puts "DESTROY RESULT CHUNKS %s" % res
+					res = resp.destroy!
+					puts "DESTROY RESULT %s " % res
+				end
+				# assert
+				resp = CacheEntry.get key
+				unless resp.nil? then
+					pp resp
+					transaction.rollback
+					raise RuntimeError
 				end
 
 				begin
@@ -55,13 +89,12 @@ module VocabulariSe
 					#STDERR.puts resp.errors
 					STDERR.puts CacheEntry.errors
 					STDERR.puts e.message
+					transaction.rollback
 					raise e
 				end
 
-
 				value_marshal = ::Marshal.dump(value) if value
 				value_64 = Base64.encode64(value_marshal)
-
 
 				chunk_64 = []
 				if value_64.size > MAX_CHUNK_SIZE then
@@ -83,6 +116,7 @@ module VocabulariSe
 					pp resp.errors
 					#STDERR.puts CacheEntry.errors
 					STDERR.puts e.message
+					transaction.rollback
 					raise e
 				end
 
@@ -122,14 +156,16 @@ module VocabulariSe
 			}
 			CacheEntry.transaction do
 				resp = CacheEntry.all req
-				resp.cache_chunks.all.destroy
-				resp.destroy
+				resp.cache_chunks.all.destroy!
+				resp.destroy!
 			end
 		end
 
 		def empty!
 			CacheEntry.transaction do
-				CacheEntry.all.destroy
+				resp = CacheEntry.all
+				resp.cache_chunks.all.destroy!
+				resp.destroy!
 			end
 		end
 
