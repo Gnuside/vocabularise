@@ -86,9 +86,10 @@ module VocabulariSe
 			# setup cache & queue
 			# 2 hours
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
-			raise ConfigurationError, "no cache duration specified" unless json.include? "cache_duration"
+			raise ConfigurationError, "no cache_duration_min specified" unless json.include? "cache_duration_min"
+			raise ConfigurationError, "no cache_duration_max specified" unless json.include? "cache_duration_max"
 
-			@cache = VocabulariSe::Cache.new(60 * 60 * 2)
+			@cache = VocabulariSe::Cache.new( json["cache_duration_min"], json["cache_duration_max"] )
 
 			@counter = HitCounter.new
 			@counter.limit :wikipedia, 500
