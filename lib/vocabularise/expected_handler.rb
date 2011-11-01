@@ -15,7 +15,8 @@ module VocabulariSe
 
 		process do |handle, query, priority|
 			intag = query[:query]
-			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS
+			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
+				{ :tag => intag }
 
 			raise NotImplementedError
 
