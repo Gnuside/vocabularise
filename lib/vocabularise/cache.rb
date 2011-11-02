@@ -69,11 +69,11 @@ module VocabulariSe
 
 				resp = CacheEntry.get key
 				if resp then
-					puts "HAD A RESP!"
+					#puts "HAD A RESP!"
 					res = resp.cache_chunks.all.destroy!
-					puts "DESTROY RESULT CHUNKS %s" % res
+					#puts "DESTROY RESULT CHUNKS %s" % res
 					res = resp.destroy!
-					puts "DESTROY RESULT %s " % res
+					#puts "DESTROY RESULT %s " % res
 				end
 				# assert
 				resp = CacheEntry.get key
