@@ -13,6 +13,7 @@ module VocabulariSe
 		property :handler, String, :length => 200, :unique_index => :u1
 		property :priority, Integer, :default => 0
 		property :created_at, Integer, :required => true
+		property :locked, Boolean, :required => true
 
 		validates_uniqueness_of :cquery, :scope => [:queue,:handler]
 	end
