@@ -1,6 +1,14 @@
 
 module VocabulariSe
 	class RequestHandler
+
+		# six hours
+		DURATION_SHORT = :short
+		# two days
+		DURATION_NORMAL = :normal
+		# seven week
+		DURATION_LONG = :long
+
 		#inspired by YARD::Handlers::Base
 		# cf https://github.com/lsegal/yard/blob/master/lib/yard/handlers/base.rb
 
@@ -27,15 +35,15 @@ module VocabulariSe
 				#raise NotImplementedError, "override #handles? in a subclass"
 			end
 
-			def cache_result
+			def cache_result duration
 				mod = Module.new
-				mod.send(:define_method, :cache_result?, Proc.new { true })
+				mod.send(:define_method, :cache_duration, Proc.new { duration })
 				include mod
 			end
 
 			def no_cache_result
 				mod = Module.new
-				mod.send(:define_method, :cache_result?, Proc.new { false })
+				mod.send(:define_method, :cache_duration, Proc.new { 0 })
 				include mod
 			end
 
@@ -58,7 +66,7 @@ module VocabulariSe
 			@store_result ||= false
 		end
 
-		def cache_result?
+		def cache_duration
 			raise NotImplementedError, "#{self} did not implement a #store_result method for handling."
 		end
 
