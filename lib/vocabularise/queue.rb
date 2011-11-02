@@ -13,7 +13,7 @@ module VocabulariSe
 		class EmptyQueueError < RuntimeError ; end
 		class AlreadyQueuedError < RuntimeError ; end
 
-		PRIORITY_HIGH = 100
+		PRIORITY_HIGH = 75
 		PRIORITY_NORMAL = 50
 		PRIORITY_LOW = 25
 
@@ -99,7 +99,7 @@ module VocabulariSe
 		end
 
 		# increase priority of given handler/query
-		def stress handler, query
+		def stress handler, query, priority
 			QueueEntry.transaction do
 				req = {
 					:queue => @name,
@@ -109,7 +109,7 @@ module VocabulariSe
 				}
 				resp = QueueEntry.first req
 				if resp then
-					resp.priority = resp.priority + PRIORITY_NORMAL
+					resp.priority = ( resp.priority + 1 ) % ( 2 * PRIORITY_NORMAL )
 					resp.save
 				end
 				self
