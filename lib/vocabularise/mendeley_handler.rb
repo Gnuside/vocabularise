@@ -15,7 +15,7 @@ module VocabulariSe
 	class MendeleyDocumentSearchTagged < RequestHandler
 
 		handles HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED
-		cache_result
+		cache_result DURATION_NORMAL
 
 		process do |handle, query, priority|
 			@debug = true
@@ -79,7 +79,7 @@ module VocabulariSe
 	class MendeleyDocumentSearchTaggedPage < RequestHandler
 
 		handles HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE
-		cache_result
+		cache_result DURATION_NORMAL
 
 		process do |handle, query, priority|
 			@debug = true
@@ -119,7 +119,7 @@ module VocabulariSe
 	#
 	class MendeleyDocumentDetails < RequestHandler
 		handles HANDLE_MENDELEY_DOCUMENT_DETAILS
-		cache_result
+		cache_result DURATION_LONG
 
 		process do |handle, query, priority|
 			@debug = true
