@@ -13,6 +13,7 @@ require 'vocabularise/config'
 require 'vocabularise/crawler'
 require 'vocabularise/request_handler'
 require 'vocabularise/mendeley_handler'
+require 'vocabularise/internal_handler'
 
 require 'spec/spec_helper'
 
@@ -67,37 +68,34 @@ describe 'RequestHandler' do
 		VocabulariSe::QueueEntry.all.destroy
 	end
 
-	it 'should respond to HANDLE_MENDELEY_DOCUMENT_DETAILS' do
-		uuid = '47df8a70-83f6-11df-aedb-0024e8453de8'
-
-		doc = helper_request do
-			@crawler.request VocabulariSe::HANDLE_MENDELEY_DOCUMENT_DETAILS,
-				{ "uuid" => uuid }, VocabulariSe::Crawler::MODE_INTERACTIVE
-		end
-		#pp doc
-	end
-
-	it 'should respond to HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE' do
+	it 'should respond to HANDLE_INTERNAL_RELATED_TAGS_MENDELEY' do
 		intag = "love"
 
-		page = helper_request do
-			@crawler.request VocabulariSe::HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE,
-				{ "tag" => intag, "page" => 0 }, VocabulariSe::Crawler::MODE_INTERACTIVE
+		reltags = helper_request do
+			@crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS_MENDELEY,
+				{ "tag" => intag }
 		end
-		#pp page
+		pp reltags
 	end
 
-	it 'should respond to HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED' do
+	it 'should respond to HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA' do
 		intag = "love"
 
-		docs = helper_request do
-			@crawler.request VocabulariSe::HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED,
-				{ "tag" => intag }, VocabulariSe::Crawler::MODE_INTERACTIVE
+		reltags = helper_request do
+			@crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA,
+				{ "tag" => intag }
 		end
+		pp reltags
+	end
 
-		if docs.size > 0 then
-			docs.first.kind_of?(Mendeley::Document).should == true
+	it 'should respond to HANDLE_INTERNAL_RELATED_TAGS' do
+		intag = "love"
+
+		reltags = helper_request do
+			@crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS,
+				{ "tag" => intag }
 		end
+		pp reltags
 	end
 
 	#
