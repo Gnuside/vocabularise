@@ -8,7 +8,7 @@ module VocabulariSe
 
 	class WikipediaRequestPage < RequestHandler
 		handles HANDLE_WIKIPEDIA_REQUEST_PAGE
-		cache_result
+		cache_result DURATION_LONG
 
 		process do |handle, query, priority|
 			@debug = true
