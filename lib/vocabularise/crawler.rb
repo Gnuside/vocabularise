@@ -13,9 +13,6 @@ module VocabulariSe
 
 		class DeferredRequest < RuntimeError ; end
 
-		MODE_INTERACTIVE = :interactive
-		MODE_PASSIVE = :passive
-
 		COUNTER_WIKIPEDIA_RATE = :wikipedia_rate
 		COUNTER_WIKIPEDIA_CURRENT = :wikipedia_current
 
@@ -23,7 +20,8 @@ module VocabulariSe
 		COUNTER_MENDELEY_CURRENT = :mendeley_current
 
 
-		SLEEP_TIME = 10
+		SLEEP_TIME = 0.1
+
 		def initialize config
 			@config = config
 			@queue = {}
@@ -43,8 +41,8 @@ module VocabulariSe
 		# request a request
 		#
 		# if request is in cache then send a result
-		def request handler, query, mode=MODE_PASSIVE
-			handle_str = "handler = %s, query = %s, mode = %s" % [ handler, query.inspect, mode ]
+		def request handler, query, priority=Queue::PRIORITY_NORMAL
+			handle_str = "handler = %s, query = %s, priority = %s" % [ handler, query.inspect, priority ]
 			rdebug handle_str
 
 			result = nil
@@ -81,7 +79,7 @@ module VocabulariSe
 				@monitor.synchronize do	
 					#DEBUG
 					@queue[some_queue].dump some_queue
-					@queue[some_queue].stress handler, query if mode == MODE_PASSIVE
+					@queue[some_queue].stress handler, query, priority
 				end
 
 				# you'll have to wait
@@ -90,8 +88,6 @@ module VocabulariSe
 				rdebug "request nowhere (%s, %s)" % [handler, query.inspect]
 				# neither in cache nor in queue
 				# we add request to the queue
-
-				priority = priority_from_mode mode
 
 				@queue.each do |key,queue|
 					if handler =~ /^#{key}/ then
@@ -132,6 +128,7 @@ module VocabulariSe
 						e_handler, e_query, e_priority = nil, nil, nil
 						@monitor.synchronize do 
 							e_handler, e_query, e_priority = queue.first
+							queue.lock e_handler, e_query
 						end
 
 						rdebug "/#{key}/ handling %s, %s, %s" % [ e_handler, e_query.inspect, e_priority ]
@@ -141,14 +138,14 @@ module VocabulariSe
 							process e_handler, e_query, e_priority
 							# success, we remove the request from the queue
 							@monitor.synchronize do 
-								queue.shift
+								queue.delete e_handler, e_query
 							end
 						rescue DeferredRequest
 							# execution failed, try it again later
 							rdebug "/#{key}/ failed for %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority/2) ]
 							rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority / 2) ]
 							@monitor.synchronize do 
-								queue.shift
+								queue.delete e_handler, e_query
 								queue.push e_handler, e_query, (e_priority / 2)
 							end
 						end
@@ -190,15 +187,12 @@ module VocabulariSe
 					result = handler_instance.process( handle, query, priority )
 
 					# may not be executed (do not worry) ;-)
-					if handler_instance.cache_result? then
-						rdebug "success && caching %s" % handle_str
+					rdebug "success && caching %s (timeout %s)" % [handle_str, handler_instance.cache_duration]
 
-						cache_key = _cache_key(handle, query)
-						@monitor.synchronize do 
-							@config.cache[cache_key] = result 
-						end
-					else
-						rdebug "success && thrashing %s" % handle_str
+					cache_key = _cache_key(handle, query)
+					@monitor.synchronize do 
+						@config.cache[cache_key] = result 
+						@config.cache.set_timeout cache_key, handler_instance.cache_duration
 					end
 				end
 			end
