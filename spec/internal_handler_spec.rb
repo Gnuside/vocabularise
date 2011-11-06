@@ -39,7 +39,8 @@ describe 'RequestHandler' do
 		FileUtils.mkdir_p "tmp/test"
 		json = {
 			'cache_dir' => 'tmp/test/cache',
-			'cache_duration' => 7200,
+			'cache_duration_min' => 3600,
+			'cache_duration_max' => 7200,
 			'consumer_key' => 'd0d46ad71eb6691a44fb608424ad71c704e160d23',
 			'consumer_secret' => '4fb7cd67cd36e341be6966db0b4dd261',
 
