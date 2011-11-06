@@ -15,7 +15,7 @@ require 'vocabularise/hit_counter'
 
 describe 'Wikipedia' do
 
-	before :all do
+	before :each do
 		@wikipedia_client = Wikipedia::Client.new                           
 
 		@counter = VocabulariSe::HitCounter.new
