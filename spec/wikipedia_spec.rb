@@ -11,10 +11,15 @@ require 'json'
 require 'wikipedia'
 require 'vocabularise/wikipedia_ext'
 
+require 'vocabularise/hit_counter'
+
 describe 'Wikipedia' do
 
 	before :all do
 		@wikipedia_client = Wikipedia::Client.new                           
+
+		@counter = VocabulariSe::HitCounter.new
+		@counter.limit :wikipedia, 500
 	end
 	
 	it 'should search' do
@@ -41,6 +46,8 @@ describe 'Wikipedia' do
 		cache = {}
 		@wikipedia_client.extend(::VocabulariSe::WikipediaExt::Cache)                              
 		@wikipedia_client.cache = cache
+		@wikipedia_client.hit_counter = @counter
+
 		result = @wikipedia_client.request_page "Love"
 		cache.empty?.should == false
 	end
