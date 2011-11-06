@@ -18,7 +18,9 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 	#t.libs << "test"
 	#t.test_files = FileList['test/*_test.rb']
 	#t.verbose = true
-	t.pattern = FileList['spec/**/*_spec.rb']
+	list =  FileList['spec/**/*_spec.rb'].to_a
+	list.reject!{ |arg| arg =~ /^spec\/obsolete/ }
+	t.pattern = list
 	t.verbose = true
 	t.ruby_opts = "-Ilib"
 	t.rspec_opts = "--color --format documentation"
@@ -27,7 +29,9 @@ end
 
 desc "Run specs"
 RSpec::Core::RakeTask.new(:coverage) do |t|
-	t.pattern = FileList['spec/**/*_spec.rb']
+	list =  FileList['spec/**/*_spec.rb'].to_a
+	list.reject!{ |arg| arg =~ /^spec\/obsolete/ }
+	t.pattern = list
 	t.rcov = true
 	t.rcov_opts = [
 		'--exclude', 'spec' 
