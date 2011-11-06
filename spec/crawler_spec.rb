@@ -40,6 +40,7 @@ describe 'Crawler' do
 
 
 	#
+=begin
 	it 'should find handlers' do
 		@crawler.should respond_to(:find_handlers)
 
@@ -49,6 +50,7 @@ describe 'Crawler' do
 			pp handler
 		end
 	end
+=end
 
 	#
 
