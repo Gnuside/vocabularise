@@ -50,7 +50,15 @@ module VocabulariSe
 				timeout = @timeout[timeout_type]
 
 				resp.expires_at = resp.created_at + timeout
-				resp.save
+				begin
+					resp.save
+				rescue DataMapper::SaveFailureError => e
+					pp resp.errors
+					#STDERR.puts CacheEntry.errors
+					STDERR.puts e.message
+					transaction.rollback
+					raise e
+				end
 			end
 		end
 
