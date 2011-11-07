@@ -33,7 +33,8 @@ module VocabulariSe
 				@queue[key].empty!
 			end
 
-			@debug = true
+			#@debug = true
+			@debug = false
 			@monitor = Monitor.new
 		end #initialize
 
