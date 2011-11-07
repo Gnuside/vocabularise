@@ -67,8 +67,8 @@ module VocabulariSe
 				that_queue = match_queues.map{ |k,v| k }.first
 				in_queue = (not that_queue.nil?)
 			end
-			rdebug "cache tested ! (%s)" % handle_str
 
+			# then use results
 			if in_cache then
 				rdebug "request in cache (%s, %s)" % [handler, query.inspect]
 				# send result from cache
@@ -102,8 +102,11 @@ module VocabulariSe
 					end
 				end
 			end
-			raise DeferredRequest if deferred
-			rdebug "YES !!! return result for %s" % handle_str
+			if deferred then
+				rdebug "NO ! request id deferred for %s" % handle_str
+				raise DeferredRequest
+			end
+			rdebug "YES ! return result for %s" % handle_str
 			return result
 		end # request
 
