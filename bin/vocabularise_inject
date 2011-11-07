@@ -1,0 +1,46 @@
+#!/usr/bin/ruby
+
+require 'fileutils'
+require 'test/unit'
+require 'pp'
+
+require 'rubygems'
+require 'bundler/setup'
+require 'rspec'
+require 'json'
+
+require 'vocabularise/model'
+require 'vocabularise/config'
+require 'vocabularise/crawler'
+require 'vocabularise/request_handler'
+require 'vocabularise/mendeley_handler'
+require 'vocabularise/internal_handler'
+
+require 'spec/spec_helper'
+
+
+#FIXME: use the same configuration as the big app'
+
+#@config = VocabulariSe::Config.new json
+#@crawler = VocabulariSe::Crawler.new @config
+
+# set crawler
+#@crawler.run
+
+dictionary_path = "config/dictionary.example"
+
+File.readlines( dictionary_path ).each do |line|
+	line = line.strip
+	next if line =~ /^\s*#/ ;
+	next if line =~ /^\s*$/ ;
+
+	intag = line.downcase
+	intag.gsub!(/\s+/,'')
+
+	pp intag
+
+	# @crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS,
+	#	{ "tag" => intag }
+end
+
+exit 1
