@@ -6,6 +6,10 @@ module VocabulariSe
 
 	# A request item, should correspond to exactly one API hit
 
+	# FIXME: store hit counter in database & use timestamps
+	# FIXME: if time > next_timestamp => do not wait (but set next timestamp)
+	# FIXME: if time <= next_timestmap => wait for the time difference
+	
 	class HitCounter
 
 		def initialize
