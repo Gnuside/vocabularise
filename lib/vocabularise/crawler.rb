@@ -49,22 +49,25 @@ module VocabulariSe
 			deferred = false
 			found = false
 			in_cache = false
-			in_queue = {}
-			some_queue = nil
+			in_queue = false
+			that_queue = nil
 			cache_key = _cache_key(handler, query)
 
+			rdebug "testing cache for existance (%s)" % handle_str
+			
+			# atomically prepare variables in_cache & in_queue[x] & that_queue
 			@monitor.synchronize do 
+				# test cache for given cache_key
 				in_cache = @config.cache.include? cache_key
-				@queue.each do |key,queue|
-					in_queue[key] = @queue[key].include? handler, query
-					#DEBUG
-					@queue[key].dump key
-					if in_queue[key] then
-						some_queue = key
-						break
-					end
+
+				# test each queue for given cache_key
+				match_queues = @queue.select do |queue_key,queue|
+					@queue[queue_key].include? handler, query
 				end
+				that_queue = match_queues.map{ |k,v| k }.first
+				in_queue = (not that_queue.nil?)
 			end
+			rdebug "cache tested ! (%s)" % handle_str
 
 			if in_cache then
 				rdebug "request in cache (%s, %s)" % [handler, query.inspect]
@@ -72,14 +75,14 @@ module VocabulariSe
 				@monitor.synchronize do 
 					result = @config.cache[cache_key]
 				end
-			elsif not some_queue.nil? then
-				rdebug "request in #{some_queue} queue (%s)" % handle_str
+			elsif in_queue then
+				rdebug "request in #{that_queue} queue (%s)" % handle_str
 
 				# increase queue priority if passive mode
 				@monitor.synchronize do	
 					#DEBUG
-					@queue[some_queue].dump some_queue
-					@queue[some_queue].stress handler, query, priority
+					@queue[that_queue].dump that_queue
+					@queue[that_queue].stress handler, query, priority
 				end
 
 				# you'll have to wait
@@ -100,6 +103,7 @@ module VocabulariSe
 				end
 			end
 			raise DeferredRequest if deferred
+			rdebug "YES !!! return result for %s" % handle_str
 			return result
 		end # request
 
@@ -194,6 +198,12 @@ module VocabulariSe
 						@config.cache[cache_key] = result 
 						@config.cache.set_timeout cache_key, handler_instance.cache_duration
 					end
+				rescue DeferredRequest => e
+					raise e
+				rescue Exception => e
+					puts e.message
+					pp e.backtrace
+					exit 1
 				end
 			end
 			rdebug "no handler found for #{handle}!" unless found
