@@ -38,7 +38,7 @@ module VocabulariSe
 				begin
 					resp = @crawler.request \
 						HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE,
-						{ :tag => tag, :page => page_counter }
+						{ "tag" => tag, "page" => page_counter }
 					pages << resp
 				rescue Crawler::DeferredRequest
 					rdebug "pages %s, %s was deferred" % [ tag, page_counter ]
@@ -93,18 +93,19 @@ module VocabulariSe
 			page = query["page"]
 
 			# make the request
-			# FIXME: make items/page configurable
+			rdebug "make the request"
 			resp = @config.mendeley_client.documents_tagged({  
 				"tag" => tag,                                        
 				"page" => page,                                       
 				"items" => ITEMS_PER_PAGE
 			})                                                      
+			rdebug "request ok"
 			documents = []
 			resp["documents"].each do |resp_doc|                        
 				# request the real document
 				doc_json = @crawler.request \
 					HANDLE_MENDELEY_DOCUMENT_DETAILS,
-					{ :uuid => resp_doc["uuid"] }
+					{ "uuid" => resp_doc["uuid"] }
 				documents << doc_json
 			end
 			resp["documents"] = documents
