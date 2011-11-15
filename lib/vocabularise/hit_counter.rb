@@ -14,8 +14,8 @@ module VocabulariSe
 
 		def initialize
 			@monitor = Monitor.new
-			@counter = {}
 			@limit = {}
+			@timeout = {}
 			@debug = true
 		end
 
@@ -28,7 +28,7 @@ module VocabulariSe
 		#
 		def limit ns, max_per_hour
 			@monitor.synchronize do
-				@counter[ns] = 0
+				@timeout[ns] = Time.now.to_i
 				@limit[ns] = max_per_hour
 			end
 		end
@@ -38,13 +38,21 @@ module VocabulariSe
 		# for given namespace
 		#
 		def hit ns
-			raise ArgumentError unless @counter.include? ns
+			raise ArgumentError unless @timeout.include? ns
+			raise ArgumentError unless @limit.include? ns
+			now = Time.now.to_i
+			diff = 0
 			@monitor.synchronize do
-				@counter[ns]+= 1 
-				@counter[ns] = 0 if @counter[ns] >= @limit[ns]
+				diff = @timeout[ns] - now
+				@timeout[ns] += (3600.0 / @limit[ns])
 			end
-			rdebug "counting a hit for %s" % ns
-			sleep (3600.0 / @limit[ns])
+
+			if diff > 0 then
+				rdebug "slow (sleep %s) hit for %s" % [ diff, ns ]
+				sleep (diff + 1)
+			else
+				rdebug "fast hit for %s" % ns
+			end
 		end
 	end
 
