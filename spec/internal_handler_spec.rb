@@ -70,6 +70,8 @@ describe 'RequestHandler' do
 	end
 
 	it 'should respond to HANDLE_INTERNAL_RELATED_TAGS_MENDELEY' do
+		STDOUT.puts "press [enter] to start"
+		STDIN.gets
 		intag = "love"
 
 		reltags = helper_request do
@@ -80,6 +82,8 @@ describe 'RequestHandler' do
 	end
 
 	it 'should respond to HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA' do
+		STDOUT.puts "press [enter] to start"
+		STDIN.gets
 		intag = "love"
 
 		reltags = helper_request do
@@ -90,6 +94,8 @@ describe 'RequestHandler' do
 	end
 
 	it 'should respond to HANDLE_INTERNAL_RELATED_TAGS' do
+		STDOUT.puts "press [enter] to start"
+		STDIN.gets
 		intag = "love"
 
 		reltags = helper_request do
