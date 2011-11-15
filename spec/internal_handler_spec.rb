@@ -15,6 +15,8 @@ require 'vocabularise/request_handler'
 require 'vocabularise/mendeley_handler'
 require 'vocabularise/internal_handler'
 
+require 'vocabularise/expected_handler'
+
 require 'spec/spec_helper'
 
 
@@ -105,6 +107,31 @@ describe 'RequestHandler' do
 		pp reltags
 	end
 
+
+	it 'should respond to HANDLE_INTERNAL_RELATED_DOCUMENTS' do
+		STDOUT.puts "press [enter] to start"
+		STDIN.gets
+		intag = ["love","fmri"]
+
+		reldocs = helper_request do
+			@crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_DOCUMENTS,
+				{ "tag_list" => intag }
+		end
+		pp reldocs
+	end
+
+
+	it 'should respond to HANDLE_INTERNAL_EXPECTED' do
+		STDOUT.puts "press [enter] to start"
+		STDIN.gets
+		intag = "love"
+
+		reltags = helper_request do
+			@crawler.request VocabulariSe::HANDLE_INTERNAL_EXPECTED,
+				{ "tag" => intag }
+		end
+		pp reltags
+	end
 	#
 end
 

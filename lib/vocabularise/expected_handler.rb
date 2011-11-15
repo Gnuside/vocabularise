@@ -11,14 +11,17 @@ module VocabulariSe
 	class InternalAggregating < RequestHandler
 
 		handles HANDLE_INTERNAL_EXPECTED
-		cache_result
+		cache_result DURATION_SHORT
 
 		process do |handle, query, priority|
-			intag = query[:query]
+			@debug = true
+			rdebug "handle = %s, query = %s, priority = %s " % \
+				[ handle, query.inspect, priority ]
+			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
+			intag = query['tag']
+
 			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
 				{ :tag => intag }
-
-			raise NotImplementedError
 
 			# Association audacieuse                                            
 			workspace = {}                                                      
@@ -34,7 +37,7 @@ module VocabulariSe
 
 				related_documents = @crawler.request \
 					HANDLE_INTERNAL_RELATED_DOCUMENTS, 
-					{:query => [intag, reltag]}
+					{:tag_list => [intag, reltag]}
 
 				related_documents.each do |doc|
 					views += doc.readers(config.mendeley_client)            

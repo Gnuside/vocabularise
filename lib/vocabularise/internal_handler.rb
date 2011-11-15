@@ -11,6 +11,8 @@ module VocabulariSe
 	HANDLE_INTERNAL_RELATED_TAGS_MENDELEY = "internal:related_tags:mendeley"
 	HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA = "internal:related_tags:wikipedia"
 
+	HANDLE_INTERNAL_RELATED_DOCUMENTS = "internal:related_docs"
+
 	class InternalRelatedTags < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS
@@ -134,6 +136,55 @@ module VocabulariSe
 			end                                                                 
 			# FIXME: cleanup wikipedia-specific tags                            
 			return final_tags
+		end
+	end
+
+
+	class InternalRelatedDocuments < RequestHandler
+		handles HANDLE_INTERNAL_RELATED_DOCUMENTS
+		cache_result DURATION_SHORT
+
+		process do |handle, query, priority|
+			@debug = true
+			rdebug "handle = %s, query = %s, priority = %s " % \
+				[ handle, query.inspect, priority ]
+			raise ArgumentError, "no 'tag_list' found" unless query.include? 'tag_list'
+			tag_list = query['tag_list']
+
+			rdebug "tag_list = %s" % tag_list
+			raise NotImplementedError
+			
+			# config, intag, limit=RELATED_DOCUMENTS_DEFAULT_HITLIMIT
+			
+			documents = Set.new
+			hit_count = 0
+
+			head = tag_list[0]
+			tail_arr = tag_list[1..-1]
+
+			# for head
+			head_documents = Set.new
+			tail_documents = Set.new
+
+			head_limit = limit.to_f / tag_list.size.to_f
+			tail_limit = tail_arr.size.to_f * head_limit
+
+			# FIXME: hit count = #tags * #limit => that makes a lot
+
+			# for tail
+			unless tail_arr.empty? then
+				tail_documents = self.related_documents_multiple config, tail_arr, tail_limit
+				#head_documents.intersection tail_documents 
+			end
+			self.related_documents config, head, head_limit do |doc|
+				if not tail_documents.include? doc then
+					yield doc if block_given?
+					#pp doc
+					head_documents.add doc
+				end
+			end
+
+			return head_documents.to_a
 		end
 	end
 
