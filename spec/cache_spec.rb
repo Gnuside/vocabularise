@@ -45,9 +45,13 @@ describe 'Cache' do
 	
 	describe '#[]=' do
 		it 'should store' do
+			# string
 			@cache['A'] = '1'
 			@cache['B'] = '2'
-			@cache['C'] = '3'
+			# int 
+			@cache['C'] = 3
+			# array (object)
+			@cache['D'] = []
 		end
 
 		it 'should be able to store twice' do
@@ -80,11 +84,12 @@ describe 'Cache' do
 		it 'should retrieve' do
 			@cache['A'] = '1'
 			@cache['B'] = '2'
-			@cache['C'] = '3'
+			@cache['C'] = 3
+			@cache['D'] = []
 			@cache['A'].should == '1'
 			@cache['B'].should == '2'
-			@cache['C'].should == '3'
-			@cache['D'].should == nil
+			@cache['C'].should == 3
+			@cache['D'].empty?.should == true
 		end
 
 		it 'should last while duration' do
