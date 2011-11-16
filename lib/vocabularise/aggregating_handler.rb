@@ -16,7 +16,7 @@ module VocabulariSe
 
 			@crawler.request \
 				HANDLE_INTERNAL_RELATED_TAGS,
-				{ :query => @query }
+				{ "query" => @query }
 
 			raise NotImplementedError
 		end

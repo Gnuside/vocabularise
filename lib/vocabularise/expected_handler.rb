@@ -21,7 +21,7 @@ module VocabulariSe
 			intag = query['tag']
 
 			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
-				{ :tag => intag }
+				{ "tag" => intag }
 
 			# Association audacieuse                                            
 			workspace = {}                                                      
@@ -37,7 +37,7 @@ module VocabulariSe
 
 				related_documents = @crawler.request \
 					HANDLE_INTERNAL_RELATED_DOCUMENTS, 
-					{:tag_list => [intag, reltag]}
+					{"tag_list" => [intag, reltag]}
 
 				related_documents.each do |doc|
 					views += doc.readers(config.mendeley_client)            
