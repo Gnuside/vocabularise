@@ -149,7 +149,7 @@ module VocabulariSe
 					value_marshal = Base64.decode64(value_64)
 					rdebug "value_marshal = %s" % value_marshal
 					value = ::Marshal.load(value_marshal)
-					rdebug "value = %s" % value
+					rdebug "value = %s" % value.inspect
 					result = value
 				end
 			end
