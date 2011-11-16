@@ -13,6 +13,10 @@ module VocabulariSe
 
 	HANDLE_INTERNAL_RELATED_DOCUMENTS = "internal:related_docs"
 
+
+	#
+	#
+	#
 	class InternalRelatedTags < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS
@@ -32,7 +36,7 @@ module VocabulariSe
 			if tags.empty?                                                      
 				mendeley_related = @crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS_MENDELEY,
-					{ :tag => intag }
+					{ "tag" => intag }
 
 				tags.merge!( mendeley_related ) do |key,oldval,newval|          
 					oldval + newval                                             
@@ -45,7 +49,7 @@ module VocabulariSe
 			if tags.empty?                                                      
 				wikipedia_related = @crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA, 
-					{ :tag => intag }
+					{ "tag" => intag }
 
 				tags.merge!( wikipedia_related ) do |key,oldval,newval|         
 					oldval + newval                                             
@@ -61,6 +65,9 @@ module VocabulariSe
 	end
 
 
+	#
+	#
+	#
 	class InternalRelatedTagsMendeley < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_MENDELEY
@@ -78,7 +85,7 @@ module VocabulariSe
 			# may fail
 			documents = @crawler.request \
 				HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED,
-				{ :tag => intag }
+				{ "tag" => intag }
 
 			documents.each do |doc|
 				document_tags = doc.tags
@@ -105,6 +112,10 @@ module VocabulariSe
 		end
 	end
 
+
+	#
+	#
+	#
 	class InternalRelatedTagsWikipedia < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA
@@ -122,8 +133,7 @@ module VocabulariSe
 
 			page_json = @crawler.request \
 				HANDLE_WIKIPEDIA_REQUEST_PAGE, 
-				{ :page => intag }, 
-				intag              
+				{ "page" => intag }
 
 			page = Wikipedia::Page.new page_json                                
 			page.links.each { |tag| tags[tag] += 1 }                            
@@ -140,6 +150,9 @@ module VocabulariSe
 	end
 
 
+	#
+	#
+	#
 	class InternalRelatedDocuments < RequestHandler
 		handles HANDLE_INTERNAL_RELATED_DOCUMENTS
 		cache_result DURATION_SHORT
@@ -152,40 +165,21 @@ module VocabulariSe
 			tag_list = query['tag_list']
 
 			rdebug "tag_list = %s" % tag_list
-			raise NotImplementedError
 			
-			# config, intag, limit=RELATED_DOCUMENTS_DEFAULT_HITLIMIT
-			
-			documents = Set.new
-			hit_count = 0
+			documents = []
+			tag_list.each do |tag|
+				rdebug "current tag = %s" % tag_list
+				tag_docs = @crawler.request HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED,
+					{ "tag" => tag }
 
-			head = tag_list[0]
-			tail_arr = tag_list[1..-1]
-
-			# for head
-			head_documents = Set.new
-			tail_documents = Set.new
-
-			head_limit = limit.to_f / tag_list.size.to_f
-			tail_limit = tail_arr.size.to_f * head_limit
-
-			# FIXME: hit count = #tags * #limit => that makes a lot
-
-			# for tail
-			unless tail_arr.empty? then
-				tail_documents = self.related_documents_multiple config, tail_arr, tail_limit
-				#head_documents.intersection tail_documents 
-			end
-			self.related_documents config, head, head_limit do |doc|
-				if not tail_documents.include? doc then
-					yield doc if block_given?
-					#pp doc
-					head_documents.add doc
+				if documents.empty? then 
+					documents = tag_docs
+				else
+					documents = documents.select{ |doc| tag_docs.include? doc }
 				end
+				#rdebug "documents = %s" % documents.inspect
 			end
-
-			return head_documents.to_a
+			return documents
 		end
 	end
-
 end
