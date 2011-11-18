@@ -154,7 +154,7 @@ module VocabulariSe
 							rdebug "/#{key}/ pushing back in queue %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority / 2) ]
 							@monitor.synchronize do 
 								queue.delete e_handler, e_query
-								queue.push e_handler, e_query, (e_priority / 2)
+								queue.push e_handler, e_query, ( 1 + (e_priority / 2) )
 							end
 						end
 
