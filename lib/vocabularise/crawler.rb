@@ -208,6 +208,8 @@ module VocabulariSe
 					puts e.message
 					pp e.backtrace
 					exit 1
+				rescue SystemExit => e
+					raise e
 				end
 			end
 			rdebug "no handler found for #{handle}!" unless found
