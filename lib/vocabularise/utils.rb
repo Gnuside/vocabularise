@@ -164,7 +164,6 @@ module VocabulariSe
 				end
 			end
 			pp tags
-			STDIN.gets #DEBUG
 
 			# try wikipedia
 			if tags.empty? 
