@@ -48,6 +48,28 @@ describe 'ExpectedHandler' do
 
 			"db_adapter" => "mysql",
 			"db_database" => "vocabularise_test",
+			"db_host" => "localhost",
+			"db_username" => "vocabularise",
+			"db_password" => "vocapass"
+=begin
+			"db_adapter"   => 'sqlite3',
+			"db_database"  => 'tmp/test/cache.sqlite3',
+			"db_username"  => "",
+			"db_password"  => "",
+			"db_host"      => "",
+=end
+		}
+
+		@config = VocabulariSe::Config.new json
+		@crawler = VocabulariSe::Crawler.new @config
+
+		# set crawler
+		@crawler.run
+	end
+
+	before :each do
+		VocabulariSe::QueueEntry.all.destroy
+	end
 
 	it 'should respond to HANDLE_INTERNAL_EXPECTED' do
 		STDOUT.puts "press [enter] to start"
