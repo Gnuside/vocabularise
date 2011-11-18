@@ -8,7 +8,7 @@ module VocabulariSe
 
 	HANDLE_INTERNAL_EXPECTED = "internal:expected"
 
-	class InternalAggregating < RequestHandler
+	class InternalExpected < RequestHandler
 
 		handles HANDLE_INTERNAL_EXPECTED
 		cache_result DURATION_SHORT
