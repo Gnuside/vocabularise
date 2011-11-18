@@ -20,7 +20,7 @@ require 'vocabularise/expected_handler'
 require 'spec/spec_helper'
 
 
-describe 'RequestHandler' do
+describe 'InternalHandler' do
 
 	SLEEP_TIME = 5
 
@@ -119,6 +119,7 @@ describe 'RequestHandler' do
 		end
 		pp reldocs
 	end
+
 
 
 	it 'should respond to HANDLE_INTERNAL_EXPECTED' do
