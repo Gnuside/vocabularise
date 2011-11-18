@@ -15,12 +15,12 @@ require 'vocabularise/request_handler'
 require 'vocabularise/mendeley_handler'
 require 'vocabularise/internal_handler'
 
-require 'vocabularise/expected_handler'
+require 'vocabularise/aggregating_handler'
 
 require 'spec/spec_helper'
 
 
-describe 'ExpectedHandler' do
+describe 'AggregatingHandler' do
 
 	SLEEP_TIME = 5
 
@@ -49,13 +49,13 @@ describe 'ExpectedHandler' do
 			"db_adapter" => "mysql",
 			"db_database" => "vocabularise_test",
 
-	it 'should respond to HANDLE_INTERNAL_EXPECTED' do
+	it 'should respond to HANDLE_INTERNAL_AGGREGATING' do
 		STDOUT.puts "press [enter] to start"
 		STDIN.gets
 		intag = "love"
 
 		reltags = helper_request do
-			@crawler.request VocabulariSe::HANDLE_INTERNAL_EXPECTED,
+			@crawler.request VocabulariSe::HANDLE_INTERNAL_AGGREGATING,
 				{ "tag" => intag }
 		end
 		pp reltags
