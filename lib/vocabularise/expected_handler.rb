@@ -23,16 +23,17 @@ module VocabulariSe
 			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
 				{ "tag" => intag }
 
-			# Association audacieuse                                            
 			workspace = {}                                                      
 			documents = Set.new   
 
+			# for each related tag, 
+			# look for documents related to both initial & related tag
+			# then compute slope for each document
 			related_tags.each do |reltag,reltag_count|                          
 				# sum of views for all documents                                
 				views = 1                                                       
 				apparitions = reltag_count                                      
 
-				hit_count = 0                                                   
 				limit = 1                                                       
 
 				related_documents = @crawler.request \
