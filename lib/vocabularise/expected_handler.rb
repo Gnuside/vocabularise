@@ -39,6 +39,8 @@ module VocabulariSe
 					HANDLE_INTERNAL_RELATED_DOCUMENTS, 
 					{"tag_list" => [intag, reltag]}
 
+				rdebug "related docs to [%s,%s] : %s" % [ intag, reltag, related_documents.inspect ]
+
 				related_documents.each do |doc|
 					views += doc.readers            
 				end                                                         
