@@ -40,12 +40,7 @@ module VocabulariSe
 					{"tag_list" => [intag, reltag]}
 
 				related_documents.each do |doc|
-					views += doc.readers(config.mendeley_client)            
-
-					# limit to X real hits                                  
-					hit_count += 1 unless doc.cached?                       
-					#puts "AlgoI - hit_count = %s" % hit_count              
-					break if hit_count > limit                              
+					views += doc.readers            
 				end                                                         
 
 				slope =  apparitions.to_f / views.to_f                          
