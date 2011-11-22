@@ -12,6 +12,7 @@ module VocabulariSe
 	class Crawler
 
 		class DeferredRequest < RuntimeError ; end
+		class HttpError < RuntimeError ; end
 
 		COUNTER_WIKIPEDIA_RATE = :wikipedia_rate
 		COUNTER_WIKIPEDIA_CURRENT = :wikipedia_current
@@ -148,6 +149,16 @@ module VocabulariSe
 							@monitor.synchronize do 
 								queue.delete e_handler, e_query
 							end
+
+						rescue HttpError => e
+							# Bad luck. Forget it dude :-)
+							# Should not happen. Mendeley doc states that we only have to wait and retry later...
+							rdebug "/#{key}/ failed for %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority/2) ]
+							rdebug "/#{key}/ remote API is broken at this time %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority / 2) ]
+							@monitor.synchronize do 
+								queue.delete e_handler, e_query
+							end
+
 						rescue DeferredRequest
 							# execution failed, try it again later
 							rdebug "/#{key}/ failed for %s, %s, %s" % [ e_handler, e_query.inspect, (e_priority/2) ]
@@ -202,7 +213,9 @@ module VocabulariSe
 						@config.cache[cache_key] = result 
 						@config.cache.set_timeout cache_key, handler_instance.cache_duration
 					end
-				rescue DeferredRequest => e
+
+				rescue DeferredRequest, HttpError => e
+					# authorized exceptions
 					raise e
 				rescue Exception => e
 					puts e.message

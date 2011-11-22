@@ -130,7 +130,13 @@ module VocabulariSe
 			raise ArgumentError, "no 'uuid' found" unless query.include? 'uuid'
 			uuid = query['uuid']
 
-			resp = @config.mendeley_client.documents_details( :id => uuid )
+			begin
+				resp = @config.mendeley_client.documents_details( :id => uuid )
+				return resp
+			rescue 
+				raise Crawler::HttpError
+			end
 		end
 	end
+
 end
