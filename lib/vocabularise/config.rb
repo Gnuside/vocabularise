@@ -83,6 +83,7 @@ module VocabulariSe
 			DataMapper.auto_upgrade!                                            
 
 
+			raise ConfigurationError, "no dictionary specified" unless json.include? "dictionary"
 			# setup cache & queue
 			# 2 hours
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
