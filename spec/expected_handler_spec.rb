@@ -39,6 +39,7 @@ describe 'ExpectedHandler' do
 
 	before(:all) do
 		FileUtils.mkdir_p "tmp/test"
+=begin
 		json = {
 			'cache_dir' => 'tmp/test/cache',
 			'cache_duration_min' => 3600,
@@ -52,6 +53,7 @@ describe 'ExpectedHandler' do
 			"db_username" => "vocabularise",
 			"db_password" => "vocapass",
 			"dictionary" => "config/dictionary.txt"
+=end
 =begin
 			"db_adapter"   => 'sqlite3',
 			"db_database"  => 'tmp/test/cache.sqlite3',
@@ -61,7 +63,7 @@ describe 'ExpectedHandler' do
 =end
 		}
 
-		@config = VocabulariSe::Config.new json
+		@config = VocabulariSe::Config.new @config_json
 		@crawler = VocabulariSe::Crawler.new @config
 
 		# set crawler

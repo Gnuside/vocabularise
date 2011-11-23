@@ -1,7 +1,8 @@
 
 # all includes
 require 'data_mapper'
-require 'dm-core'                                                               
+require 'dm-core'
+require 'json'
 
 RSpec.configure do |config|
 	config.fail_fast = true
@@ -21,6 +22,9 @@ RSpec.configure do |config|
 			"host"      => "",                                          
 			"timeout"   => 15000                                        
 		} 
+
+		config_path = File.expand_path 'spec/config/vocabularise.json'
+		@config_json = JSON.parse File.open( config_path ).read
 
 		#DataMapper::Logger.new(STDERR, :debug)
 		DataMapper::Logger.new(STDERR, :info)
