@@ -94,11 +94,17 @@ module VocabulariSe
 
 			# make the request
 			rdebug "make the request"
-			resp = @config.mendeley_client.documents_tagged({  
-				"tag" => tag,                                        
-				"page" => page,                                       
-				"items" => ITEMS_PER_PAGE
-			})                                                      
+			resp = nil
+			begin
+				resp = @config.mendeley_client.documents_tagged({  
+					"tag" => tag,                                        
+					"page" => page,                                       
+					"items" => ITEMS_PER_PAGE
+				})                                                      
+			rescue 
+				raise Crawler::HttpError
+			end
+
 			rdebug "request ok"
 			documents = []
 			resp["documents"].each do |resp_doc|                        
