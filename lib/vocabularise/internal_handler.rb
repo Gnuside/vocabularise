@@ -28,6 +28,7 @@ module VocabulariSe
 				[ handle, query.inspect, priority ]
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			intag = query['tag']
+			raise ArgumentError, "'tag' must not be nil" if intag.nil?
 
 			tags = Hash.new 0                                                   
 
