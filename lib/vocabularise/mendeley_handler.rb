@@ -8,9 +8,9 @@ module VocabulariSe
 	HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE = "mendeley:document:search_tagged:page"
 	HANDLE_MENDELEY_DOCUMENT_DETAILS = "mendeley:document:details"
 
-	PRELOADED_PAGES = 2
+	PRELOADED_PAGES = 5
 	REQUIRED_PAGES = 1
-	ITEMS_PER_PAGE = 5
+	ITEMS_PER_PAGE = 20
 
 	class MendeleyDocumentSearchTagged < RequestHandler
 
