@@ -8,11 +8,12 @@ module VocabulariSe
 	class InternalAggregating < RequestHandler
 
 		handles HANDLE_INTERNAL_CONTROVERSIAL
-		cache_result
+		cache_result DURATION_SHORT
 
 		# limit the number of considered articles for computation               
 		ARTICLE_LIMIT = 3                                                       
-		def tag_hotness config, tags_arr                                        
+
+		def tag_hotness tags_arr                                        
 			search_expr = '"%s"' % tags_arr.sort.join('" AND "')                
 			puts search_expr                                                    
 
@@ -48,24 +49,27 @@ module VocabulariSe
 		end 
 
 		process do |handle, query, priority|
-			intag = query[:query]
+			@debug = true
+			rdebug "handle = %s, query = %s, priority = %s " % \
+				[ handle, query.inspect, priority ]
+			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
+			intag = query['tag']
+			raise ArgumentError, "'tag' must not be nil" if intag.nil?
+
 			# Association audacieuse                                            
 			workspace = {}                                                      
 			documents = Set.new                                                 
 			related_tags = @crawler.request \
 				HANDLE_INTERNAL_RELATED_TAGS, 
-				query
+				{ "tag" => intag }
 
 			related_tags.each do |reltag,reltag_count|                          
-				hotness = tag_hotness( config, [reltag, intag] )                
+				hotness = tag_hotness( [reltag, intag] )                
 
 				workspace[reltag] = {                                           
 					:hotness => hotness                                         
 				}                                                               
 			end                                                                 
-
-			puts "AlgoII - all tags :"                                          
-			pp workspace.keys                                                   
 
 			# sort workspace keys (tags) by slope                               
 			result = workspace.sort{ |a,b| a[1][:hotness] <=> b[1][:hotness] }.reverse
