@@ -50,7 +50,8 @@ describe 'ExpectedHandler' do
 			"db_database" => "vocabularise_test",
 			"db_host" => "localhost",
 			"db_username" => "vocabularise",
-			"db_password" => "vocapass"
+			"db_password" => "vocapass",
+			"dictionary" => "config/dictionary.txt"
 =begin
 			"db_adapter"   => 'sqlite3',
 			"db_database"  => 'tmp/test/cache.sqlite3',
