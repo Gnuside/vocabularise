@@ -18,29 +18,47 @@ require 'vocabularise/internal_handler'
 
 require 'spec/spec_helper'
 
+module VocabulariSe
 
-#FIXME: use the same configuration as the big app'
+	#
+	# A class used to inject data to 
+	#
+	class InjectorApp
+		def initialize args
 
-#@config = VocabulariSe::Config.new json
-#@crawler = VocabulariSe::Crawler.new @config
+			# set config
+			@json = JSON.load File.open 'spec/config/vocabularise.json'
+			@config = VocabulariSe::Config.new @json
+			# set crawler
+			@crawler = VocabulariSe::Crawler.new @config
+		end
 
-# set crawler
-#@crawler.run
+		def exec
 
-dictionary_path = "config/dictionary.example"
+			File.readlines( @config.dictionary ).each do |line|
+				line = line.strip
 
-File.readlines( dictionary_path ).each do |line|
-	line = line.strip
-	next if line =~ /^\s*#/ ;
-	next if line =~ /^\s*$/ ;
+				case line
+				when /^\s*#/, /^\s*$/ then
+					next
+				else
+					intag = line.downcase
+					intag.gsub!(/\s+/,'')
 
-	intag = line.downcase
-	intag.gsub!(/\s+/,'')
+					begin
+						@crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS,
+							{ "tag" => intag }
+					rescue
+						# it doesn't hurt me. Never ;-)
+					end
+				end
+			end
 
-	pp intag
-
-	# @crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS,
-	#	{ "tag" => intag }
+		end
+	end
 end
+
+app = VocabulariSe::InjectorApp.new ARGV
+app.exec
 
 exit 1
