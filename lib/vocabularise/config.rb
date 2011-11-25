@@ -5,6 +5,7 @@ require 'wikipedia'
 require 'data_mapper'
 require 'dm-core'                                                               
 
+require 'vocabularise/model'
 require 'vocabularise/cache'
 require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia_ext'
@@ -25,6 +26,7 @@ module VocabulariSe
 		# cache store
 		attr_reader :cache
 		attr_reader :counter
+		attr_reader :dictionary
 
 		def initialize json
 			# default values
@@ -33,6 +35,7 @@ module VocabulariSe
 			@wikipedia_client = nil
 			@counter = nil
 			@database = nil
+			@dictionary = nil
 
 			load_json json
 			validate	
@@ -84,6 +87,8 @@ module VocabulariSe
 
 
 			raise ConfigurationError, "no dictionary specified" unless json.include? "dictionary"
+			@dictionary = json['dictionary']
+
 			# setup cache & queue
 			# 2 hours
 			raise ConfigurationError, "no consumer_key specified" unless json.include? "consumer_key"
