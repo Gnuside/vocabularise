@@ -10,5 +10,5 @@
     "db_host" : "localhost",
     "db_username" : "vocabularise",
     "db_password" : "vocapass",
-    "dictionary" : "config/dictionary.txt"
+    "dictionary" : "config/dictionary.example"
 }
