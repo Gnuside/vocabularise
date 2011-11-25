@@ -6,5 +6,10 @@
   "consumer_secret" : "****",
   "db_adapter" : "sqlite3",
   "db_database" : "vocabularise.sqlite3",
+
   "dictionary" : "config/dictionary.txt"
+
+  "mendeley_preloaded_pages" : 5,
+  "mendeley_required_pages" : 1,
+  "mendeley_items_per_pages" : 20
 }

@@ -10,5 +10,10 @@
     "db_host" : "localhost",
     "db_username" : "vocabularise",
     "db_password" : "vocapass",
-    "dictionary" : "config/dictionary.example"
+
+    "dictionary" : "config/dictionary.example",
+
+    "mendeley_preloaded_pages" : 5,
+    "mendeley_required_pages" : 1,
+    "mendeley_items_per_pages" : 20
 }
