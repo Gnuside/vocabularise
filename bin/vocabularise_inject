@@ -12,6 +12,7 @@ require 'json'
 require 'vocabularise/model'
 require 'vocabularise/config'
 require 'vocabularise/crawler'
+require 'vocabularise/queue'
 require 'vocabularise/request_handler'
 require 'vocabularise/mendeley_handler'
 require 'vocabularise/internal_handler'
@@ -43,11 +44,12 @@ module VocabulariSe
 					next
 				else
 					intag = line.downcase
-					intag.gsub!(/\s+/,'')
+					intag.gsub!(/\s+/,' ')
 
 					begin
 						@crawler.request VocabulariSe::HANDLE_INTERNAL_RELATED_TAGS,
-							{ "tag" => intag }
+							{ "tag" => intag },
+							Queue::PRIORITY_LOW
 					rescue
 						# it doesn't hurt me. Never ;-)
 					end
