@@ -6,6 +6,7 @@ require 'vocabularise/queue'
 require 'vocabularise/hit_counter'
 
 require 'rdebug/base'
+require 'pp'
 
 module VocabulariSe
 
