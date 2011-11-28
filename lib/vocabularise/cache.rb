@@ -18,7 +18,7 @@ module VocabulariSe
 		def initialize min, max
 			@timeout = {
 				TIMEOUT_SHORT => min,
-				TIMEOUT_NORMAL => (min + min + max)/3,
+				TIMEOUT_NORMAL => Math.exp((Math.log(min) + Math.log(max))/2).to_i,
 				TIMEOUT_LONG => max
 			}
 
