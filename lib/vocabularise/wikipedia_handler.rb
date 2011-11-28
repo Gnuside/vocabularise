@@ -38,7 +38,7 @@ module VocabulariSe
 			rdebug handle_str
 
 			raise ArgumentError, "no 'query' found" unless query.include? 'query'
-			page = query['query']
+			search_expr = query['query']
 
 			search_json = @config.wikipedia_client.search( search_expr )          
 			return search_json
