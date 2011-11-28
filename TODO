@@ -1,0 +1,14 @@
+JSON structure = {
+	"algorithm":"expected",
+	"result": [
+		["change", {
+			"apparations": 5,
+			…
+			"links": [
+				{"href": "http://example.com", "text": "Example"},
+				{"href": "http://example.com", "text": "Example2"}
+			]
+		],
+		…
+	]
+}

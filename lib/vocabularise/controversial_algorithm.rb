@@ -7,6 +7,7 @@ module VocabulariSe
 		# limit the number of considered articles for computation
 		ARTICLE_LIMIT = 3
 		def tag_hotness config, tags_arr
+			links = []
 			search_expr = '"%s"' % tags_arr.sort.join('" AND "')
 			puts search_expr
 
@@ -16,6 +17,10 @@ module VocabulariSe
 			score = 0
 			limit = ARTICLE_LIMIT
 			resp["query"]["search"].each do |article_desc|
+				links << {
+					:text => article_desc["title"],
+					:url => "http://en.wikipedia.org/wiki/%s" % article_desc["title"]
+				}
 				talk_title = "Talk:%s" % article_desc["title"]
 				puts "  - " + talk_title
 				#pp article_desc
@@ -36,7 +41,7 @@ module VocabulariSe
 				break if limit <= 0
 			end
 			puts "  * score = %s" % score
-			return score
+			return score, links
 		end
 
 		def exec intag, related_tags
@@ -45,10 +50,11 @@ module VocabulariSe
 			documents = Set.new
 			related_tags = VocabulariSe::Utils.related_tags config, intag
 			related_tags.each do |reltag,reltag_count|
-				hotness = tag_hotness( config, [reltag, intag] )
+				hotness, links = tag_hotness( config, [reltag, intag] )
 
 				workspace[reltag] = {
-					:hotness => hotness
+					:hotness => hotness,
+					:links => links
 				}
 			end
 

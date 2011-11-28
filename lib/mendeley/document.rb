@@ -36,6 +36,16 @@ module Mendeley
 			@long_json["uuid"]
 		end
 
+		# Instance
+		def url
+			@long_json["mendeley_url"]
+		end
+
+		# article title
+		def title
+			@long_json["title"]
+		end
+
 		# tags
 		#
 		def tags

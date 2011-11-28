@@ -2,7 +2,7 @@
 !!! 5
 %html
 	%head
-		%title= "vocabulari.se :: %s" % @title
+		%title= "vocabulari.se - %s" % @title
 		-# google droid fonds
 		%link{:rel => "stylesheet", :type => "text/css", :href => 'http://fonts.googleapis.com/css?family=Droid+Sans+Mono' }
 		-# blueprint css
@@ -41,15 +41,8 @@
 						%li.span-4
 							%a{:href => 'http://vocabularise.blogspot.com/', :target => '_blank' } news
 						%li.span-4.last
-							%a{:href => '/contact'} contact
+							%a{:href => '/credits'} credits
 
-						%li.span-6
-							%small
-								%a{:href => '/status/cache'} cache status
-							
-						%li.span-6.last
-							%small
-								%a{:href => '/status/queue'} queue status
 					%hr.tag
 					%div.span-9.prepend-3.last
 						%a{ :href=> "https://twitter.com/vocabularise", :class => "twitter-follow-button", "data-show-count"=>"false", :"data-align" => "left"} Follow @vocabularise

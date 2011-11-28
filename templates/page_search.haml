@@ -1,59 +1,76 @@
 -# vim: set ts=4 sw=4 noet :
 - content_for :headers do
+	%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/fancybox/jquery.fancybox-1.3.4.css" }
+	%link{:rel => "stylesheet", :type => "text/css", :media => "screen", :href=>"/css/jquery.jscrollpane.css" }
 	%script{ :type => "text/javascript", :src=>"/js/page_search.js" }
+	%script{ :type => "text/javascript", :src=>"/js/jquery.mousewheel.min.js" }
+	%script{ :type => "text/javascript", :src=>"/js/jquery.jscrollpane.min.js" }
+	%script{ :type => "text/javascript", :src=>"/fancybox/jquery.fancybox-1.3.4.pack.js" }
 
 #search_search.span-24.last
 	%strong vocabulari.se the word
 	= haml :widget_search
 
+#share.prepend-8.span-8.last
+	%div{ :class=>"addthis_toolbox addthis_default_style "}
+		%a{ :class=>"addthis_button_facebook_like", :"fb:like:layout" => "button_count" }
+		%a{ :class=>"addthis_button_tweet", :"tw:via" => "vocabularise", :"tw:related" => "vocabularise" }
+		%a{ :class=>"addthis_button_google_plusone", :"g:plusone:size"=>"medium" }
+		//%a{ :class=>"addthis_counter addthis_pill_style" }
+		%script{ :type=>"text/javascript", :src=>"http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4e8afab213fefadd" }
 
 .col_header.span-24.last
-	.tag_expected.span-7
-		%img{ :src => "/images/top-arrow-green.png" }
-	.tag_controversial.span-10
-		%img{ :src => "/images/top-arrow-orange.png" }
-	.tag_aggregating.span-7.last
-		%img{ :src => "/images/top-arrow-blue.png" }
-
-%hr
-
-.col_content.span-24.last
-	.tag_expected.span-7.colborder
-		%h2
+	.tag.tag_expected.span-8
+		%h2<
 			%a>< (un)
 			expected
-
-		%ul#list_expected.taglist
-			%li<
-				%img(src="/images/ajax-loader-bar.gif")
-
-	.tag_controversial.span-8.colborder
-		%h2
+		%p<
+			(related scientific articles)
+		.arrow.jspDisabled
+			%img.top_arrow{ :src => "/images/top-arrow-expected.png", :height => 26, :width => 59 }
+	.tag.tag_controversial.span-8
+		%h2<
 			%a>< (un)
 			controversial
-
-		%ul#list_controversial.taglist
-			%li<
-				%img(src="/images/ajax-loader-bar.gif")
-
-	.tag_aggregating.span-7.last
-		%h2
+		%p<
+			(related Wikipedia entries)
+		.arrow.jspDisabled
+			%img.top_arrow{ :src => "/images/top-arrow-controversial.png", :height => 26, :width => 59 }
+	.tag.tag_aggregating.span-8.last
+		%h2<
 			%a>< (dis)
 			aggregating
+		%p<
+			(related Mendeley disciplines)
+		.arrow.jspDisabled
+			%img.top_arrow{ :src => "/images/top-arrow-aggregating.png", :height => 26, :width => 59 }
 
+.col_content.span-24.last
+	.fixed_tagheight.tag_expected.span-8
+		%ul#list_expected.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif" width="220" height="19" alt="")
+
+	.fixed_tagheight.tag_controversial.span-8
+		%ul#list_controversial.taglist
+			%li<
+				%img(src="/images/ajax-loader-bar.gif" width="220" height="19" alt="")
+
+	.fixed_tagheight.tag_aggregating.span-8.last
 		%ul#list_aggregating.taglist
 			%li<
-				%img(src="/images/ajax-loader-bar.gif")
-
-%hr
+				%img(src="/images/ajax-loader-bar.gif" width="220" height="19" alt="")
 
 .col_footer
-	.tag_expected.span-7
-		%img{ :src => "/images/bottom-arrow-green.png" }
+	.tag.tag_expected.span-8
+		.arrow.jspDisabled
+			%img.bottom_arrow{ :src => "/images/bottom-arrow-expected.png", :height => 26, :width => 59 }
 
-	.tag_controversial.span-10
-		%img{ :src => "/images/bottom-arrow-orange.png" }
+	.tag.tag_controversial.span-8
+		.arrow.jspDisabled
+			%img.bottom_arrow{ :src => "/images/bottom-arrow-controversial.png", :height => 26, :width => 59 }
 
-	.tag_aggregating.span-7.last
-		%img{ :src => "/images/bottom-arrow-blue.png" }
+	.tag.tag_aggregating.span-8.last
+		.arrow.jspDisabled
+			%img.bottom_arrow{ :src => "/images/bottom-arrow-aggregating.png", :height => 26, :width => 59 }
 

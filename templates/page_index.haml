@@ -1,20 +1,12 @@
 -# vim: set ts=4 sw=4 noet :
 - content_for :headers do
 	%script{ :type => "text/javascript", :src=>"/js/page_index.js" }
+	%script{ :type => "text/javascript", :src=>"/js/jquery.dimensions.min.js" }
+	%script{ :type => "text/javascript", :src=>"/js/jquery.tooltip.min.js" }
 
 .span-12.prepend-6.last
 
-	%h2 The social network of your research objects
-
-	/
-		%p.alt
-			What do you look for when you want to know more about a research topic? A definition!
-			%br/
-			Sure. But there is more to knowledge than definitions, especially when you dig into new, unsolidified or controversial research objects.
-			%br/
-			Objects matter, their relationships to other objects matter. The proofs of these relationships matter.
-			%br/
-			This is why vocabulari.se offers the exploration of a social network of research objects.
+	%h2#title The social network of your research objects
 
 	#search_index
 		%strong vocabulari.se
@@ -23,19 +15,19 @@
 			(examples:&nbsp;
 			%a{ :href=>"/search?query=climate+change" }>< climate change
 			,
-			%a{ :href=>"/search?query=neutrino" } neutrino 
+			%a{ :href=>"/search?query=neutrino" } neutrino
 			or any other one&nbsp;/&nbsp;two-word expression)
 
 	%p One search, three types of relationships:
 	%ul
-		%li.tag_expected 
+		%li.tag_expected
 			%strong (un)expected
 			relationships and popular publications that assert them.
-		%li.tag_controversial 
-			%strong (un)controversial 
+		%li.tag_controversial
+			%strong (un)controversial
 			relationships and hot Wikipedia entries that document them.
-		%li.tag_aggregating 
-			%strong (dis)aggregating 
+		%li.tag_aggregating
+			%strong (dis)aggregating
 			relationships and the scientific disciplines they bring together.
 
 	%p
@@ -44,7 +36,33 @@
 		To acknowledge the political relevance of your vocabulary,
 		%br/
 		To spice up your grant proposals and research papers:
-	%h2 
-		%a{ :href=>"/" } vocabulari.se 
+	%h2
+		%a{ :href=>"/" } vocabulari.se
 		your research!
 
+	#tooltip_title(style="display:none;")
+		%hr.tag.tag_expected
+		%hr.tag.tag_controversial
+		%hr.tag.tag_aggregating
+		%p<
+			What do you look for when you want to know more about a research topic?
+		%p<
+			A definition!
+		%p<
+			Sure. But there is more to knowledge than definitions, especially when you dig into new, unsolidified or controversial research objects.
+			%br/
+			Objects matter, their relationships to other objects matter. The proofs of these relationships matter.
+		%p<
+			This is why vocabulari.se offers the exploration of a social network of research objects.
+		%hr.tag.tag_expected
+		%hr.tag.tag_controversial
+		%hr.tag.tag_aggregating
+	#tooltip_expected(style="display:none;")
+		%p<
+			search returns words co-tagged unfrequently yet effectively with the query in research publications, ranked according to readership on Mendeley, and the associated publications
+	#tooltip_controversial(style="display:none;")
+		%p<
+			search returns words co-appearing with the query in the most discussed Wikipedia entries, according to controversial power, and the associated entries
+	#tooltip_aggregating(style="display:none;")
+		%p<
+			search returns words co-tagged with the query in research publications, ranked according to the diversity of readers&rsquo; disciplines on Mendeley, and the associated disciplines

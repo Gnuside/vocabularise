@@ -1,4 +1,3 @@
-
 body {
     font-family: 'Droid Sans Mono', sans-serif;
     background: white;
@@ -7,8 +6,15 @@ body {
 a { color: #444; text-decoration: underline; }
 a:hover {  color: black; text-decoration: underline; }
 
+ol { margin-left: 1em; }
+
+dl, dt, dd { margin-bottom: 1em; }
+dl { margin: 2em 0; }
+dt { color: #7f7f7f; }
+dd img { vertical-align: middle; }
+
 #footer {
-    margin-bottom: 1em;
+    margin: 1em 0;
 }
 
 #footer ul {
@@ -20,8 +26,8 @@ a:hover {  color: black; text-decoration: underline; }
 #footer ul li {
     list-style: none;
     text-transform: uppercase;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 #content {
@@ -68,56 +74,65 @@ a:hover {  color: black; text-decoration: underline; }
 #footer,
 .col_header,
 .col_content,
-.col_footer {
-    text-align: center;
-}
+.col_footer { text-align: center; }
 
-.col_header {
-    margin-bottom: 17px;
-}
+#tooltip { background: white; font-size: 95%; opacity: 0.95; filter: alpha(opacity=95); position: absolute; width: 320px; }
+#tooltip.tooltip_expected { background: #3ca52b; }
+#tooltip.tooltip_controversial { background: #e75018; }
+#tooltip.tooltip_aggregating { background: #008bd0; }
+#tooltip p { margin: 10px; }
+
+.col_header .tag { border-bottom: 2px; border-color: #7f7f7f; border-style: dotted; padding-bottom: .5em; }
+.col_footer .tag { border-top: 2px; border-color: #7f7f7f; border-style: dotted; padding-top: .5em; }
+
+div.arrow { cursor: pointer; height: 26px; }
 
 h1 { margin-top: 0.5em; }
-h1 a { color: #000000; text-decoration:none; text-transform: capitalize; }
+h1 a { color: #000000; text-decoration:none; }
 
 h2 { font-size: 130%; text-align: center; }
 
-.tag_expected { color: #3ca52b; border-color: #3ca52b; }
-.tag_controversial { color: #e75018; border-color: #e75018; }
-.tag_aggregating { color: #008bd0; border-color: #008bd0; }
+.tag_expected { color: #3ca52b; }
+.tag_controversial { color: #e75018; }
+.tag_aggregating { color: #008bd0; }
 
-.col_content h2 { font-weight: bold; }
+.col_header h2 { color: inherit; cursor: pointer; font-size: 200%; margin-bottom:0; text-decoration: underline; }
+.col_header p { color: #7f7f7f; }
+.tag_expected h2 a { color: #7f7f7f; }
+.tag_expected h2.reverse { color: #7f7f7f; }
+.tag_expected h2.reverse a { color: #3ca52b; }
 
-.col_content .tag_expected h2 { color: #3ca52b; }
-.col_content .tag_expected h2 a { color: #7f7f7f; }
-.col_content .tag_expected h2.reverse { color: #7f7f7f; }
-.col_content .tag_expected h2.reverse a { color: #3ca52b; }
+/*.col_content div { overflow: hidden; overflow-y: auto; }*/
+.col_content div.fixed_tagheight { height: 19px; }
+.tag_controversial h2 a { color: #7f7f7f; }
+.tag_controversial h2.reverse { color: #7f7f7f; }
+.tag_controversial h2.reverse a { color: #e75018; }
 
-.col_content .tag_controversial h2 { color: #e75018; }
-.col_content .tag_controversial h2 a { color: #7f7f7f; }
-.col_content .tag_controversial h2.reverse { color: #7f7f7f; }
-.col_content .tag_controversial h2.reverse a { color: #e75018; }
+.tag_aggregating h2 a { color: #7f7f7f; }
+.tag_aggregating h2.reverse { color: #7f7f7f; }
+.tag_aggregating h2.reverse a { color: #008bd0; }
 
-.col_content .tag_aggregating h2 { color: #008bd0; }
-.col_content .tag_aggregating h2 a { color: #7f7f7f; }
-.col_content .tag_aggregating h2.reverse { color: #7f7f7f; }
-.col_content .tag_aggregating h2.reverse a { color: #008bd0; }
-
-.col_content li {
-    list-style: none;
-    text-transform: capitalize;
-}
+ul.taglist { margin-bottom: 0; }
+.col_content ul { position: relative; }
+.col_content li { list-style: none; text-transform: capitalize; }
 
 .col_content li a { text-decoration: none; }
 .col_content li a:hover { text-decoration: underline; cursor: pointer; }
 
+p.powered img { vertical-align: middle; }
+
 hr.tag { border: 0; display: block; height: 1px; margin: 0 0 5px 0; }
-hr.tag_expected { background-color: #3ca52b; color: #3ca52b; }
-hr.tag_controversial { background-color: #e75018; color: #e75018; }
-hr.tag_aggregating { background-color: #008bd0; color: #008bd0; }
+#tooltip hr.tag { margin: 0 0 2px 0; }
+hr.tag_expected { background-color: #3ca52b; }
+hr.tag_controversial { background-color: #e75018; }
+hr.tag_aggregating { background-color: #008bd0; }
 
 #footer ul li {
-    list-style: none;
-    text-transform: uppercase;
-    margin: 0px;
-    padding: 0px;
+	list-style: none;
+	text-transform: uppercase;
+	margin: 0px;
+	padding: 0px;
 }
+
+#fancybox-content h3 { margin-bottom: 0; text-transform: capitalize; }
+#fancybox-content p.rank { color: #000000; }
