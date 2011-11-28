@@ -21,7 +21,11 @@ module VocabulariSe
 			raise ArgumentError, "no 'page' found" unless query.include? 'page'
 			page = query['page']
 
-			page_json = @config.wikipedia_client.request_page page
+			begin
+				page_json = @config.wikipedia_client.request_page page
+			rescue Timeout::Error => e                                      
+				raise Crawler::HttpError
+			end
 			return page_json
 		end
 	end
@@ -40,7 +44,11 @@ module VocabulariSe
 			raise ArgumentError, "no 'query' found" unless query.include? 'query'
 			search_expr = query['query']
 
-			search_json = @config.wikipedia_client.search( search_expr )          
+			begin
+				search_json = @config.wikipedia_client.search( search_expr )          
+			rescue Timeout::Error => e                                      
+				raise Crawler::HttpError
+			end
 			return search_json
 		end
 	end
