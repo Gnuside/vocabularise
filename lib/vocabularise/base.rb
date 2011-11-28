@@ -21,7 +21,7 @@ module VocabulariSe
 		set :haml, :format => :html5 # default Haml format is :xhtml
 
 		set :static, true
-		set :public, File.expand_path( File.dirname(__FILE__) + '/../../static' )
+		set :public_folder, File.expand_path( File.dirname(__FILE__) + '/../../static' )
 		set :views, File.expand_path( File.dirname(__FILE__) + '/../../templates' )
 
 		mime_type :ttf, "application/octet-stream"
@@ -89,8 +89,8 @@ module VocabulariSe
 			begin
 				settings.crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS, 
-					{ :query => @query },
-					Crawler::MODE_INTERACTIVE
+					{ "tag" => @query },
+					Queue::PRIORITY_HIGH
 
 			rescue Crawler::DeferredRequest
 				# does not hurt ;-)
@@ -118,7 +118,7 @@ module VocabulariSe
 			begin
 				result = settings.crawler.request \
 					HANDLE_INTERNAL_EXPECTED,
-					{ "query" => @query }, 
+					{ "tag" => @query }, 
 					Queue::PRIORITY_HIGH
 
 =begin
@@ -145,8 +145,8 @@ module VocabulariSe
 			begin
 				result = settings.crawler.request \
 					HANDLE_INTERNAL_CONTROVERSIAL,
-					{ :query => @query },
-					Crawler::MODE_INTERACTIVE
+					{ "tag" => @query },
+					Queue::PRIORITY_HIGH
 
 =begin
 			result = settings.manager.request :controversial, @query
@@ -172,8 +172,8 @@ module VocabulariSe
 			begin
 				result = settings.crawler.request \
 					HANDLE_INTERNAL_AGGREGATING,
-					{ :query => @query },
-					Crawler::MODE_INTERACTIVE
+					{ "tag" => @query },
+					Queue::PRIORITY_HIGH
 
 =begin
 			result = settings.manager.request :aggregating, @query
