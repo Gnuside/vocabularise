@@ -10,7 +10,7 @@ module VocabulariSe
 
 	PRELOADED_PAGES = 5
 	REQUIRED_PAGES = 1
-	ITEMS_PER_PAGE = 20
+	ITEMS_PER_PAGE = 5
 
 	class MendeleyDocumentSearchTagged < RequestHandler
 
