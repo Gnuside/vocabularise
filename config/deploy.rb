@@ -4,7 +4,7 @@ require "bundler/capistrano"
 
 # use multi-stages
 set :default_stage, "development"
-set :stages, %w(production development)
+set :stages, %w(production development testing)
 require 'capistrano/ext/multistage'
 
 set :application, "vocabularise"
