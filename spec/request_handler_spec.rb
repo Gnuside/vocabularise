@@ -9,6 +9,8 @@ require 'rspec'
 require 'json'
 
 require 'vocabularise/model'
+require 'vocabularise/config'
+require 'vocabularise/crawler'
 require 'vocabularise/request_handler'
 
 require 'spec/spec_helper'
