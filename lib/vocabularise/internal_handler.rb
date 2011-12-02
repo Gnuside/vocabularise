@@ -137,16 +137,16 @@ module VocabulariSe
 				{ "page" => intag }
 
 			page = Wikipedia::Page.new page_json                                
-			page.links.each { |tag| tags[tag] += 1 }                            
+			page.links.each do |tag| 
+				# prevent modification on a frozen string
+				ftag = tag.dup 
 
-			final_tags = []
-			tags.keys.each do |tag|                                             
-				ftag = tag.dup # prevent modification on a frozen string
+				# cleanup wikipedia semantics for links categories
 				ftag.gsub!(/ \(.*\)$/,'')
-				final_tags << tag
-			end                                                                 
-			# FIXME: cleanup wikipedia-specific tags                            
-			return final_tags
+				tags[ftag] += 1 
+			end				
+
+			return tags
 		end
 	end
 
