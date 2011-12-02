@@ -20,44 +20,51 @@ module VocabulariSe
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			intag = query['tag']
 
-			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS, 
+			related_tags = @crawler.request HANDLE_INTERNAL_RELATED_TAGS,
 				{ "tag" => intag }
 
-			workspace = {}                                                      
-			documents = Set.new   
+			workspace = {}
+			documents = Set.new
 
-			# for each related tag, 
+			# for each related tag,
 			# look for documents related to both initial & related tag
 			# then compute slope for each document
-			related_tags.each do |reltag,reltag_count|                          
-				# sum of views for all documents                                
-				views = 1                                                       
-				apparitions = reltag_count                                      
+			related_tags.each do |reltag,reltag_count|
+				ws_tag = {
+					:links => [],
+					:views => 0,
+					:apparitions => 0,
+					:slope => 0
+				}
 
-				limit = 1                                                       
+				# sum of views for all documents
+				views = 1
+				apparitions = reltag_count
 
+				limit = 1
 				related_documents = @crawler.request \
-					HANDLE_INTERNAL_RELATED_DOCUMENTS, 
+					HANDLE_INTERNAL_RELATED_DOCUMENTS,
 					{"tag_list" => [intag, reltag]}
 
 				rdebug "related docs to [%s,%s] : %s" % [ intag, reltag, related_documents.inspect ]
 
 				related_documents.each do |doc|
-					views += doc.readers            
-				end                                                         
+					views += doc.readers
+				end
+				slope =  apparitions.to_f / views.to_f
 
-				slope =  apparitions.to_f / views.to_f                          
-				workspace[reltag] = {                                           
-					:views => views,                                            
-					:apparitions => apparitions,                                
-					:slope => slope                                             
-				}                                                               
-			end                                                                 
+				ws_tag.merge!({
+					:views => views,
+					:apparitions => apparitions,
+					:slope => slope
+				})
+				workspace[reltag] = ws_tag
+			end
 
-			# sort workspace keys (tags) by increasing slope                    
+			# sort workspace keys (tags) by increasing slope
 			result = workspace.sort{ |a,b| a[1][:slope] <=> b[1][:slope] }.reverse
 
-			return result      
+			return result
 		end
 	end
 end
