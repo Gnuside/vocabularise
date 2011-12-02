@@ -6,7 +6,7 @@ role :db,  "vocabulari.se", :primary => true # This is where Rails migrations wi
 set :user, "vocabularise"
 set :use_sudo, false
 
-set :deploy_to, "/home/vocabularise"
+set :deploy_to, "/home/vocabularise/production"
 set :deploy_env, 'production'
 
 # limit number of releases on server
