@@ -37,31 +37,10 @@ describe 'RequestHandler' do
 
 	before(:all) do
 		FileUtils.mkdir_p "tmp/test"
-		json = {
-			'cache_dir' => 'tmp/test/cache',
-			'cache_duration_min' => 3600,
-			'cache_duration_max' => 7200,
-			'consumer_key' => 'd0d46ad71eb6691a44fb608424ad71c704e160d23',
-			'consumer_secret' => '4fb7cd67cd36e341be6966db0b4dd261',
 
-			"db_adapter" => "mysql",
-			"db_database" => "vocabularise_test",
-			"db_host" => "localhost",
-			"db_username" => "vocabularise",
-			"db_password" => "vocapass"
-=begin
-			"db_adapter"   => 'sqlite3',
-			"db_database"  => 'tmp/test/cache.sqlite3',
-			"db_username"  => "",
-			"db_password"  => "",
-			"db_host"      => "",
-=end
-		}
-
-		@config = VocabulariSe::Config.new json
+		@config = VocabulariSe::Config.new @config_json
 		@crawler = VocabulariSe::Crawler.new @config
 
-		#DataMapper::Logger.new(STDERR, :debug)
 		# set crawler
 		@crawler.run
 	end
