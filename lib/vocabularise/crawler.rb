@@ -193,7 +193,7 @@ module VocabulariSe
 		def process handle, query, priority
 			handle_str = "handle = %s, query = %s, priority = %s" % [ handle, query.inspect, priority ]
 			rdebug handle_str
-			sleep SLEEP_TIME #DEBUG FIXME
+			sleep SLEEP_TIME # FIXME : remove for production
 			found = false
 			handlers = find_handlers( handle )
 			rdebug "handlers => %s" % handlers.inspect
@@ -218,6 +218,11 @@ module VocabulariSe
 				rescue DeferredRequest, HttpError => e
 					# authorized exceptions
 					raise e
+				rescue DataMapper::Validations::ValidationErrors => e
+					# FIXME : log errors to separate file
+					puts e.message
+					pp e.backtrace
+					raise DeferredRequest
 				rescue Exception => e
 					puts e.message
 					pp e.backtrace
