@@ -85,7 +85,7 @@ function attach_fancybox ( li, tag_class, li_color ) {
 }
 
 function get_tag_data ( liElement, tag, li_color, color, tag_class, type ) {
-	var data = [], links, lisElements = $("ul#list_" + type).children(),
+	var data = [], links = [], lisElements = $("ul#list_" + type).children(),
 		rank = 0, tagLisElements, typeLisElements, tagRank = 0, factor, res_rgb;
 	// find rank
 	lisElements.each( function ( index ) {
