@@ -20,7 +20,7 @@ module VocabulariSe
 	class InternalRelatedTags < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS
-		cache_result DURATION_SHORT
+		cache_result DURATION_NORMAL
 
 		process do |handle, query, priority|
 			@debug = true
@@ -79,7 +79,7 @@ module VocabulariSe
 	class InternalRelatedTagsMendeley < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_MENDELEY
-		cache_result DURATION_SHORT
+		cache_result DURATION_NORMAL
 
 		process do |handle, query, priority|
 			@debug = true
@@ -127,7 +127,7 @@ module VocabulariSe
 	class InternalRelatedTagsWikipedia < RequestHandler
 
 		handles HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA
-		cache_result DURATION_SHORT
+		cache_result DURATION_NORMAL
 
 		process do |handle, query, priority|
 			@debug = true
@@ -163,7 +163,7 @@ module VocabulariSe
 	#
 	class InternalRelatedDocuments < RequestHandler
 		handles HANDLE_INTERNAL_RELATED_DOCUMENTS
-		cache_result DURATION_SHORT
+		cache_result DURATION_NORMAL
 
 		process do |handle, query, priority|
 			@debug = true
