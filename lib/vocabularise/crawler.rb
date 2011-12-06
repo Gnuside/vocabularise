@@ -22,7 +22,7 @@ module VocabulariSe
 		COUNTER_MENDELEY_CURRENT = :mendeley_current
 
 
-		SLEEP_TIME = 0.1
+		SLEEP_TIME = 0.001
 
 		def initialize config
 			@config = config
