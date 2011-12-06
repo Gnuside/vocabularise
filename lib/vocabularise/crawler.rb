@@ -215,8 +215,13 @@ module VocabulariSe
 						@config.cache.set_timeout cache_key, handler_instance.cache_duration
 					end
 
-				rescue DeferredRequest, HttpError => e
+				rescue DeferredRequest => e
 					# authorized exceptions
+					raise e
+				rescue HttpError => e
+					# authorized exceptions but remote problem
+					puts e.message
+					pp e.backtrace
 					raise e
 				rescue DataMapper::Validations::ValidationErrors => e
 					# FIXME : log errors to separate file
