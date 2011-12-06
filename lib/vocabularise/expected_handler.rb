@@ -49,6 +49,14 @@ module VocabulariSe
 				rdebug "related docs to [%s,%s] : %s" % [ intag, reltag, related_documents.inspect ]
 
 				related_documents.each do |doc|
+					ws_tag[:links] << { 
+						:url => doc.url, 
+						:text => (
+							if doc.title.size > 27 then doc.title[0..27] + "..."
+							else doc.title 
+							end )
+					}
+
 					views += doc.readers
 				end
 				slope =  apparitions.to_f / views.to_f
