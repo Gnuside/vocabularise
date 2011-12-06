@@ -86,7 +86,7 @@ function attach_fancybox ( li, tag_class, li_color ) {
 
 function get_tag_data ( liElement, tag, li_color, color, tag_class, type ) {
 	var data = [], links = [], lisElements = $("ul#list_" + type).children(),
-		rank = 0, tagLisElements, typeLisElements, tagRank = 0, factor, res_rgb;
+		rank = 0, tagLisElements, tagRank = 0, factor, res_rgb;
 	// find rank
 	lisElements.each( function ( index ) {
 		if ( tag === $(this).data("tag") ) {
@@ -103,8 +103,7 @@ function get_tag_data ( liElement, tag, li_color, color, tag_class, type ) {
 		data.push( '<h3 style="color: rgb(' + li_color[0] + ',' + li_color[1] + ',' + li_color[2] + ');">' + tag + "</h3>" );
 		links = $(liElement).data( "links" );
 	} else {
-		tagLisElements = $("div.tag_" + tag_class + " > ul.taglist").children();
-		typeLisElements = $("div.tag_" + type + " > ul.taglist").children();
+		tagLisElements = $("ul#list_" + tag_class).children();
 		// search rank in clicked list
 		tagLisElements.each( function (index) {
 			if ( tag === $(this).data("tag") ) {
@@ -113,7 +112,7 @@ function get_tag_data ( liElement, tag, li_color, color, tag_class, type ) {
 			}
 		});
 		// search links
-		typeLisElements.each( function () {
+		lisElements.each( function () {
 			if ( tag === $(this).data("tag") ) {
 				links = $(this).data("links");
 				return false;
