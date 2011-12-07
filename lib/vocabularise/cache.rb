@@ -120,6 +120,12 @@ module VocabulariSe
 
 				begin
 					resp.save
+				rescue DataMapper::Validations::ValidationErrors => e
+					pp resp.errors
+					#STDERR.puts CacheEntry.errors
+					STDERR.puts e.message
+					transaction.rollback
+					raise e
 				rescue DataMapper::SaveFailureError => e
 					pp resp.errors
 					#STDERR.puts CacheEntry.errors
