@@ -46,6 +46,9 @@ module VocabulariSe
 					HANDLE_INTERNAL_RELATED_DOCUMENTS,
 					{"tag_list" => [intag, reltag]}
 
+				# skip current tag if no related documents
+				next if related_documents.nil?
+
 				rdebug "related docs to [%s,%s] : %s" % [ intag, reltag, related_documents.inspect ]
 
 				related_documents.each do |doc|
