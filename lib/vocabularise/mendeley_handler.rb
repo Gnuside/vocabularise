@@ -96,11 +96,13 @@ module VocabulariSe
 			rdebug "make the request"
 			resp = nil
 			begin
-				resp = @config.mendeley_client.documents_tagged({  
-					"tag" => tag,                                        
-					"page" => page,                                       
+				resp = @config.mendeley_client.documents_tagged({
+					"tag" => tag,
+					"page" => page,
 					"items" => ITEMS_PER_PAGE
-				})                                                      
+				})
+			rescue Timeout::Error => e                                      
+				raise Crawler::HttpError
 			rescue 
 				raise Crawler::HttpError
 			end
@@ -139,6 +141,8 @@ module VocabulariSe
 			begin
 				resp = @config.mendeley_client.documents_details( :id => uuid )
 				return resp
+			rescue Timeout::Error => e                                      
+				raise Crawler::HttpError
 			rescue 
 				raise Crawler::HttpError
 			end
