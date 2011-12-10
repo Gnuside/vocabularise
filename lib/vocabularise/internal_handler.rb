@@ -144,6 +144,9 @@ module VocabulariSe
 				{ "page" => intag }
 
 			page = Wikipedia::Page.new page_json
+			return tags if page.nil? 
+			return tags if page.links.nil? 
+
 			page.links.each do |tag|
 				# prevent modification on a frozen string
 				ftag = tag.dup
