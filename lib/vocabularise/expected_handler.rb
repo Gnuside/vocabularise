@@ -6,6 +6,8 @@ module VocabulariSe
 	#
 	#
 
+	LIMIT_DOCUMENTS_PER_TAGREL = 10
+
 	HANDLE_INTERNAL_EXPECTED = "internal:expected"
 
 	class InternalExpected < RequestHandler
@@ -44,7 +46,7 @@ module VocabulariSe
 				limit = 1
 				related_documents = @crawler.request \
 					HANDLE_INTERNAL_RELATED_DOCUMENTS,
-					{"tag_list" => [intag, reltag]}
+					{"tag_list" => [intag, reltag], "limit" => LIMIT_DOCUMENTS_PER_TAGREL }
 
 				# skip current tag if no related documents
 				next if related_documents.nil?
