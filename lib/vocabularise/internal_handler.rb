@@ -22,6 +22,8 @@ module VocabulariSe
 		handles HANDLE_INTERNAL_RELATED_TAGS
 		cache_result DURATION_NORMAL
 
+		# @arg "tag" (mandatory)
+		# @arg "limit" (optional)
 		process do |handle, query, priority|
 			@debug = true
 			rdebug "handle = %s, query = %s, priority = %s " % \
@@ -29,6 +31,8 @@ module VocabulariSe
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			intag = query['tag']
 			raise ArgumentError, "'tag' must not be nil" if intag.nil?
+			inlimit = query['limit'].to_i
+			inlimit ||= 0
 
 			tags = Hash.new 0
 
@@ -37,7 +41,7 @@ module VocabulariSe
 			if tags.empty? then
 				mendeley_related = @crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS_MENDELEY,
-					{ "tag" => intag }
+					{ "tag" => intag, "limit" => inlimit }
 
 				tags.merge!( mendeley_related ) do |key,oldval,newval|
 					oldval + newval
@@ -50,7 +54,7 @@ module VocabulariSe
 			if tags.empty? then
 				wikipedia_related = @crawler.request \
 					HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA,
-	 				{ "tag" => intag }
+					{ "tag" => intag, "limit" => inlimit }
 
 				# backup for broken cache
 				if wikipedia_related.kind_of? Array then
@@ -87,6 +91,9 @@ module VocabulariSe
 				[ handle, query.inspect, priority ]
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			intag = query['tag']
+			raise ArgumentError, "'tag' must not be nil" if intag.nil?
+			inlimit = query['limit'].to_i
+			inlimit ||= 0
 
 			tags = Hash.new 0
 
@@ -129,12 +136,17 @@ module VocabulariSe
 		handles HANDLE_INTERNAL_RELATED_TAGS_WIKIPEDIA
 		cache_result DURATION_NORMAL
 
+		# @arg "tag" (mandatory)
+		# @arg "limit" (optional)
 		process do |handle, query, priority|
 			@debug = true
 			rdebug "handle = %s, query = %s, priority = %s " % \
 				[ handle, query.inspect, priority ]
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			intag = query['tag']
+			raise ArgumentError, "'tag' must not be nil" if intag.nil?
+			inlimit = query['limit'].to_i
+			inlimit ||= 0
 
 			rdebug "intag = %s" % intag
 			tags = Hash.new 0
@@ -168,6 +180,8 @@ module VocabulariSe
 		handles HANDLE_INTERNAL_RELATED_DOCUMENTS
 		cache_result DURATION_NORMAL
 
+		# @arg "tag" (mandatory)
+		# @arg "limit" (optional)
 		process do |handle, query, priority|
 			@debug = true
 			rdebug "handle = %s, query = %s, priority = %s " % \
@@ -176,7 +190,7 @@ module VocabulariSe
 			tag_list = query['tag_list']
 
 			rdebug "tag_list = %s" % tag_list
-			
+
 			documents = []
 			tag_list.each do |tag|
 				rdebug "current tag = %s" % tag_list
