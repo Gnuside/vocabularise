@@ -8,8 +8,8 @@ module VocabulariSe
 	HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED_PAGE = "mendeley:document:search_tagged:page"
 	HANDLE_MENDELEY_DOCUMENT_DETAILS = "mendeley:document:details"
 
-	PRELOADED_PAGES = 5
-	REQUIRED_PAGES = 1
+	PRELOADED_PAGES = 3
+	REQUIRED_PAGES = 2
 	ITEMS_PER_PAGE = 5
 
 	class MendeleyDocumentSearchTagged < RequestHandler
@@ -17,6 +17,8 @@ module VocabulariSe
 		handles HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED
 		cache_result DURATION_NORMAL
 
+		# @arg "tag" (mandatory)
+		# @arg "limit" (optional)
 		process do |handle, query, priority|
 			@debug = true
 			handle_str = "handle = %s, query = %s, priority = %s " % \
@@ -25,6 +27,9 @@ module VocabulariSe
 
 			raise ArgumentError, "no 'tag' found" unless query.include? 'tag'
 			tag = query['tag']
+			raise ArgumentError, "'tag' must not be nil" if tag.nil?
+			inlimit = query['limit'].to_i
+			inlimit ||= 0
 
 			page_counter = 0                                                            
 			total_pages = 0                                                     
