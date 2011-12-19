@@ -100,7 +100,7 @@ module VocabulariSe
 			# may fail
 			documents = @crawler.request \
 				HANDLE_MENDELEY_DOCUMENT_SEARCH_TAGGED,
-				{ "tag" => intag }
+				{ "tag" => intag, "limit" => inlimit }
 
 			documents.each do |doc|
 				document_tags = doc.tags
@@ -147,6 +147,7 @@ module VocabulariSe
 			raise ArgumentError, "'tag' must not be nil" if intag.nil?
 			inlimit = query['limit'].to_i
 			inlimit ||= 0
+			# FIXME: do something with limit
 
 			rdebug "intag = %s" % intag
 			tags = Hash.new 0
