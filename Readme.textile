@@ -106,4 +106,17 @@ pre.
 
 h3. 4.1. Configuring 
 
+h4. 4.2. Deploying
 
+To deploy, get in the source directory, on you computer (not the server), and type:
+
+    cap production deploy
+
+It will update the remote source from the reference Git repository.
+
+Then control the server run with :
+
+  cap production deploy:stop
+  cap production deploy:start
+
+P.S: all that requires login & password access to the server.
