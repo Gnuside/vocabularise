@@ -1,9 +1,6 @@
-Vocabulari.se
-=============
+# Vocabulari.se
 
-
-1. Requirements
----------------
+## 1. Requirements
 
 First, make install ruby and a proper version of rubygems (>=1.7) on your system
 
@@ -31,21 +28,17 @@ their dependencies :
     bundle install --path vendor
 
 
-2. Configuration
-----------------
+## 2. Configuration
 
 
-3. Running (development mode)
------------------------------
+## 3. Running (development mode)
 
 Simply type the following command, from the project directory :
 
     ./run.sh
 
 
-4. Deploying 
-------------
-
+## 4. Deploying 
 
 ### 4.1. Configuring the web server
 
