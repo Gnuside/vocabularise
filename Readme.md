@@ -2,22 +2,22 @@
 
 ## 1. Requirements
 
-First, make install ruby and a proper version of rubygems (>=1.7) on your system
+First, make install ruby and a proper version of rubygems (>=1.7) on your system :
 
     sudo apt-get install rubygems1.8
 
-Then, install  headers packages required to build some gems
+Then, install  headers packages required to build some gems :
 
     sudo apt-get install libmysqlclient-dev libsqlite3-dev
 
-Also install mandatory gem packages on your system
+Also install mandatory gem packages on your system :
 
     sudo gem install bundle 
     sudo gem install capistrano capistrano-ext
     sudo gem install thin
 
 And make sure that `/var/lib/gems/1.8/bin` is in your path. Update your
-`~.profile` or `~/.bashrc` or simply run
+`~.profile` or `~/.bashrc` or simply run :
 
     export PATH=$PATH:/var/lib/gems/1.8/bin/
 
@@ -40,7 +40,7 @@ Simply type the following command, from the project directory :
 
 ## 4. Deploying 
 
-### 4.1. Configuring the web server
+### 4.1. Setting up the web server
 
 
 Install a reverse proxy server, like nginx :
@@ -95,9 +95,29 @@ Restart nginx :
     /etc/init.d/nginx restart
 
 
-### 4.2. Remotely updating code
+### 4.2. Setting up vocabularise user
 
-To deploy, get in the source directory on you computer (not the server), and type:
+On the remote server, type (as root) :
+
+    adduser vocabularise
+
+Also make sure you have a SSH server enabled to allow remote access.
+If not, type type (as root) :
+
+    apt-get install openssh-server
+
+From you own computer, generate you ssh key :
+
+    ssh-keygen -t dsa
+
+And upload it to the list of authorized keys on server, either by editing the `~/.ssh/authorized_keys` file on the server, or typing the following command from you own machine : 
+
+    ssh-copy-id vocabularise@vocabulari.se
+
+
+### 4.4. Remotely updating code
+
+To deploy, get in the source directory on you computer (not the server), and type :
 
     cap production deploy
 
