@@ -1,3 +1,4 @@
+
 # Vocabulari.se
 
 ## 1. Requirements
@@ -52,12 +53,13 @@ Fill required fields in the `config/vocabularise.json` file :
 
 ## 3. Running (development mode)
 
-Simply type the following command, from the project directory :
+From the source directory, simply type the following command, from the project
+directory :
 
     ./run.sh
 
 
-## 4. Deploying
+## 4. Deploying (production mode)
 
 ### 4.1. Setting up the web server
 
@@ -146,4 +148,67 @@ Then control the server run with :
 
     cap production deploy:stop
     cap production deploy:start
+
+## 5. API
+
+Some interesting URL, if you want to directly access computed data :
+
+### 5.1. /search/expected
+
+#### Examples 
+
+  * http://vocabulari.se/search/expected?query=neutrino
+  * http://vocabulari.se/search/expected?query=climate%20change
+
+#### Method
+
+<table>
+    <tr>
+	<th>URI</th>
+	<th>Method</th>
+	<th>Authentication</th>
+    </tr>
+    </tr>
+	<td>http://vocabulari.se/search/controversial</td>
+	<td>GET</td>
+	<td>none</td>
+    </tr>
+</table>
+
+
+#### Parameters
+
+
+### 5.2. /search/aggregating
+
+#### Examples
+
+  * http://vocabulari.se/search/aggregating?query=neutrino
+  * http://vocabulari.se/search/aggregating?query=climate%20change
+
+#### Method
+
+| URI | Method | Authentication |
+| http://vocabulari.se/search/controversial | GET | none |
+
+#### Parameters
+
+
+### 5.3. /search/controversial
+
+#### Examples
+
+  * http://vocabulari.se/search/controversial?query=neutrino
+  * http://vocabulari.se/search/controversial?query=climate%20change
+
+#### Method
+
+| URI | Method | Authentication |
+| http://vocabulari.se/search/controversial | GET | none |
+
+#### Parameters
+
+
+
+
 
