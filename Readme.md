@@ -34,20 +34,20 @@ their dependencies :
 Fill required fields in the `config/vocabularise.json` file :
 
     {
-	"cache_dir" : "cache",
-	"cache_duration_min" : 7200,
-	"cache_duration_max" : 604800,
+        "cache_dir" : "cache",
+        "cache_duration_min" : 7200,
+        "cache_duration_max" : 604800,
 
-	"consumer_key" : "",
-	"consumer_secret" : "",
+        "consumer_key" : "",
+        "consumer_secret" : "",
 
-	"db_adapter" : "mysql",
-	"db_database" : "",
-	"db_host" : "",
-	"db_username" : "",
-	"db_password" : "",
+        "db_adapter" : "mysql",
+        "db_database" : "",
+        "db_host" : "",
+        "db_username" : "",
+        "db_password" : "",
 
-	"dictionary" : "config/dictionary.example"
+        "dictionary" : "config/dictionary.example"
     }
 
 
