@@ -200,6 +200,25 @@ associated publications.
 
 #### Response example
 
+    {
+	"result":[
+	    [
+		"opera",{
+		    "views":263,
+		    "links":[
+			{
+			"url":"http://api.mendeley.com/research/measurement-neutrino-velocity-opera-detector-cngs-beam/",
+			"text":"Measurement of the neutrino ..."
+			}
+		    ],
+		    "apparitions":1,
+		    "slope":0.00380228136882129
+		}
+	    ]
+	],
+	"algorithm":"expected"
+    }
+
 
 ### 5.2. /search/controversial
 
@@ -247,6 +266,30 @@ entries.
 
 #### Response example
 
+    {
+        "result":[
+            [
+                "opera",{
+                "links":[
+                    {
+                        "url":"http://en.wikipedia.org/wiki/OPERA neutrino anomaly",
+                        "text":"OPERA neutrino anomaly"
+                    },
+                    {
+                        "url":"http://en.wikipedia.org/wiki/Neutrino",
+                        "text":"Neutrino"
+                    },
+                    {
+                        "url":"http://en.wikipedia.org/wiki/OPERA experiment",
+                        "text":"OPERA experiment"
+                    }
+                ],
+                "hotness":38
+                }
+            ]
+        ],
+        "algorithm":"controversial"
+    }
 
 
 ### 5.3. /search/aggregating
@@ -293,4 +336,43 @@ associated disciplines.
 </table>
 
 #### Response example
+
+A simple response example :
+
+    {
+        "result" : [
+            [
+                "opera",
+                {
+                    "disc_list":[
+                        [
+                            "Astronomy / Astrophysics / Space Science",
+                            {"value":11,"count":1}
+                        ],
+                        [
+                            "Biological Sciences",
+                            {"value":10,"count":1}
+                        ]
+                    ],
+                    "links":[
+                        {
+                            "url":"http://www.mendeley.com/biologicalsciences/",
+                            "text":"Biological Sciences"
+                        },
+                        {
+                            "url":"http://www.mendeley.com/astronomy/astrophysics/spacescience/",
+                            "text":"Astronomy / Astrophysics / Space Science"
+                        },
+                        {
+                            "url":"http://www.mendeley.com/physics/",
+                            "text":"Physics"
+                        }
+                    ],
+                    "disc_count":2,
+                    "disc_sum":21
+                }
+            ]
+        ],
+        "algorithm":"aggregating"
+    }
 
