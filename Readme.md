@@ -155,10 +155,16 @@ Some interesting URL, if you want to directly access computed data :
 
 ### 5.1. /search/expected
 
+Search returns words co-tagged unfrequently yet effectively with the query in
+research publications, ranked according to readership on Mendeley, and the
+associated publications.
+
+
 #### Examples 
 
   * http://vocabulari.se/search/expected?query=neutrino
   * http://vocabulari.se/search/expected?query=climate%20change
+
 
 #### Method
 
@@ -178,23 +184,29 @@ Some interesting URL, if you want to directly access computed data :
 
 #### Parameters
 
-
-### 5.2. /search/aggregating
-
-#### Examples
-
-  * http://vocabulari.se/search/aggregating?query=neutrino
-  * http://vocabulari.se/search/aggregating?query=climate%20change
-
-#### Method
-
-| URI | Method | Authentication |
-| http://vocabulari.se/search/controversial | GET | none |
-
-#### Parameters
+<table>
+    <tr>
+	<th>Parameter</th>
+	<th>Type</th>
+	<th>Description</th>
+    </tr>
+    </tr>
+	<td>query</td>
+	<td>String</td>
+	<td>A tag to be searched</td>
+    </tr>
+</table>
 
 
-### 5.3. /search/controversial
+#### Response example
+
+
+### 5.2. /search/controversial
+
+Search returns words co-appearing with the query in the most discussed
+Wikipedia entries, according to controversial power, and the associated
+entries.
+
 
 #### Examples
 
@@ -203,12 +215,82 @@ Some interesting URL, if you want to directly access computed data :
 
 #### Method
 
-| URI | Method | Authentication |
-| http://vocabulari.se/search/controversial | GET | none |
+<table>
+    <tr>
+	<th>URI</th>
+	<th>Method</th>
+	<th>Authentication</th>
+    </tr>
+    </tr>
+	<td>http://vocabulari.se/search/controversial</td>
+	<td>GET</td>
+	<td>none</td>
+    </tr>
+</table>
+
 
 #### Parameters
 
+<table>
+    <tr>
+	<th>Parameter</th>
+	<th>Type</th>
+	<th>Description</th>
+    </tr>
+    </tr>
+	<td>query</td>
+	<td>String</td>
+	<td>A tag to be searched</td>
+    </tr>
+</table>
+
+
+#### Response example
 
 
 
+### 5.3. /search/aggregating
+
+Search returns words co-tagged with the query in research publications, ranked
+according to the diversity of readers&rsquo; disciplines on Mendeley, and the
+associated disciplines.
+
+
+#### Examples
+
+  * http://vocabulari.se/search/aggregating?query=neutrino
+  * http://vocabulari.se/search/aggregating?query=climate%20change
+
+#### Method
+
+<table>
+    <tr>
+	<th>URI</th>
+	<th>Method</th>
+	<th>Authentication</th>
+    </tr>
+    </tr>
+	<td>http://vocabulari.se/search/aggregating</td>
+	<td>GET</td>
+	<td>none</td>
+    </tr>
+</table>
+
+
+#### Parameters
+
+<table>
+    <tr>
+	<th>Parameter</th>
+	<th>Type</th>
+	<th>Description</th>
+    </tr>
+    </tr>
+	<td>query</td>
+	<td>String</td>
+	<td>A tag to be searched</td>
+    </tr>
+</table>
+
+#### Response example
 
