@@ -30,6 +30,25 @@ their dependencies :
 
 ## 2. Configuration
 
+Fill required fields in the `config/vocabularise.json` file :
+
+    {
+	"cache_dir" : "cache",
+	"cache_duration_min" : 7200,
+	"cache_duration_max" : 604800,
+
+	"consumer_key" : "",
+	"consumer_secret" : "",
+
+	"db_adapter" : "mysql",
+	"db_database" : "",
+	"db_host" : "",
+	"db_username" : "",
+	"db_password" : "",
+
+	"dictionary" : "config/dictionary.example"
+    }
+
 
 ## 3. Running (development mode)
 
@@ -38,7 +57,7 @@ Simply type the following command, from the project directory :
     ./run.sh
 
 
-## 4. Deploying 
+## 4. Deploying
 
 ### 4.1. Setting up the web server
 
@@ -127,11 +146,4 @@ Then control the server run with :
 
     cap production deploy:stop
     cap production deploy:start
-
-P.S: all that requires login & password access to the server.
-
-
-### 4.1. Configuring 
-
-FIXME: explain vocabularise.json
 
