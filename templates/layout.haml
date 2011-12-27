@@ -21,6 +21,7 @@
 		-# less important things
 		%script{ :type => "text/javascript", :src=>"/js/uservoice.js" }
 		%script{ :type => "text/javascript", :src=>"/js/google-analytics.js" }
+		%script{ :type => "text/javascript", :src=>"/js/github-watchers.min.js" }
 		%link{ :rel => "image_src", :href => "http://#{request.host}/images/logo_vocabularise.png" }
 
 		%body
@@ -45,9 +46,12 @@
 						%li.span-4.last
 							%a{:href => '/credits'} credits
 
-					%hr.tag
-					%div.span-9.prepend-3.last
+					%hr.tag.last
+					%div.prepend-2.span-4
 						%a{ :href=> "https://twitter.com/vocabularise", :class => "twitter-follow-button", "data-show-count"=>"false", :"data-align" => "left"} Follow @vocabularise
 						%script{ :src => "http://platform.twitter.com/widgets.js", :type=>"text/javascript"}
+					%div.span-4.last
+						%a{ :href=>"http://github.com/Gnuside/vocabularise", :class=>"gitwatch small"} Watch us on GitHub
+						%script{ :type => "text/javascript", :src=>"/js/github-watchers.js"}
 					%br
 
