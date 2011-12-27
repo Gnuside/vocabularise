@@ -1,5 +1,5 @@
 --- 
-pid: tmp/pids/beta.pid
+pid: tmp/pids/thin.pid
 address: 0.0.0.0
 wait: 30
 timeout: 30
