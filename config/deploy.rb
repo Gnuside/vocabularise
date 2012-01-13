@@ -8,7 +8,7 @@ set :stages, %w(production development testing)
 require 'capistrano/ext/multistage'
 
 set :application, "vocabularise"
-set :repository,  "git@devel.gnuside.com:vocabulari-se.git"
+set :repository,  "git@github.com:Gnuside/vocabularise.git"
 set :branch, "master"
 
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
