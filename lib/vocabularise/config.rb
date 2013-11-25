@@ -11,6 +11,9 @@ require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia_ext'
 require 'vocabularise/mendeley_ext'
 
+require 'navvy'
+require 'navvy/job/datamapper'
+
 
 module VocabulariSe
 	class Config
@@ -85,6 +88,7 @@ module VocabulariSe
 			DataMapper::Model.raise_on_save_failure = true                      
 			DataMapper.auto_upgrade!                                            
 
+			Navvy::Job.auto_migrate!
 
 			raise ConfigurationError, "no dictionary specified" unless json.include? "dictionary"
 			@dictionary = json['dictionary']
