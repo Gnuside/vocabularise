@@ -40,11 +40,9 @@ module VocabulariSe
 			# set crawler
 			crawler = VocabulariSe::Crawler.new config
 
-			set :crawler, crawler
+			# FIXME: run the crawler process
+			# set :crawler, crawler 
 			set :config, config
-
-			# run crawler thread ;-)
-			crawler.run
 		end
 
 
@@ -86,15 +84,11 @@ module VocabulariSe
 				redirect '/'
 			end
 
-			begin
-				settings.crawler.request \
-					HANDLE_INTERNAL_RELATED_TAGS, 
-					{ "tag" => @query },
-					Queue::PRIORITY_HIGH
-
-			rescue Crawler::DeferredRequest
-				# does not hurt ;-)
-			end
+			# FIXME: add delayed job there
+			# settings.crawler.request 
+			#	HANDLE_INTERNAL_RELATED_TAGS, 
+			#	{ "tag" => @query },
+			#	Queue::PRIORITY_HIGH
 
 			haml :page_search
 		end
@@ -112,22 +106,18 @@ module VocabulariSe
 
 
 		# Return results for expected algorithm
-		get "/search/expected" do
+		get "/search/expected.json" do
 			@query = params[:query]
+			@timestamp = params[:timestamp]
 
 			begin
-				result = settings.crawler.request \
-					HANDLE_INTERNAL_EXPECTED,
-					{ "tag" => @query }, 
-					Queue::PRIORITY_HIGH
+				# FIXME: verify that job is done
+				# result = settings.crawler.request \
+				#	HANDLE_INTERNAL_EXPECTED,
+				#	{ "tag" => @query }, 
+				#	Queue::PRIORITY_HIGH
+				result = {}
 
-=begin
-			result = settings.manager.request :expected, @query
-			if result.nil? then
-				status(503)
-			else
-				JSON.generate( {
-=end
 				JSON.generate( { 
 					:algorithm => "expected",
 					:result => result
@@ -139,22 +129,17 @@ module VocabulariSe
 
 
 		# Return results for aggregating algorithm
-		get "/search/controversial" do
+		get "/search/controversial.json" do
 			@query = params[:query]
+			@timestamp = params[:timestamp]
 
 			begin
-				result = settings.crawler.request \
-					HANDLE_INTERNAL_CONTROVERSIAL,
-					{ "tag" => @query },
-					Queue::PRIORITY_HIGH
+				# FIXME: verify that job is done
+				# result = settings.crawler.request
+				#	HANDLE_INTERNAL_CONTROVERSIAL,
+				#	{ "tag" => @query },
+				#	Queue::PRIORITY_HIGH
 
-=begin
-			result = settings.manager.request :controversial, @query
-			if result.nil? then
-				status(503)
-			else
-				JSON.generate( {
-=end
 				JSON.generate( { 
 					:algorithm => "controversial",
 					:result => result
@@ -166,22 +151,17 @@ module VocabulariSe
 
 
 		# Return information about wikipedia pages for tag tag :tag
-		get "/search/aggregating" do
+		get "/search/aggregating.json" do
 			@query = params[:query]
+			@timestamp = params[:timestamp]
 
 			begin
-				result = settings.crawler.request \
-					HANDLE_INTERNAL_AGGREGATING,
-					{ "tag" => @query },
-					Queue::PRIORITY_HIGH
+			# FIXME: verify that job is done
+			#	result = settings.crawler.request \
+			#		HANDLE_INTERNAL_AGGREGATING,
+			#		{ "tag" => @query },
+			#		Queue::PRIORITY_HIGH
 
-=begin
-			result = settings.manager.request :aggregating, @query
-			if result.nil? then
-				status(503)
-			else
-				JSON.generate( {
-=end
 				JSON.generate( { 
 					:algorithm => "aggregating",
 					:result => result
