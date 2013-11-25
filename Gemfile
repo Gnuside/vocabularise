@@ -28,8 +28,10 @@ gem 'dm-aggregates'
 
 #gem 'spore', :git => 'git://github.com/sukria/Ruby-Spore.git'
 #gem 'oauth2'
+gem 'delayed_job'
 
 # Strange dependencies
+gem 'rake'
 gem 'extlib'
 gem 'rdebug'
 gem 'rspec'
