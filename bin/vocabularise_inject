@@ -4,18 +4,12 @@ require 'fileutils'
 require 'test/unit'
 require 'pp'
 
-require 'rubygems'
 require 'bundler/setup'
+
 require 'rspec'
 require 'json'
 
-require 'vocabularise/model'
-require 'vocabularise/config'
-require 'vocabularise/crawler'
-require 'vocabularise/queue'
-require 'vocabularise/request_handler'
-require 'vocabularise/mendeley_handler'
-require 'vocabularise/internal_handler'
+require 'vocabularise.rb'
 
 require 'spec/spec_helper'
 

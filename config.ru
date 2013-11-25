@@ -20,6 +20,7 @@ require 'haml'
 require 'json'
 
 # Vocabularise specific
-require "vocabularise/base"
+require "vocabularise"
 
 run VocabulariSe::Base
+
