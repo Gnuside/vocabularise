@@ -1,3 +1,4 @@
+Gemfile.lock
 cache
 vendor*/*
 .bundle
