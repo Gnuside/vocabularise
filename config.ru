@@ -1,7 +1,5 @@
 
-$:.push File.join( File.dirname(File.expand_path(__FILE__)), "/lib")
-
-require 'rubygems'
+$:.push File.join( File.dirname(File.expand_path(__FILE__)), "lib")
 
 # use bundler
 require 'bundler/setup'
