@@ -11,9 +11,7 @@ require 'vocabularise/hit_counter'
 require 'vocabularise/wikipedia_ext'
 require 'vocabularise/mendeley_ext'
 
-require 'navvy'
-require 'navvy/job/datamapper'
-
+require 'delayed_job'
 
 module VocabulariSe
 	class Config
@@ -88,7 +86,9 @@ module VocabulariSe
 			DataMapper::Model.raise_on_save_failure = true                      
 			DataMapper.auto_upgrade!                                            
 
-			Navvy::Job.auto_migrate!
+			## FIX: initialize delayed job
+			Delayed::Worker.max_run_time = 900
+			Delayed::Worker.backend = :data_mapper
 
 			raise ConfigurationError, "no dictionary specified" unless json.include? "dictionary"
 			@dictionary = json['dictionary']
