@@ -3,7 +3,7 @@ Vocabularise API
 
 Some interesting URL, if you want to directly access computed data :
 
-1. /search/expected
+1. Expected search
 -------------------
 
 Search returns words co-tagged unfrequently yet effectively with the query in
@@ -11,13 +11,13 @@ research publications, ranked according to readership on Mendeley, and the
 associated publications.
 
 
-### Examples 
+### 1.1 Examples 
 
   * http://vocabulari.se/search/expected?query=neutrino
   * http://vocabulari.se/search/expected?query=climate%20change
 
 
-### Method
+### 1.2. Method
 
 <table>
     <tr>
@@ -33,7 +33,7 @@ associated publications.
 </table>
 
 
-### Parameters
+### 1.3. Parameters
 
 <table>
     <tr>
@@ -49,7 +49,7 @@ associated publications.
 </table>
 
 
-### Response example
+### 1.4. Response example
 
     {
 	"result":[
@@ -71,20 +71,21 @@ associated publications.
     }
 
 
-/search/controversial
----------------------
+2. Controversial search
+-----------------------
 
 Search returns words co-appearing with the query in the most discussed
 Wikipedia entries, according to controversial power, and the associated
 entries.
 
 
-### Examples
+### 2.1. Examples
 
   * http://vocabulari.se/search/controversial?query=neutrino
   * http://vocabulari.se/search/controversial?query=climate%20change
 
-### Method
+
+### 2.2. Method
 
 <table>
     <tr>
@@ -100,7 +101,7 @@ entries.
 </table>
 
 
-### Parameters
+### 2.3. Parameters
 
 <table>
     <tr>
@@ -116,7 +117,7 @@ entries.
 </table>
 
 
-### Response example
+### 2.4. Response example
 
     {
         "result":[
@@ -144,20 +145,20 @@ entries.
     }
 
 
-3. /search/aggregating
-----------------------
+3. Aggregating search
+---------------------
 
 Search returns words co-tagged with the query in research publications, ranked
 according to the diversity of readers&rsquo; disciplines on Mendeley, and the
 associated disciplines.
 
 
-### Examples
+### 3.1. Examples
 
   * http://vocabulari.se/search/aggregating?query=neutrino
   * http://vocabulari.se/search/aggregating?query=climate%20change
 
-### Method
+### 3.2. Method
 
 <table>
     <tr>
@@ -173,7 +174,7 @@ associated disciplines.
 </table>
 
 
-### Parameters
+### 3.3. Parameters
 
 <table>
     <tr>
@@ -189,7 +190,7 @@ associated disciplines.
 </table>
 
 
-### Response example
+### 3.4. Response example
 
 A simple response example :
 
