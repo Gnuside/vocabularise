@@ -33,8 +33,8 @@ version of the tool or dissect our amazing algorithms :-)
 Credits
 -------
 
-* Original idea & project lead : Axel Meunier and "Deuxi&egrave;me labo":http://www.deuxieme-labo.fr/
-* Code development & integration : "Gnuside":http://www.gnuside.com
+* Original idea & project lead : Axel Meunier and [Deuxi&egrave;me labo](http://www.deuxieme-labo.fr)
+* Code development & integration : [Gnuside](http://www.gnuside.com)
 * Graphic design : Jérémie Elalouf
 * Technical advice : Pierre Maumont
 
