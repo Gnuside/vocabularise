@@ -1,151 +1,32 @@
+Vocabularise
+============
 
-# Vocabulari.se
+The social network of your research objects
+-------------------------------------------
 
-## 1. Requirements
+Vocabulari.se is a search tool addressed to researchers to explore a social network of research objects, help them choose the wording of their abstracts or the tagging of their papers, and discover their research interests in new ways. This tool is grounded in “science studies” , which show that research objects have a social, even political, life of their own… let us play with it! And open the black box of the ubiquitous yet poor tagging system as the ultimate linking device of words…
 
-First, make install ruby and a proper version of rubygems (>=1.7) on your system :
+Vocabularise searches for terms related to a given term (i.e. a research object, treated as a Mendeley tag or a Wikipedia entry) according to three qualities of relationships:
 
-    sudo apt-get install rubygems1.8
+* Unexpected relationships (i.e. not frequent yet effective) that give originality to research
+* Controversial relationships (i.e most discussed on Wikipedia) that widen the audience ;
+* Aggregating relationships (i.e. most multidisciplinary Mendeley associations) that bridge the gap with other disciplines' interests.
 
-Then, install  headers packages required to build some gems :
-
-    sudo apt-get install libmysqlclient-dev libsqlite3-dev
-
-Also install mandatory gem packages on your system :
-
-    sudo gem install bundle 
-    sudo gem install capistrano capistrano-ext
-    sudo gem install thin
-
-And make sure that `/var/lib/gems/1.8/bin` is in your path. Update your
-`~.profile` or `~/.bashrc` or simply run :
-
-    export PATH=$PATH:/var/lib/gems/1.8/bin/
-
-Finally, from the project directory, run the following command to install
-locally into the `vendor/` directory the gems required by this project and all
-their dependencies :
-
-    bundle install --path vendor
+The classifications are reversible since it may be preferred to know about expected, uncontroversial or disaggregating relationships. It is up to you!
 
 
-## 2. Configuration
+## And for the geeks among you...
+---------------------------------
 
-Fill required fields in the `config/vocabularise.json` file :
+Vocabularise is a mash-up of Mendeley and Wikipedia APIs. Our algorithms start
+from an ensemble of related tags obtained through co-occurrence analysis in
+Mendeley data. Then we sort the results through the slope of frequency vs.
+readership relationship (algorithm 1), through the size of Wikipedia discussion
+pages resulting from querying two related tags (algorithm 2), through the
+multidisciplinarity of Mendeley publications readership (algorithm 3).
 
-    {
-        "cache_dir" : "cache",
-        "cache_duration_min" : 7200,
-        "cache_duration_max" : 604800,
+The code of vocabularise is published under the GNU Affero GPL license. 
 
-        "consumer_key" : "",
-        "consumer_secret" : "",
-
-        "db_adapter" : "mysql",
-        "db_database" : "",
-        "db_host" : "",
-        "db_username" : "",
-        "db_password" : "",
-
-        "dictionary" : "config/dictionary.example"
-    }
-
-
-## 3. Running (development mode)
-
-From the source directory, simply type the following command, from the project
-directory :
-
-    ./run.sh
-
-
-## 4. Deploying (production mode)
-
-### 4.1. Setting up the web server
-
-
-Install a reverse proxy server, like nginx :
-
-    sudo apt-get install nginx
-
-In the directory `/etc/nginx/sites-enabled/`, create a configuration file for 
-a virtual host called `vocabulari.se`, with the following content :
-
-    upstream vocabularise_cluster {
-        server  unix:/var/tmp/vocabularise.sock;
-    }
-
-    server {
-        listen          80
-        server_name     vocabulari.se;
-    
-        access_log      /var/log/nginx/vocabulari-se.access_log;
-        error_log       /var/log/nginx/vocabulari-se.error_log warn;
-    
-        root            /var/www;
-        index           index.php index.html;
-
-        location / {
-            break;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-Proto https;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_pass http://vocabularise_cluster;
-
-            # in order to support COPY and MOVE, etc
-            set  $dest  $http_destination;
-            if ($http_destination ~ "^https://(.+)") {
-                set  $dest   http://$1;
-            }
-            proxy_set_header  Destination   $dest;
-        }
-    }
-
-
-The web server will then redirect any external request to internal unix
-socket `/var/tmp/vocabularise.sock` .
-
-Enable the configuration :
-
-    ln -s /etc/nginx/sites-available/vocabulari.se \
-        /etc/nginx/sites-enabled/vocabulari.se
-
-Restart nginx :
-
-    /etc/init.d/nginx restart
-
-
-### 4.2. Setting up vocabularise user
-
-On the remote server, type (as root) :
-
-    adduser vocabularise
-
-Also make sure you have a SSH server enabled to allow remote access.
-If not, type type (as root) :
-
-    apt-get install openssh-server
-
-From you own computer, generate you ssh key :
-
-    ssh-keygen -t dsa
-
-And upload it to the list of authorized keys on server, either by editing the `~/.ssh/authorized_keys` file on the server, or typing the following command from you own machine : 
-
-    ssh-copy-id vocabularise@vocabulari.se
-
-
-### 4.4. Remotely updating code
-
-To deploy, get in the source directory on you computer (not the server), and type :
-
-    cap production deploy
-
-It will update the remote source from the reference Git repository.
-
-Then control the server run with :
-
-    cap production deploy:stop
-    cap production deploy:start
+Hence you can (and are invited to) contribute improvements, implement your own
+version of the tool or dissect our amazing algorithms :-) 
 
