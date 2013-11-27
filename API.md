@@ -1,5 +1,5 @@
-Vocabularise API
-================
+vocabulari.se API
+=================
 
 Some interesting URL, if you want to directly access computed data :
 
