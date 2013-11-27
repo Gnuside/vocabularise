@@ -5,37 +5,31 @@ vocabulari.se install (obsolete)
 1. Requirements
 ---------------
 
-First, make install ruby and a proper version of rubygems (>=1.7) on your system :
+First, make sure your have a recent ruby installation on your system (if
+possible with rbenv or rvm).
 
-    sudo apt-get install rubygems1.8
+    sudo apt-get install rubygems1.9
 
-Then, install  headers packages required to build some gems :
+Then, install some headers packages required to build dependencies :
 
     sudo apt-get install libmysqlclient-dev libsqlite3-dev
 
 Also install mandatory gem packages on your system :
 
-    sudo gem install bundle 
-    sudo gem install capistrano capistrano-ext
-    sudo gem install thin
-
-And make sure that `/var/lib/gems/1.8/bin` is in your path. Update your
-`~.profile` or `~/.bashrc` or simply run :
-
-    export PATH=$PATH:/var/lib/gems/1.8/bin/
+    sudo gem install bundle
 
 Finally, from the project directory, run the following command to install
 locally into the `vendor/` directory the gems required by this project and all
 their dependencies :
 
-    bundle install --path vendor
+    bundle install --path vendor/bundle
 
 
 2. Configuration
 ----------------
 
 Fill required fields in the `config/vocabularise.json` file :
- 
+
     {
         "cache_dir" : "cache",
         "cache_duration_min" : 7200,
@@ -54,16 +48,17 @@ Fill required fields in the `config/vocabularise.json` file :
     }
 
 
-3. Running (development mode)
------------------------------
+3. Running in development mode
+------------------------------
 
 From the source directory, simply type the following command, from the project
 directory :
 
-    ./dev-run.sh
+    ./script/server-dev.sh
 
 
-## 4. Deploying (production mode)
+4. Running in production mode
+-----------------------------
 
 ### 4.1. Setting up the web server
 
@@ -140,7 +135,7 @@ And upload it to the list of authorized keys on server, either by editing the `~
     ssh-copy-id vocabularise@vocabulari.se
 
 
-### 4.4. Remotely updating code
+### 4.4. Deploy the code
 
 To deploy, get in the source directory on you computer (not the server), and type :
 
