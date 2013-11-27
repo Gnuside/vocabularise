@@ -15,8 +15,8 @@ Vocabularise searches for terms related to a given term (i.e. a research object,
 The classifications are reversible since it may be preferred to know about expected, uncontroversial or disaggregating relationships. It is up to you!
 
 
-## And for the geeks among you...
----------------------------------
+And for the geeks among you...
+------------------------------
 
 Vocabularise is a mash-up of Mendeley and Wikipedia APIs. Our algorithms start
 from an ensemble of related tags obtained through co-occurrence analysis in
